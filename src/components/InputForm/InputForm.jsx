@@ -5,10 +5,10 @@ import "./InputForm.css";
 
 export const InputForm = () => {
   return (
-    <div className="w3-animate-bottom">
-      <PopupButton id="ZjowQHZV" className="btn btn-dark inputButton">
-        Create TAG
-      </PopupButton>
-    </div>
+      <div className="w3-animate-bottom">
+          <PopupButton id="ZjowQHZV" className="btn btn-dark inputButton w3-btn w3-hover-white">
+              Create TAG
+          </PopupButton>
+      </div>
   );
 };
