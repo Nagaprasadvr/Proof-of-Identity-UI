@@ -24,7 +24,7 @@ export const Home = () => {
             {publicKey ? (
                 <div className="App">
                     <h1 className="w3-animate-opacity">
-                        <b>Create your Digital identity on Solana chain!</b>
+                        <b>Create your Digital fingerprint on Solana chain!</b>
                     </h1>
 
                     <div className="w3-animate-opacity w3-jumbo">
