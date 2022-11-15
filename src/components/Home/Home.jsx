@@ -9,11 +9,7 @@ export const Home = () => {
 
     const { publicKey, wallet } = useWallet();
     const [balance, setBalance] = useState(null);
-    const [walletName, setWalletName] = useState(wallet.adapter.name);
 
-    useEffect(() => {
-        setWalletName(wallet.adapter.name);
-    }, [wallet]);
     useEffect(() => {
         setBalance(null);
     }, [publicKey]);
@@ -40,14 +36,15 @@ export const Home = () => {
 
                     <div className="w3-animate-bottom" style={{ marginTop: '20px', alignContent: 'center' }}>
                         <button className="balance-button w3-btn w3-hover-white App " onClick={checkBalance}>
-                            Check {walletName} Wallet Balance
+                            Check {wallet.adapter.name} Wallet Balance
                         </button>
                     </div>
                     {balance ? (
                         <div className="w3-animate-opacity" style={{ marginTop: '20px' }}>
                             <h1>
                                 <b>
-                                    Your Solana {walletName} wallet balance on devent is : {balance / Web3.LAMPORTS_PER_SOL} Sol
+                                    Your Solana {wallet.adapter.name} wallet balance on devent is :{' '}
+                                    {balance / Web3.LAMPORTS_PER_SOL} Sol
                                 </b>
                             </h1>
                         </div>
