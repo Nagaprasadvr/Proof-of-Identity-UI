@@ -33,6 +33,25 @@ export const Home = () => {
                     <div className="w3-animate-top">
                         <InputForm />
                     </div>
+                    <div
+                        className="w3-animate-opacity"
+                        style={{
+                            alignContent: 'center',
+                            width: '100%',
+
+                            marginTop: '20px',
+                            borderRadius: '10px',
+                            alignItems: 'center',
+
+                            display: 'flex',
+                            justifyContent: 'center',
+                            height: '60px',
+                        }}
+                    >
+                        <h1 style={{ color: 'lightskyblue', alignContent: 'center', fontSize: '28px' }}>
+                            <b>Connected to {wallet.adapter.name}!</b>
+                        </h1>
+                    </div>
 
                     <div className="w3-animate-bottom" style={{ marginTop: '20px', alignContent: 'center' }}>
                         <button className="balance-button w3-btn w3-hover-white App " onClick={checkBalance}>
