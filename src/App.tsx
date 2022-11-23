@@ -1,7 +1,8 @@
 import './App.css';
 import { Navbar } from './components/Navbar/Navbar.component';
+import { Blog } from './components/Blog/blog';
 import { Home } from './components/Home/Home';
-import { ConnectionProvider, useWallet, WalletProvider } from '@solana/wallet-adapter-react';
+import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
@@ -35,7 +36,8 @@ function App() {
 
                         <Routes>
                             <Route path="/" element={<Home />}></Route>
-                            <Route path="/design" element={<Design />} />
+                            <Route path="/design" element={<Design />}></Route>
+                            <Route path="/blog" element={<Blog />}></Route>
                         </Routes>
                     </div>
                 </WalletModalProvider>
