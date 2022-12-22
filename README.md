@@ -1,3 +1,18 @@
+#About the project
+There are many use cases associated with Blockchain Technology like
+finance, NFT, Domain services, payments etc. But almost everything on
+Blockchain is done anonymously with hexadecimal or some type of encoded
+cryptographic strings (public keys). This has proven to be secure as well
+as it helps in hiding one’s identity from going public. But in some
+Applications users are required to do KYC, provide their identity in order
+to use some applications. In this case we need a protocol which can
+automatically fetch data from Blockchain with user’s permission and prove
+their identity and still provide privacy support for users so that their
+data is not public on-chain by encrypting their data. This is the problem
+we are trying to solve.
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
