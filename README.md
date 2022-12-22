@@ -1,4 +1,8 @@
-#About the project
+# 
+
+
+About the project
+
 There are many use cases associated with Blockchain Technology like
 finance, NFT, Domain services, payments etc. But almost everything on
 Blockchain is done anonymously with hexadecimal or some type of encoded
