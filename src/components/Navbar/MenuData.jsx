@@ -6,16 +6,23 @@ export const MenuData = [
     icon: "fa-solid fa-house",
   },
   {
-    title: "Blog",
+    title: "View Identity",
+    url: "/ViewIdentity",
+    cName: "nav-links",
+    icon: "fas fa-fingerprint",
+  },
+
+  {
+    title: "Lite paper",
     url: "/blog",
     cName: "nav-links",
     icon: "fa-solid fa-pen",
   },
-
   {
     title: "Design",
     url: "/design",
     cName: "nav-links",
-    icon: "fa-solid fa-pen-ruler",
+    icon: "fas fa-drafting-compass",
   },
+ 
 ];

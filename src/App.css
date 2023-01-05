@@ -69,3 +69,14 @@ a {
 balance-button:hover {
     color: white;
 }
+
+
+input{
+    background:lightskyblue;
+    color:black;
+    font-family:"Roboto mono ", monospace;
+    font-weight:bolder;
+    width:300px;
+    height:30px;
+    border-radius:1em
+}

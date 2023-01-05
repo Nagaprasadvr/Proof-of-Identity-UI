@@ -11,6 +11,7 @@ import Design from './components/DesignPage/DesignPage';
 import { PhantomWalletAdapter, BackpackWalletAdapter } from '@solana/wallet-adapter-wallets';
 import React from 'react';
 import { useMemo } from 'react';
+import { ViewIdentity } from './components/ViewIdentity/ViewIdentity';
 require('bootstrap/dist/css/bootstrap.min.css');
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                             <Route path="/" element={<Home />}></Route>
                             <Route path="/design" element={<Design />}></Route>
                             <Route path="/blog" element={<Blog />}></Route>
+                            <Route path="/ViewIdentity" element={<ViewIdentity />}></Route>
                         </Routes>
                     </div>
                 </WalletModalProvider>
