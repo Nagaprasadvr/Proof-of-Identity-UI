@@ -34,7 +34,7 @@
   margin-top: 10px;
   display: grid;
   grid-template-columns: repeat(5, auto);
-  grid-gap: 10px;
+  grid-gap: 5px;
   list-style: none;
   align-items: center;
   text-align: center;
