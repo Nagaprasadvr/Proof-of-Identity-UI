@@ -11,6 +11,7 @@ export const Blog = () => {
                 scrolling="auto"
                 height="800px"
                 width="100%"
+                style={{marginTop:"10px"}}
             ></iframe>
         </div>
     );
