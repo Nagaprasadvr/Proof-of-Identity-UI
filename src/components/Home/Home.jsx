@@ -58,7 +58,7 @@ export const Home = () => {
                             Check {wallet.adapter.name} Wallet Balance
                         </button>
                     </div>
-                    {balance ? (
+                    {balance && (
                         <div className="w3-animate-opacity" style={{ marginTop: '20px' }}>
                             <h1>
                                 <b>
@@ -66,10 +66,6 @@ export const Home = () => {
                                     {balance / Web3.LAMPORTS_PER_SOL} Sol
                                 </b>
                             </h1>
-                        </div>
-                    ) : (
-                        <div>
-                            <h1>...</h1>
                         </div>
                     )}
                 </div>

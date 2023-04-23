@@ -10,9 +10,9 @@ export const DesignPage = () => {
         width="1000px"
         height="600"
         src="https://miro.com/app/live-embed/uXjVPEyIqc0=/?moveToViewport=-3142,-1542,2300,1087&embedId=50722394489"
-        frameborder="0"
+        frameBorder="0"
         scrolling="no"
-        allowfullscreen
+        allowFullscreen
       ></iframe>
       <br></br>
       <br></br>
