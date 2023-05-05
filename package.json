@@ -15,6 +15,7 @@
         "tsconfig.json"
     ],
     "scripts": {
+        "start": "",
         "clean": "shx mkdir -p build lib && shx rm -rf build lib",
         "dev": "react-app-rewired start",
         "build": "react-app-rewired build",
