@@ -16,7 +16,7 @@ export const Navbar = () => {
                 className="fa-solid fa-fingerprint"
                 style={{ color: "white", paddingRight: "15px" }}
               ></i>
-              ChainTAG
+              Proof-Of-Identity
             </p>
           </div>
         </div>
