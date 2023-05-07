@@ -7,6 +7,10 @@ import { useState } from "react";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { registerCoreBlocks } from "@quillforms/react-renderer-utils";
+import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
+import welcome from "../Images/welcome.jpg"
+
+
 registerCoreBlocks();
 
 // registerCoreBlocks();
@@ -23,9 +27,9 @@ export const InputForm = () => {
             <Modal open={open} onClose={handleClose} style={{ borderRadius: "50px" }}>
                 <Box>
                     {
-                        open && (<div style={{ width: "100%", height: "100vh" }}>
-
-                            <Form
+                        open && (<div style={{ width: "90%", height: "80vh", marginLeft: "5%", marginTop: "10vh" }}>
+                            <DisabledByDefaultRoundedIcon onClick={handleClose} style={{ backgroundColor: "white", color: "black", fontSize: "6vh", float: "right" }}></DisabledByDefaultRoundedIcon>
+                            <Form style={{ zIndex: "0" }}
                                 formId="1"
                                 formObj={{
                                     blocks: [
@@ -135,25 +139,53 @@ export const InputForm = () => {
                                                         required: true,
                                                         placeholder: "India"
                                                     }
+                                                }, {
+                                                    id: "2esad013a",
+                                                    name: "email",
+                                                    attributes: {
+                                                        label: "Email",
+                                                        required: true,
+                                                        placeholder: "Write your email here!"
+                                                    }
+                                                }, {
+                                                    name: "date",
+                                                    id: "a213rsew",
+                                                    attributes: {
+                                                        required: true,
+                                                        label: "Please type your birth of date!"
+                                                    }
                                                 }
                                             ]
                                         }, {
-                                            id: "2esad013a",
-                                            name: "email",
+                                            name: "short-text",
+                                            id: "a213rsep",
                                             attributes: {
-                                                label: "Email",
-                                                required: true,
-                                                placeholder: "Write your email here!"
+                                                label: "Enter your Aadhar SSN number or any type of Identity number recognized by Government"
                                             }
-                                        }, {
-                                            name: "date",
-                                            id: "a213rsew",
+                                        },
+                                        {
+                                            id: "1dsdf12k",
+                                            name: "group",
                                             attributes: {
-                                                required: true,
-                                                label: "Please type your birth of date!"
-                                            }
-                                        }, {
+                                                label: "Govenment Id's",
+                                                description: "enter your present address"
+                                            },
+                                            innerBlocks: [
+                                                {
+                                                    name: "short-text",
+                                                    id: "a213rsem",
+                                                    attributes: {
+                                                        label: "Enter your Aadhar Number"
+                                                    }
+                                                }, {
+                                                    name: "short-text",
+                                                    id: "a213rsen",
+                                                    attributes: {
+                                                        label: "Enter your Passport ID"
+                                                    }
+                                                },
 
+                                            ]
                                         }
 
 
@@ -193,7 +225,9 @@ export const InputForm = () => {
                             />
                         </div>)
                     }
+
                 </Box>
+
             </Modal>
         </>
     );
