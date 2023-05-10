@@ -7,6 +7,10 @@ import { useState } from "react";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { registerCoreBlocks } from "@quillforms/react-renderer-utils";
+import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
+import welcome from "../Images/welcome.jpg"
+
+
 registerCoreBlocks();
 
 export const InputForm = () => {
@@ -137,8 +141,7 @@ export const InputForm = () => {
                                                         }
                                                     }
                                                 ]
-                                            },
-                                            {
+                                            }, {
                                                 id: "2esad013a",
                                                 name: "email",
                                                 attributes: {
@@ -153,7 +156,14 @@ export const InputForm = () => {
                                                     required: true,
                                                     label: "Please type your birth of date!"
                                                 }
-                                            },
+                                            }, {
+
+                                            }
+
+
+
+
+
 
                                         ],
                                         settings: {
@@ -192,7 +202,9 @@ export const InputForm = () => {
                                 />
                             </Box>)
                     }
+
                 </Box>
+
             </Modal>
         </>
     );
