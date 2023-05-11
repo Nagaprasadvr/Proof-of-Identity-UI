@@ -13,6 +13,8 @@ import React from 'react';
 import { useMemo } from 'react';
 import { ViewIdentity } from './components/ViewIdentity/ViewIdentity';
 import Navigation from './components/Navbar/Navigation';
+import BundlrUpload from "./components/BundlrUpload/BundlrUpload"
+import { Box } from '@mui/material';
 require('bootstrap/dist/css/bootstrap.min.css');
 
 function App() {
@@ -29,21 +31,20 @@ function App() {
 
     return (
         <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets} autoConnect>
+            <WalletProvider wallets={wallets}>
                 <WalletModalProvider>
-                    <div>
-                        {/* <div style={{ height: '150px' }}>
+                    <Box>
+                        <Box style={{ height: '150px' }}>
                             <Navbar />
-                        </div> */}
-                        <Navigation></Navigation>
+                        </Box>
 
                         <Routes>
                             <Route path="/" element={<Home />}></Route>
                             <Route path="/design" element={<Design />}></Route>
                             <Route path="/blog" element={<Blog />}></Route>
-                            <Route path="/ViewIdentity" element={<ViewIdentity />}></Route>
+                            <Route path="/ViewIdentity" element={<BundlrUpload />}></Route>
                         </Routes>
-                    </div>
+                    </Box>
                 </WalletModalProvider>
             </WalletProvider>
         </ConnectionProvider>

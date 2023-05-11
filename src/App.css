@@ -6,10 +6,12 @@
     justify-content: center;
     position: relative;
 }
+
 * {
     margin: 0;
     box-sizing: border-box;
 }
+
 .App-logo {
     height: 40vmin;
     pointer-events: none;
@@ -40,6 +42,7 @@
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
@@ -66,15 +69,16 @@ a {
     width: 350px;
     border-radius: 8px;
 }
-balance-button:hover {
+
+.balance-button:hover {
     color: white;
 }
 
 
-input{
-    background:lightskyblue;
-    color:black;
-    font-family:"Roboto mono ", monospace;
-    font-weight:bolder;
+input {
+    background: lightskyblue;
+    color: black;
+    font-family: "Roboto mono ", monospace;
+    font-weight: bolder;
 
 }

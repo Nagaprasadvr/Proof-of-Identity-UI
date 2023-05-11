@@ -1,9 +1,10 @@
 import React from 'react';
+import { Box } from '@mui/material';
 import '../../App.css';
 
 export const Blog = () => {
     return (
-        <div className="App">
+        <Box className="App">
             <iframe
                 title="blog"
                 src="./blog.pdf"
@@ -11,8 +12,8 @@ export const Blog = () => {
                 scrolling="auto"
                 height="800px"
                 width="100%"
-                style={{marginTop:"10px"}}
+                style={{ marginTop: "10px" }}
             ></iframe>
-        </div>
+        </Box>
     );
 };

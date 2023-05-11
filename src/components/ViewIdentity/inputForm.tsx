@@ -3,6 +3,7 @@ import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import * as sdk from "../../digitalIdentity/js/src/generated/"
 import { useWallet } from "@solana/wallet-adapter-react";
 import * as Buffer from "buffer"
+import { Box } from '@mui/material';
 export const InputPubkey = () => {
   const [pubkey, setPubkey] = useState<string>("")
   const wallet = useWallet();
@@ -37,20 +38,20 @@ export const InputPubkey = () => {
   }
 
   return (
-    <div>
+    <Box>
       <label style={{ color: "lightskyblue", fontSize: "30px", fontWeight: "bolder" }}>
         Enter your solana Pubkey associated with the digital Identity
       </label>
-      <div style={{ marginTop: "20px" }} className="w3-animate-bottom" >
+      <Box style={{ marginTop: "20px" }} className="w3-animate-bottom" >
         <input type="text" style={{ color: "black", height: "50px", width: "600px", borderRadius: "0.5em", fontSize: "20px" }} placeholder="enter pubkey" onChange={onChange} suppressHydrationWarning={true} suppressContentEditableWarning={true}>
         </input>
-      </div>
-      <div className=" App w3-animate-bottom" style={{ marginTop: '20px', alignContent: 'center', }}>
+      </Box>
+      <Box className=" App w3-animate-bottom" style={{ marginTop: '20px', alignContent: 'center', }}>
         <button style={{ width: "100px" }} className="balance-button w3-btn w3-hover-white App " onClick={onSubmit}>
           submit
         </button>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 
 }
