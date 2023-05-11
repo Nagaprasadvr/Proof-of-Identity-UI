@@ -12,6 +12,7 @@ import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 import React from 'react';
 import { useMemo } from 'react';
 import { ViewIdentity } from './components/ViewIdentity/ViewIdentity';
+import Navigation from './components/Navbar/Navigation';
 require('bootstrap/dist/css/bootstrap.min.css');
 
 function App() {
@@ -31,9 +32,10 @@ function App() {
             <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
                     <div>
-                        <div style={{ height: '150px' }}>
+                        {/* <div style={{ height: '150px' }}>
                             <Navbar />
-                        </div>
+                        </div> */}
+                        <Navigation></Navigation>
 
                         <Routes>
                             <Route path="/" element={<Home />}></Route>

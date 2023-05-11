@@ -216,11 +216,13 @@ export const InputForm = () => {
                                         progressBarBgColor: "#ccc"
                                     }
                                 }}
+
                                 onSubmit={(data, { completeForm, setIsSubmitting }) => {
-                                    setTimeout(() => {
-                                        setIsSubmitting(false);
-                                        completeForm();
-                                    }, 500);
+                                    console.log(data)
+                                    // setTimeout(() => {
+                                    //     setIsSubmitting(false);
+                                    //     completeForm();
+                                    // }, 500);
                                 }}
                             />
                         </div>)

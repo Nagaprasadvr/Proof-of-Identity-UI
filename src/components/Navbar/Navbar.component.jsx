@@ -5,6 +5,7 @@ import { MenuData } from "./MenuData";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import "../../App.css";
 require("@solana/wallet-adapter-react-ui/styles.css");
+
 export const Navbar = () => {
   return (
     <div className="w3-animate-opacity App">
