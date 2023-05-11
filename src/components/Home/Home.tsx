@@ -9,20 +9,23 @@ export const Home = () => {
     const rpc = new Web3.Connection(Web3.clusterApiUrl('devnet'));
 
     const { publicKey, wallet } = useWallet();
-    const [balance, setBalance] = useState(null);
+    const [balance, setBalance] = useState<number | null>(null);
 
     useEffect(() => {
         setBalance(null);
     }, [publicKey]);
     const checkBalance = () => {
-        rpc.getBalance(publicKey).then((balance) => {
-            setBalance(balance);
-        });
+        if (publicKey) {
+            rpc.getBalance(publicKey).then((balance) => {
+                setBalance(balance);
+            });
+        }
+
     };
 
     return (
         <Box className="App">
-            {publicKey ? (
+            {publicKey && wallet ? (
                 <Box className="App">
                     <h1 className="w3-animate-opacity">
                         <b>Create your Digital fingerprint on Solana chain!</b>

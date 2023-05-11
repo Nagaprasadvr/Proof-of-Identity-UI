@@ -7,8 +7,6 @@ import { useState } from "react";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { registerCoreBlocks } from "@quillforms/react-renderer-utils";
-import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
-import welcome from "../Images/welcome.jpg"
 
 
 registerCoreBlocks();
@@ -30,7 +28,7 @@ export const InputForm = () => {
                             <Box width={600} height={600} style={{ borderRadius: "4rem", "borderColor": "lightskyblue" }}>
                                 <Form
 
-                                    formId="1"
+                                    formId={1987}
                                     formObj={{
                                         blocks: [
                                             {
@@ -84,8 +82,8 @@ export const InputForm = () => {
                                                 id: "1dsdf12e",
                                                 name: "group",
                                                 attributes: {
-                                                    label: "Your Resedential Address.."
-                                                    , description: "enter your present address"
+                                                    label: "Your Resedential Address..",
+                                                    description: "enter your present address"
                                                 },
                                                 innerBlocks: [
                                                     {
@@ -115,7 +113,7 @@ export const InputForm = () => {
                                                             placeholder: "Tumkur"
                                                         }
                                                     }, {
-
+                                                        id: "2aedfce",
                                                         name: "short-text",
                                                         attributes: {
                                                             label: " State/Region/Province",
@@ -156,15 +154,7 @@ export const InputForm = () => {
                                                     required: true,
                                                     label: "Please type your birth of date!"
                                                 }
-                                            }, {
-
-                                            }
-
-
-
-
-
-
+                                            },
                                         ],
                                         settings: {
                                             animationDirection: "vertical",
@@ -172,7 +162,6 @@ export const InputForm = () => {
                                             disableNavigationArrows: false,
                                             disableProgressBar: false,
                                             showQuestionsNumbers: true,
-
                                         },
                                         theme: {
                                             font: "Roboto",
@@ -190,16 +179,13 @@ export const InputForm = () => {
                                             progressBarFillColor: "lightskyblue",
                                             progressBarBgColor: "lightskyblue"
                                         }
-
-
                                     }}
                                     onSubmit={(data, { completeForm, setIsSubmitting }) => {
                                         setTimeout(() => {
                                             setIsSubmitting(false);
                                             completeForm();
                                         }, 500);
-                                    }}
-                                />
+                                    }} applyLogic={false} isPreview={false} />
                             </Box>)
                     }
 
