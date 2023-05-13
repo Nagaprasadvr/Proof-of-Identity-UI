@@ -38,7 +38,7 @@ export const Home = () => {
             {publicKey && wallet ? (
                 <Box className="App">
                     <h1 className="w3-animate-opacity">
-                        <b>Create your Digital fingerprint on Solana chain!</b>
+                        <b >Create your Digital fingerprint on Solana chain!</b>
                     </h1>
 
                     <Box className="w3-animate-opacity w3-jumbo">
@@ -62,13 +62,13 @@ export const Home = () => {
                             height: '60px',
                         }}
                     >
-                        <h1 style={{ color: 'lightskyblue', alignContent: 'center', fontSize: '28px' }}>
+                        <h2 className='w3-animate-opacity'>
                             <b>Connected to {wallet.adapter.name}!</b>
-                        </h1>
+                        </h2>
                     </Box>
 
                     <Box className="w3-animate-bottom" style={{ marginTop: '20px', alignContent: 'center' }}>
-                        <button className="balance-button w3-btn w3-hover-white App " onClick={airdropSol}>
+                        <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white App " onClick={airdropSol}>
                             Airdrop Devnet Sol
                         </button>
                     </Box>

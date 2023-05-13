@@ -82,3 +82,8 @@ input {
     font-weight: bolder;
 
 }
+
+h1:hover,
+h2:hover {
+    color: white;
+}
