@@ -13,7 +13,8 @@ import React from 'react';
 import { useMemo } from 'react';
 import { ViewIdentity } from './components/ViewIdentity/ViewIdentity';
 import Navigation from './components/Navbar/Navigation';
-import BundlrUpload from "./components/BundlrUpload/BundlrUpload"
+import BundlrUpload from "./components/BundlrUpload/BundlrUpload";
+
 import { Box } from '@mui/material';
 require('bootstrap/dist/css/bootstrap.min.css');
 

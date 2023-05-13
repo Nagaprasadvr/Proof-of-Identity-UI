@@ -6,10 +6,9 @@ import "@quillforms/renderer-core/build-style/style.css";
 import { useState } from "react";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import { registerCoreBlocks } from "@quillforms/react-renderer-utils";
 import CancelIcon from '@mui/icons-material/Cancel';
 
-interface User {
+interface UserData {
     name: string,
     authority: string,
     contactNumber: string,
@@ -18,39 +17,54 @@ interface User {
     panNumber: string,
     aadharNumber: string,
     passportId: string,
-    passportAttached: boolean,
-    aadharAttached: boolean,
-    panAttached: boolean,
-    picAttached: boolean
+    // passportAttached: boolean,
+    // aadharAttached: boolean,
+    // panAttached: boolean,
+    // picAttached: boolean
 
 }
 
-function initializeUser(props: Object) {
-                console.log(props)
-    
-}
 
 
-registerCoreBlocks();
+
+
 
 export const InputForm = () => {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState<boolean>(false);
+    const [data, setData] = useState<UserData | null>(null)
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
 
+    const setUserData = (inputData: any) => {
+        const answers: any = inputData?.answers;
+        const userData: UserData = {
+            name: answers?.street.value as string,
+            authority: answers?.wallet_add.value as string,
+            contactNumber: answers?.phnum.value as string,
+            dob: answers?.DOB.value as string,
+            residenceAddress: answers?.country?.value as string,
+            panNumber: answers?.pan.value as string,
+            aadharNumber: answers?.id_number.value as string,
+            passportId: answers?.passport_id?.value as string
+        }
+
+        setData(userData)
+
+        console.log("data:", userData)
+
+    }
     return (
         <>
             <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white" onClick={handleOpen}>Create Identity</button>
 
-            <Modal open={open} onClose={handleClose} style={{width: "100vw", height: "100vh"}}>
+            <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh" }}>
                 <Box className="App" >
                     {
                         open && (
-                            <Box style={{  width: "100vw", height: "100vh" }}>
-                                <Box style={{ backgroundColor: "black" }}><button style={{ backgroundColor: "transparent", borderColor: "transparent"}}  onClick={handleClose}><CancelIcon style={{color: "lightskyblue",fontSize: "50px"}}></CancelIcon></button></Box>
+                            <Box style={{ width: "100vw", height: "100vh" }}>
+                                <Box style={{ backgroundColor: "black" }}><button style={{ backgroundColor: "transparent", borderColor: "transparent" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button></Box>
                                 <Form
-
                                     formId={1987}
                                     formObj={{
                                         blocks: [
@@ -140,7 +154,8 @@ export const InputForm = () => {
                                                             label: "zip / Post code",
                                                             required: true,
                                                             max: "10",
-                                                            placeholder: "572102"
+                                                            placeholder: "572102",
+                                                            min: 6
                                                         }
                                                     }, {
                                                         id: "country",
@@ -150,16 +165,17 @@ export const InputForm = () => {
                                                             required: true,
                                                             placeholder: "India"
                                                         }
-                                                    },{
-                                                name: "number",
-                                                id: "phnum",
-                                                attributes: {
-                                                    label: "Enter your Phone Number...",
-                                                    required: true,
+                                                    }, {
+                                                        name: "number",
+                                                        id: "phnum",
+                                                        attributes: {
+                                                            label: "Enter your Phone Number...",
+                                                            required: true,
 
-                                                    "max": 10
-                                                }
-                                            },
+                                                            max: 10,
+                                                            min: 10
+                                                        }
+                                                    },
                                                 ]
                                             }, {
                                                 id: "email",
@@ -167,24 +183,17 @@ export const InputForm = () => {
                                                 attributes: {
                                                     label: "Email",
                                                     required: true,
-                                                    placeholder: "Write your email here!"
+                                                    placeholder: "Type your email here!"
                                                 }
                                             }, {
                                                 name: "date",
                                                 id: "DOB",
                                                 attributes: {
                                                     required: true,
-                                                    label: "Please type your birth of date!"
+                                                    label: "Date of Birth!"
                                                 }
-                                            }, {
-                                                name: "short-text",
-                                                id: "govid",
-                                                attributes: {
-                                                    required: true,
-                                                    label: "Enter your Aadhar/SSN number or any type of Identity number recognized by government",
-                                                    placeholder: "Enter your identity"
-                                                }
-                                            }, {
+                                            },
+                                            {
                                                 id: "1dsdf12xx",
                                                 name: "group",
                                                 attributes: {
@@ -194,17 +203,26 @@ export const InputForm = () => {
                                                 innerBlocks: [
                                                     {
                                                         name: "short-text",
+                                                        id: "id_number",
+                                                        attributes: {
+                                                            required: true,
+                                                            label: "Enter your Aadhar/SSN number or any type of Identity number recognized by government",
+                                                            placeholder: "Enter your identity"
+                                                        }
+                                                    },
+                                                    {
+                                                        name: "short-text",
                                                         id: "pan",
                                                         attributes: {
                                                             required: true,
-                                                            label: "Enter your PAN number..",   
+                                                            label: "Enter your PAN number..",
                                                         }
-                                                    },{
+                                                    }, {
                                                         name: "short-text",
                                                         id: "passport_id",
                                                         attributes: {
                                                             required: true,
-                                                            label: "Enter your PASSPORT number..",   
+                                                            label: "Enter your PASSPORT number..",
                                                         }
                                                     },
 
@@ -233,10 +251,11 @@ export const InputForm = () => {
                                             errorsBgColor: "#f00",
                                             progressBarFillColor: "lightskyblue",
                                             progressBarBgColor: "lightskyblue"
-                                        }
+                                        },
+
                                     }}
                                     onSubmit={(data, { completeForm, setIsSubmitting }) => {
-                                        initializeUser(data)
+                                        setUserData(data)
                                         setTimeout(() => {
                                             setIsSubmitting(false);
                                             completeForm();
