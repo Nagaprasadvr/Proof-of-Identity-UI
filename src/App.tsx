@@ -14,6 +14,7 @@ import { useMemo } from 'react';
 import { ViewIdentity } from './components/ViewIdentity/ViewIdentity';
 import BundlrUpload from "./components/BundlrUpload/BundlrUpload"
 import { Box } from '@mui/material';
+import { SnackbarProvider } from 'notistack';
 require('bootstrap/dist/css/bootstrap.min.css');
 
 function App() {
@@ -29,24 +30,26 @@ function App() {
     );
 
     return (
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets}>
-                <WalletModalProvider>
-                    <Box>
-                        <Box style={{ height: '150px' }}>
-                            <Navbar />
-                        </Box>
+        <SnackbarProvider>
+            <ConnectionProvider endpoint={endpoint}>
+                <WalletProvider wallets={wallets}>
+                    <WalletModalProvider>
+                        <Box>
+                            <Box style={{ height: '150px' }}>
+                                <Navbar />
+                            </Box>
 
-                        <Routes>
-                            <Route path="/" element={<Home />}></Route>
-                            <Route path="/design" element={<Design />}></Route>
-                            <Route path="/blog" element={<Blog />}></Route>
-                            <Route path="/ViewIdentity" element={<BundlrUpload />}></Route>
-                        </Routes>
-                    </Box>
-                </WalletModalProvider>
-            </WalletProvider>
-        </ConnectionProvider>
+                            <Routes>
+                                <Route path="/" element={<Home />}></Route>
+                                <Route path="/design" element={<Design />}></Route>
+                                <Route path="/blog" element={<Blog />}></Route>
+                                <Route path="/ViewIdentity" element={<BundlrUpload />}></Route>
+                            </Routes>
+                        </Box>
+                    </WalletModalProvider>
+                </WalletProvider>
+            </ConnectionProvider>
+        </SnackbarProvider>
     );
 }
 
