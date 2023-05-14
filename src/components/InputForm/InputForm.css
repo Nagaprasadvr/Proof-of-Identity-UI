@@ -9,3 +9,11 @@
 .inputButton:hover {
   background-color: lightskyblue;
 }
+
+button p {
+  color: white;
+}
+
+.render-core-html-parser{
+  color: red;
+}

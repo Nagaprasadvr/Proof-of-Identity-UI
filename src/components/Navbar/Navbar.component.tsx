@@ -6,6 +6,7 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { Box } from '@mui/material';
 import "../../App.css";
 require("@solana/wallet-adapter-react-ui/styles.css");
+
 export const Navbar = () => {
   return (
     <Box className="w3-animate-opacity App">
