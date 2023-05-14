@@ -25,18 +25,20 @@ interface User {
 
 }
 
-function initializeUser(props: Object) {
-                console.log(props)
-    
-}
+
 
 
 registerCoreBlocks();
 
 export const InputForm = () => {
     const [open, setOpen] = useState(false);
+    const [user, setUser] = useState(null);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    function initializeUser(prop: Object) {
+        console.log(prop)
+    }
 
 
     return (
