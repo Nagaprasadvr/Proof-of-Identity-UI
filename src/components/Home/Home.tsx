@@ -1,25 +1,35 @@
 import React from 'react';
 import { InputForm } from '../InputForm/InputForm';
 import '../../App.css';
-import { useState, useEffect } from 'react';
 import * as Web3 from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Box } from '@mui/material';
+import { closeSnackbar, enqueueSnackbar } from 'notistack';
 export const Home = () => {
     const rpc = new Web3.Connection(Web3.clusterApiUrl('devnet'));
 
     const { publicKey, wallet } = useWallet();
-    const [balance, setBalance] = useState<number | null>(null);
 
-    useEffect(() => {
-        setBalance(null);
-    }, [publicKey]);
-    const checkBalance = () => {
-        if (publicKey) {
-            rpc.getBalance(publicKey).then((balance) => {
-                setBalance(balance);
-            });
+    const airdropSol = async () => {
+        const id = enqueueSnackbar("Airdrop in progress...", { variant: "info", persist: true })
+        try {
+            if (publicKey) {
+
+                const sig = await rpc.requestAirdrop(publicKey, Web3.LAMPORTS_PER_SOL * 1);
+                await rpc.confirmTransaction(sig);
+
+            }
+            closeSnackbar(id);
+            enqueueSnackbar("Airdrop Success", { variant: "success", })
+
         }
+        catch (e) {
+            closeSnackbar(id);
+            console.error(e)
+            enqueueSnackbar("Airdrop Failed", { variant: "error" })
+
+        }
+
 
     };
 
@@ -28,7 +38,7 @@ export const Home = () => {
             {publicKey && wallet ? (
                 <Box className="App">
                     <h1 className="w3-animate-opacity">
-                        <b>Create your Digital fingerprint on Solana chain!</b>
+                        <b >Create your Digital fingerprint on Solana chain!</b>
                     </h1>
 
                     <Box className="w3-animate-opacity w3-jumbo">
@@ -52,26 +62,16 @@ export const Home = () => {
                             height: '60px',
                         }}
                     >
-                        <h1 style={{ color: 'lightskyblue', alignContent: 'center', fontSize: '28px' }}>
+                        <h2 className='w3-animate-opacity'>
                             <b>Connected to {wallet.adapter.name}!</b>
-                        </h1>
+                        </h2>
                     </Box>
 
                     <Box className="w3-animate-bottom" style={{ marginTop: '20px', alignContent: 'center' }}>
-                        <button className="balance-button w3-btn w3-hover-white App " onClick={checkBalance}>
-                            Check {wallet.adapter.name} Wallet Balance
+                        <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white App " onClick={airdropSol}>
+                            Airdrop Devnet Sol
                         </button>
                     </Box>
-                    {balance && (
-                        <Box className="w3-animate-opacity" style={{ marginTop: '20px' }}>
-                            <h1>
-                                <b>
-                                    Your Solana {wallet.adapter.name} wallet balance on devent is :{' '}
-                                    {balance / Web3.LAMPORTS_PER_SOL} Sol
-                                </b>
-                            </h1>
-                        </Box>
-                    )}
                 </Box>
             ) : (
                 <Box className="App" style={{ height: '300px' }}>
