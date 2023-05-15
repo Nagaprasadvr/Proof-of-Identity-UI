@@ -49,7 +49,7 @@ export const verifyProofsInstructionDiscriminator = [
  */
 export function createVerifyProofsInstruction(
   accounts: VerifyProofsInstructionAccounts,
-  programId = new web3.PublicKey('4HYr7M3ytiSoqr3Zh3iK1VcNNm7ZgrNikwmWYJdGMvw4')
+  programId = new web3.PublicKey('72K1fxmt2ZGRqT68uhwQBQU2Syjj9JzgWAfzpsxNUL1w')
 ) {
   const [data] = verifyProofsStruct.serialize({
     instructionDiscriminator: verifyProofsInstructionDiscriminator,

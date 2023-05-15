@@ -47,7 +47,7 @@ export const verifyIdentityInstructionDiscriminator = [
  */
 export function createVerifyIdentityInstruction(
   accounts: VerifyIdentityInstructionAccounts,
-  programId = new web3.PublicKey('4HYr7M3ytiSoqr3Zh3iK1VcNNm7ZgrNikwmWYJdGMvw4')
+  programId = new web3.PublicKey('72K1fxmt2ZGRqT68uhwQBQU2Syjj9JzgWAfzpsxNUL1w')
 ) {
   const [data] = verifyIdentityStruct.serialize({
     instructionDiscriminator: verifyIdentityInstructionDiscriminator,

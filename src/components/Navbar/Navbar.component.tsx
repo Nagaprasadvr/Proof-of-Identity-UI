@@ -36,7 +36,7 @@ export const Navbar = () => {
           <WalletMultiButton
             style={{
               fontFamily: "Roboto Mono,monospace",
-              fontWeight: "bolder",
+              fontWeight: "bold",
               fontSize: "18px",
               backgroundColor: "white",
               color: "lightskyblue",

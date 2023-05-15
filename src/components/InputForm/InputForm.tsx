@@ -7,56 +7,109 @@ import { useState } from "react";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import CancelIcon from '@mui/icons-material/Cancel';
-
+import * as solana from "@solana/web3.js"
+import * as digitalIdentity from "../../digitalIdentity/js/src/generated";
+import * as anchor from "@project-serum/anchor"
+import toast from "react-hot-toast"
+import { useWallet } from "@solana/wallet-adapter-react";
+import { closeSnackbar, enqueueSnackbar } from "notistack";
 interface UserData {
     name: string,
-    authority: string,
     contactNumber: string,
     dob: string,
     residenceAddress: string,
     panNumber: string,
     aadharNumber: string,
     passportId: string,
-    // passportAttached: boolean,
-    // aadharAttached: boolean,
-    // panAttached: boolean,
-    // picAttached: boolean
-
-
 }
 
 
 
-
-
-
 export const InputForm = () => {
+    const solWallet = useWallet();
     const [open, setOpen] = useState<boolean>(false);
-    const [data, setData] = useState<UserData | null>(null)
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    function initializeUser(prop: Object) {
-        console.log(prop)
-    }
 
 
     const setUserData = (inputData: any) => {
         const answers: any = inputData?.answers;
         const userData: UserData = {
-            name: answers?.street.value as string,
-            authority: answers?.wallet_add.value as string,
-            contactNumber: answers?.phnum.value as string,
-            dob: answers?.DOB.value as string,
-            residenceAddress: answers?.country?.value as string,
-            panNumber: answers?.pan.value as string,
-            aadharNumber: answers?.id_number.value as string,
-            passportId: answers?.passport_id?.value as string
+            name: answers?.street.value.toString(),
+            contactNumber: (answers?.phnum.value as number).toString() as string,
+            dob: answers?.DOB.value.toString(),
+            residenceAddress: answers?.country?.value.toString(),
+            panNumber: answers?.pan.value.toString(),
+            aadharNumber: answers?.id_number.value.toString(),
+            passportId: answers?.passport_id?.value.toString()
         }
 
-        setData(userData)
+
 
         console.log("data:", userData)
+        return userData;
+
+    }
+
+
+    const createIdentity = async (toastId: string, data: UserData) => {
+        toast.dismiss(toastId)
+        const rpcCon = new solana.Connection(solana.clusterApiUrl("devnet"))
+        console.log("calling")
+        const id = toast.loading("Creating Digital Identity...")
+        try {
+
+            console.log("inside try")
+            if (solWallet?.publicKey) {
+                console.log("inisde")
+                const [identityPda, pdaBump] = solana.PublicKey.findProgramAddressSync([
+                    Buffer.from("dig_identity"),
+                    solWallet?.publicKey?.toBuffer()
+                ], digitalIdentity.PROGRAM_ID)
+                console.log("pda:", identityPda.toBase58())
+                const createDigitalIdentityAccounts: digitalIdentity.CreateIdentityInstructionAccounts = {
+                    digIdentityAcc: identityPda,
+                    systemProgram: solana.SystemProgram.programId,
+                    authority: solWallet.publicKey
+
+                }
+                const test: digitalIdentity.DigitalIdentityParam = { name: "harsha", contactNumber: "98762518326", dob: "25-09-2001", residenceAddress: "tumkur", panNumber: "kadh96y29", aadharNumber: "9187987dhjao", passportId: "2oehiy992" }
+                const args: digitalIdentity.CreateIdentityInstructionArgs = {
+                    createIdentityParams: data as UserData
+                }
+                const ix0 = digitalIdentity.createCreateIdentityInstruction(createDigitalIdentityAccounts, args);
+                if (solWallet.signTransaction) {
+                    console.log("inx")
+                    console.log("inx:", ix0)
+                    const tx0 = new solana.Transaction().add(ix0);
+                    tx0.recentBlockhash = (await rpcCon.getLatestBlockhash()).blockhash
+                    tx0.feePayer = solWallet.publicKey
+                    // const signedTx0 = await solWallet.signTransaction(tx0);
+                    console.log("sending tx")
+                    const signature = await solWallet.sendTransaction(tx0, rpcCon);
+                    if (signature) {
+                        const txSig = `https://explorer.solana.com/tx/${signature} `
+                        toast.dismiss(id)
+                        toast.success(<>
+                            <Box>
+                                <p style={{ color: "black" }}>Digital Identity has been created Successfully with tx</p>
+                                <a href={txSig}>Tx</a>
+                            </Box>
+                        </>)
+                    }
+
+                }
+
+
+            }
+
+        }
+        catch (e) {
+            toast.dismiss(id);
+            toast.error("Digital identity creation failed")
+            console.error(e)
+        }
 
     }
     return (
@@ -252,20 +305,28 @@ export const InputForm = () => {
                                             answersColor: "lightskyblue",
                                             buttonsFontColor: "white",
                                             buttonsBorderRadius: 25,
-                                            errorsFontColor: "#fff",
-                                            errorsBgColor: "#f00",
+                                            errorsFontColor: "lightsky",
+                                            errorsBgColor: "white",
                                             progressBarFillColor: "lightskyblue",
                                             progressBarBgColor: "lightskyblue"
                                         },
 
                                     }}
-                                    onSubmit={(data, { completeForm, setIsSubmitting }) => {
-                                        setUserData(data)
-                                        setTimeout(() => {
-                                            setIsSubmitting(false);
-                                            completeForm();
-                                        }, 500);
-                                    }} applyLogic={false} isPreview={false} />
+                                    onSubmit={async (data, { completeForm, setIsSubmitting }) => {
+
+
+
+
+                                        // setIsSubmitting(false);
+                                        completeForm();
+                                        const userData = setUserData(data);
+                                        const id = toast.loading("loading")
+                                        setTimeout(async () => {
+
+                                            await createIdentity(id, userData)
+                                        }, 3000)
+
+                                    }} applyLogic={true} isPreview={false} />
                             </Box>)
                     }
 
