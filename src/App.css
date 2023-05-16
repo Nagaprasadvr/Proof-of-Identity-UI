@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    color: lightskyblue;
 }
 
 * {
@@ -53,6 +54,7 @@ h3,
 h4,
 h5,
 p,
+b,
 a {
     font-family: 'Roboto Mono', monospace;
     color: lightskyblue;
@@ -80,4 +82,10 @@ input {
     font-family: "Roboto mono ", monospace;
     font-weight: bolder;
 
+}
+
+h1:hover,
+h2:hover,
+b:hover {
+    color: white;
 }

@@ -115,7 +115,7 @@ export class DigitalIdentity implements DigitalIdentityArgs {
    */
   static gpaBuilder(
     programId: web3.PublicKey = new web3.PublicKey(
-      '4HYr7M3ytiSoqr3Zh3iK1VcNNm7ZgrNikwmWYJdGMvw4'
+      '72K1fxmt2ZGRqT68uhwQBQU2Syjj9JzgWAfzpsxNUL1w'
     )
   ) {
     return beetSolana.GpaBuilder.fromStruct(programId, digitalIdentityBeet)

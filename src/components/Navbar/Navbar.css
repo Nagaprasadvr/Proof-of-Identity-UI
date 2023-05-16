@@ -6,15 +6,13 @@
   align-items: center;
   align-content: center;
   justify-content: space-evenly;
-  width: 95%;
+  width: 98%;
   height: 80px;
   border-radius: 13px;
-
   top: 20px;
-
   box-shadow: 0 5px 15px black;
 
-  position: relative;
+  position: sticky;
 }
 
 .logo {
