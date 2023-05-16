@@ -5,6 +5,7 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import { registerCoreBlocks } from "@quillforms/react-renderer-utils";
+import { Toaster } from 'react-hot-toast';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 registerCoreBlocks();

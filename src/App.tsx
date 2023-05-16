@@ -35,14 +35,16 @@ function App() {
     );
 
     return (
-        <SnackbarProvider>
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets}>
-                <WalletModalProvider>
-                    <Box>
-                        <Box style={{ height: '150px' }}>
-                            <Navibar />
-                        </Box>
+        <>
+
+            <ConnectionProvider endpoint={endpoint}>
+                <WalletProvider wallets={wallets}>
+                    <WalletModalProvider>
+                        <Toaster position='bottom-left' />
+                        <Box>
+                            <Box style={{ height: '150px' }}>
+                                <Navibar />
+                            </Box>
 
                             <Routes>
                                 <Route path="/" element={<Home />}></Route>
@@ -54,7 +56,7 @@ function App() {
                     </WalletModalProvider>
                 </WalletProvider>
             </ConnectionProvider>
-        </SnackbarProvider>
+        </>
     );
 }
 

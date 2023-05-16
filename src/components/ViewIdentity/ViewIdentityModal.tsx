@@ -12,8 +12,6 @@ interface ViewIdentityModalProps {
 const ViewIdentityModal = ({ handleClose, open, data }: ViewIdentityModalProps
 ) => {
 
-
-
     return (
         <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black" }}>
             <Box>
@@ -34,12 +32,22 @@ const ViewIdentityModal = ({ handleClose, open, data }: ViewIdentityModalProps
                     </Typography>
 
                     <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        panNumber:{data.panNumber}
+                        panNumber:{data.panNumber.toString()}
                     </Typography>
 
                     <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        passportNumber:{data.passportId}
+                        picUploaded:{data.picAttached.toString()}
                     </Typography>
+                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
+                        passportUploaded:{data.passportAttached.toString()}
+                    </Typography>
+                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
+                        panUploaded:{data.panAttached.toString()}
+                    </Typography>
+                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
+                        aadharUploaded:{data.aadharAttached.toString()}
+                    </Typography>
+
                 </Box>
 
 
