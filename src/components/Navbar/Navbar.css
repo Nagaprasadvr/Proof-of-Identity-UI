@@ -1,4 +1,4 @@
-.navbar {
+/* .navbar {
   background-color: lightskyblue;
   color: white;
   display: flex;
@@ -61,4 +61,13 @@
   color: lightskyblue;
   border-radius: 4px;
   transition: all 0.2s ease-in-out;
+} */
+
+.container-fluid{
+  display: flex;
+  justify-content: space-around;
+}
+
+*{
+  color: white;
 }

@@ -1,5 +1,5 @@
 import './App.css';
-import { Navbar } from './components/Navbar/Navbar.component';
+import { Navibar } from './components/Navbar/Navbar.component';
 import { Blog } from './components/Blog/blog';
 import { Home } from './components/Home/Home';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
@@ -34,7 +34,7 @@ function App() {
                 <WalletModalProvider>
                     <Box>
                         <Box style={{ height: '150px' }}>
-                            <Navbar />
+                            <Navibar />
                         </Box>
 
                         <Routes>
