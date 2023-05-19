@@ -16,7 +16,7 @@ const ViewIdentityModal = ({ handleClose, open, data }: ViewIdentityModalProps
         <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black" }}>
             <Box>
                 <Box style={{ backgroundColor: "black" }}>
-                    <button style={{ backgroundColor: "transparent", borderColor: "transparent" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
+                    <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
                 </Box>
                 <Box sx={{ color: "lightskyblue", display: "flex", flexDirection: "column", justifyContent: "center", alignContent: "center", width: "100vw", height: "100vh", }}>
                     <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>

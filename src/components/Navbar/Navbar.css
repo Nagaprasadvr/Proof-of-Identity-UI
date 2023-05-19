@@ -61,11 +61,25 @@
   transition: all 0.2s ease-in-out;
 } */
 
-.container-fluid{
+.container-fluid {
   display: flex;
   justify-content: space-around;
 }
 
-*{
+/* *{
   color: white;
+} */
+
+.nav-menu {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  grid-gap: 5px;
+  list-style: none;
+  align-items: center;
+  text-align: center;
+  justify-content: space-evenly;
+  font-size: 20px;
+  font-weight: bolder;
+  margin-right: 10px;
 }

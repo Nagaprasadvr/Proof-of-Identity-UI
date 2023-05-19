@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../../App"
 import "./InputForm.css";
 import "@quillforms/renderer-core/build-style/style.css";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -12,7 +12,7 @@ import * as digitalIdentity from "../../digitalIdentity/js/src/generated";
 import * as anchor from "@project-serum/anchor"
 import toast from "react-hot-toast"
 import { useWallet } from "@solana/wallet-adapter-react";
-import { closeSnackbar, enqueueSnackbar } from "notistack";
+import { Typography } from "@mui/material";
 interface UserData {
     name: string,
     contactNumber: string,
@@ -28,10 +28,54 @@ interface UserData {
 export const InputForm = () => {
     const solWallet = useWallet();
     const [open, setOpen] = useState<boolean>(false);
-    const handleOpen = () => setOpen(true);
+    const handleOpen = () => {
+        if (isExists) {
+            toast.error("Digital Identity Already Exists, You cannoy create more than one Identity")
+            return
+
+        }
+        else if (!isExists) {
+            setOpen(true)
+        }
+    }
+
     const handleClose = () => setOpen(false);
+    const [isExists, setIsExist] = useState<boolean>(false);
+    const rpcCon = useMemo(() => {
+        return new solana.Connection(solana.clusterApiUrl("devnet"))
 
+    }, [])
 
+    console.log("isExist:", isExists)
+    useEffect(() => {
+        const checkIdentityAlreadyExists = async () => {
+            if (solWallet?.publicKey) {
+                console.log("firing")
+                const [identityPda, pdaBump] = solana.PublicKey.findProgramAddressSync([Buffer.from("dig_identity"), solWallet.publicKey?.toBuffer()], digitalIdentity.PROGRAM_ID);
+                console.log("idenpda:", identityPda.toBase58())
+                try {
+                    console.log("inside try")
+                    const identityAcc = await digitalIdentity.DigitalIdentity.fromAccountAddress(rpcCon, identityPda);
+                    console.log("idne:", identityAcc)
+                    if (identityAcc) {
+                        setIsExist(true)
+                    }
+
+                }
+                catch (e) {
+                    console.log("error")
+                    setIsExist(false)
+                    console.error(e)
+                }
+
+            }
+
+        }
+        if (solWallet && rpcCon) {
+            checkIdentityAlreadyExists()
+        }
+
+    }, [rpcCon, solWallet])
 
     const setUserData = (inputData: any) => {
         const answers: any = inputData?.answers;
@@ -55,7 +99,7 @@ export const InputForm = () => {
 
     const createIdentity = async (toastId: string, data: UserData) => {
         toast.dismiss(toastId)
-        const rpcCon = new solana.Connection(solana.clusterApiUrl("devnet"))
+
         console.log("calling")
         const id = toast.loading("Creating Digital Identity...")
         try {
@@ -74,7 +118,7 @@ export const InputForm = () => {
                     authority: solWallet.publicKey
 
                 }
-                const test: digitalIdentity.DigitalIdentityParam = { name: "harsha", contactNumber: "98762518326", dob: "25-09-2001", residenceAddress: "tumkur", panNumber: "kadh96y29", aadharNumber: "9187987dhjao", passportId: "2oehiy992" }
+
                 const args: digitalIdentity.CreateIdentityInstructionArgs = {
                     createIdentityParams: data as UserData
                 }
@@ -329,6 +373,7 @@ export const InputForm = () => {
                                     }} applyLogic={true} isPreview={false} />
                             </Box>)
                     }
+
 
                 </Box>
 

@@ -14,7 +14,6 @@ import { useMemo } from 'react';
 import { ViewIdentity } from './components/ViewIdentity/ViewIdentity';
 import BundlrUpload from "./components/BundlrUpload/BundlrUpload"
 import { Box } from '@mui/material';
-import { SnackbarProvider } from 'notistack';
 import { Toaster } from 'react-hot-toast';
 import './App.css';
 require('bootstrap/dist/css/bootstrap.min.css');
@@ -40,7 +39,7 @@ function App() {
             <ConnectionProvider endpoint={endpoint}>
                 <WalletProvider wallets={wallets}>
                     <WalletModalProvider>
-                        <Toaster position='bottom-left' />
+                        <Toaster position='bottom-left' toastOptions={{ style: { color: "black", backgroundColor: "lightskyblue" } }} />
                         <Box>
                             <Box style={{ height: '150px' }}>
                                 <Navibar />
