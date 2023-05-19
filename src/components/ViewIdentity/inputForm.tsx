@@ -9,7 +9,8 @@ import toast from "react-hot-toast"
 import ViewIdentityModal from "./ViewIdentityModal";
 export const InputPubkey = () => {
   const [open, setOpen] = useState<boolean>(false)
-  const [digIdentityAcc, setDigIdentityAcc] = useState<sdk.DigitalIdentity | null>(null)
+  const [digIdentityAcc, setDigIdentityAcc] = useState<sdk.DigitalIdentity | null>(null);
+  const [digitalIdentityPda, setDigIdentityPda] = useState<string>("")
   const [pubkey, setPubkey] = useState<string>("")
   const wallet = useWallet();
 
@@ -69,6 +70,7 @@ export const InputPubkey = () => {
           // console.log(`https://explorer.solana.com/address/${txHash}`)
           toast.dismiss(id);
           setDigIdentityAcc(acc)
+          setDigIdentityPda(digitalPdaAcc.toBase58())
           setOpen(!open)
 
         }
@@ -99,7 +101,7 @@ export const InputPubkey = () => {
           submit
         </button>
       </Box>
-      {open && digIdentityAcc && (<ViewIdentityModal open={open} data={digIdentityAcc} handleClose={handleClose} />)}
+      {open && digIdentityAcc && (<ViewIdentityModal open={open} data={digIdentityAcc} digitalIdentityPda={digitalIdentityPda} handleClose={handleClose} pubkey={pubkey} />)}
     </Box>
   );
 
