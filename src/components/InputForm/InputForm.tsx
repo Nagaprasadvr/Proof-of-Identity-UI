@@ -160,7 +160,7 @@ export const InputForm = () => {
         <>
             <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white" onClick={handleOpen}>Create Identity</button>
 
-            <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh" }}>
+            <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100%" }}>
                 <Box className="App" >
                     {
                         open && (

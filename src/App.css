@@ -12,17 +12,6 @@
     box-sizing: border-box;
 }
 
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
-}
-
 .App-header {
     background-color: #282c34;
     min-height: 100vh;
@@ -88,4 +77,17 @@ h1:hover,
 h2:hover,
 b:hover {
     color: white;
+}
+
+/* Customize the scrollbar for the entire page */
+::-webkit-scrollbar {
+    width: 5px;
+    /* Set the width of the scrollbar */
+}
+
+/* Customize the thumb (the part that you drag) */
+::-webkit-scrollbar-thumb {
+    background-color: #7e67bd;
+    /* Set the color of the thumb */
+
 }

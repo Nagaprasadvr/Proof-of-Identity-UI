@@ -41,7 +41,7 @@ function App() {
                     <WalletModalProvider>
                         <Toaster position='bottom-left' toastOptions={{ style: { color: "black", backgroundColor: "lightskyblue" } }} />
                         <Box>
-                            <Box style={{ height: '150px' }}>
+                            <Box>
                                 <Navibar />
                             </Box>
 
