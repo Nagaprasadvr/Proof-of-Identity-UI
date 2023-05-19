@@ -80,10 +80,10 @@ export const InputForm = () => {
     const setUserData = (inputData: any) => {
         const answers: any = inputData?.answers;
         const userData: UserData = {
-            name: answers?.street.value.toString(),
+            name: answers?.name.value.toString(),
             contactNumber: (answers?.phnum.value as number).toString() as string,
             dob: answers?.DOB.value.toString(),
-            residenceAddress: answers?.country?.value.toString(),
+            residenceAddress: answers?.address.value.toString(),
             panNumber: answers?.pan.value.toString(),
             aadharNumber: answers?.id_number.value.toString(),
             passportId: answers?.passport_id?.value.toString()
@@ -186,113 +186,32 @@ export const InputForm = () => {
                                             },
                                             {
                                                 name: "short-text",
-                                                id: "wallet_add",
-                                                attributes: {
-                                                    // attachment: {
-                                                    //     type: "image",
-                                                    //     url:
-                                                    //         "https://quillforms.com/wp-content/uploads/2022/10/ludovic-migneault-B9YbNbaemMI-unsplash_50-scaled.jpeg"
-                                                    // },
-                                                    // layout: "split-right",
-                                                    required: true,
-                                                    label: "Your Solana Wallet Address (Pubkey) ?",
-                                                    description: "please enter a valid Solana address!",
-                                                }
-                                            },
-                                            {
-                                                name: "short-text",
-                                                id: "url",
+                                                id: "name",
                                                 attributes: {
                                                     required: true,
-                                                    label: "Enter your Sol NameService domain if any..."
-                                                }
-                                            },
-                                            {
-                                                id: "1dsdf12e",
-                                                name: "group",
-                                                attributes: {
-                                                    label: "Your Resedential Address..",
-                                                    description: "enter your present address"
-                                                },
-                                                innerBlocks: [
-                                                    {
-                                                        id: "street",
-                                                        name: "short-text",
-                                                        attributes: {
-                                                            label: "address",
-                                                            required: true,
-                                                            placeholder: "Street and cross"
-                                                        }
-                                                    },
-                                                    {
-                                                        id: "area",
-                                                        name: "short-text",
-                                                        attributes: {
-                                                            label: "Address Line 2",
-                                                            required: true,
-                                                            placeholder: "Area and Post"
-                                                        }
-                                                    },
-                                                    {
-                                                        id: "city",
-                                                        name: "short-text",
-                                                        attributes: {
-                                                            label: "City/Town",
-                                                            required: true,
-                                                            placeholder: "Tumkur"
-                                                        }
-                                                    }, {
-                                                        id: "state",
-                                                        name: "short-text",
-                                                        attributes: {
-                                                            label: " State/Region/Province",
-                                                            required: true,
-                                                            placeholder: "Karnataka"
-                                                        }
-                                                    }, {
-                                                        id: "zip",
-                                                        name: "number",
-                                                        attributes: {
-                                                            label: "zip / Post code",
-                                                            required: true,
-                                                            max: "10",
-                                                            placeholder: "572102",
-                                                            min: 6
-                                                        }
-                                                    }, {
-                                                        id: "country",
-                                                        name: "short-text",
-                                                        attributes: {
-                                                            label: "Country",
-                                                            required: true,
-                                                            placeholder: "India"
-                                                        }
-                                                    }, {
-                                                        name: "number",
-                                                        id: "phnum",
-                                                        attributes: {
-                                                            label: "Enter your Phone Number...",
-                                                            required: true,
-
-                                                            max: 10,
-                                                            min: 10
-                                                        }
-                                                    },
-                                                ]
-                                            }, {
-                                                id: "email",
-                                                name: "email",
-                                                attributes: {
-                                                    label: "Email",
-                                                    required: true,
-                                                    placeholder: "Type your email here!"
+                                                    label: "Enter your Name"
                                                 }
                                             }, {
                                                 name: "date",
                                                 id: "DOB",
                                                 attributes: {
-                                                    required: true,
-                                                    label: "Date of Birth!"
+                                                    label: "Enter your date of birth",
+                                                    required: true
+                                               }
+                                            },
+                                            {
+                                                id: "address",
+                                                name: "short-text",
+                                                attributes: {
+                                                    label: "Your Resedential Address..",
+                                                    description: "enter your present address"
+                                                }
+                                            }, {
+                                                id: "phnum",
+                                                name: "number",
+                                                attributes: {
+                                                    label: "Enter your phone number",
+                                                    required: true
                                                 }
                                             },
                                             {
