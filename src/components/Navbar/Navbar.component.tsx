@@ -1,7 +1,7 @@
 import React from "react";
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
- 
+
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { MenuData } from "./MenuData";
@@ -14,16 +14,16 @@ require("@solana/wallet-adapter-react-ui/styles.css");
 
 export const Navibar = () => {
   return (
-    <Navbar bg="light" expand="lg" style={{zIndex: "999"}}>
+    <Navbar expand="lg" style={{ zIndex: "999", backgroundColor: "lightskyblue", marginLeft: "20px", marginTop: "20px", marginRight: "20px", borderRadius: "1rem" }}>
       <Container>
-          <Navbar.Brand href="#home" style={{width: "30vh"}}>
-            <i
-                className="fa-solid fa-fingerprint"
-                style={{ color: "black", paddingRight: "15px" }}
-              ></i> {' '}
-            Proof-of-Identity
-          </Navbar.Brand>
-         {/* <div style={{width: "70vw"}}> */}
+        <Navbar.Brand href="#home" style={{ width: "30vh" }}>
+          <i
+            className="fa-solid fa-fingerprint"
+            style={{ color: "white", paddingRight: "15px" }}
+          ></i> {' '}
+          Proof-of-Identity
+        </Navbar.Brand>
+        {/* <div style={{width: "70vw"}}> */}
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -32,26 +32,26 @@ export const Navibar = () => {
             navbarScroll
           >
             {MenuData.map((menu, index) => {
-            return (
-              <Nav.Link key={index}>
-                <Link to={menu.url} className={menu.cName} style={{marginLeft: "2vw", marginRight: "2vw"}}>
-                  <i className={menu.icon} style={{ paddingRight: "10px", color: "black" }}></i>
-                  {menu.title}
-                </Link>
-              </Nav.Link>
-            );
-          })}
-             <WalletMultiButton
-            style={{
-              fontFamily: "Roboto Mono,monospace",
-              fontWeight: "bold",
-              fontSize: "18px",
-              backgroundColor: "white",
-              width: "15vh",
-              color: "lightskyblue",
-            }}
+              return (
+                <Nav.Link key={index}>
+                  <Link to={menu.url} className={menu.cName} style={{ marginLeft: "2vw", marginRight: "2vw" }}>
+                    <i className={menu.icon} style={{ paddingRight: "10px", color: "black" }}></i>
+                    {menu.title}
+                  </Link>
+                </Nav.Link>
+              );
+            })}
+            <WalletMultiButton
+              style={{
+                fontFamily: "Roboto Mono,monospace",
+                fontWeight: "bold",
+                fontSize: "18px",
+                backgroundColor: "white",
+
+                color: "lightskyblue",
+              }}
             />
-            
+
           </Nav>
         </Navbar.Collapse>
         {/* </div> */}

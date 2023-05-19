@@ -3,7 +3,6 @@ import { InputForm } from '../InputForm/InputForm';
 import * as Web3 from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Box } from '@mui/material';
-import { closeSnackbar, enqueueSnackbar } from 'notistack';
 import toast, { Toaster } from 'react-hot-toast';
 import '../../App.css';
 export const Home = () => {
