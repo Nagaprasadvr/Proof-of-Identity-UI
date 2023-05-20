@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { Modal, Box, Typography } from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import * as digitalIdentity from "../../digitalIdentity/js/src/generated";
@@ -11,6 +11,9 @@ import { PhantomWalletName } from "@solana/wallet-adapter-wallets";
 import { useWallet } from "@solana/wallet-adapter-react";
 import fileReaderStream from "filereader-stream";
 import { PublicKey } from "@solana/web3.js";
+import { toast } from "react-hot-toast";
+import * as solana from "@solana/web3.js"
+import { sleep } from "@bundlr-network/client/build/cjs/common/upload";
 
 interface ViewIdentityModalProps {
     handleClose: () => void,
@@ -20,17 +23,25 @@ interface ViewIdentityModalProps {
     digitalIdentityPda: string
 
 }
+
+interface fileObj {
+    filename: string,
+    file: File
+}
 const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda }: ViewIdentityModalProps
 ) => {
-    const [fileArray, setFileArray] = useState([]);
+    const [fileArray, setFileArray] = useState<File[]>([]);
     const [pic, setPic] = useState<File | null>(null);
     const [passport, setPassport] = useState<File | null>(null);
     const [pan, setPan] = useState<File | null>(null);
     const [aadhar, setAadhar] = useState<File | null>(null);
     const [bundlr, setBundlr] = useState<WebBundlr>();
+    const [arweaveUploads, setArweaveUploads] = useState<string[]>([])
+    const rpcCon = new solana.Connection(solana.clusterApiUrl("devnet"))
 
+    console.log("rpcCon:", rpcCon)
     const walletProvider = useWallet();
-
+    console.log("acc:", data.authority.toBase58())
     useEffect(() => {
         const getBundlrInstance = async () => {
             try {
@@ -59,12 +70,97 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         try {
             console.log(bundlr)
             if (bundlr) {
-                const dataStream = fileReaderStream(pic);
-                const tx = await bundlr.upload(dataStream, {
-                    tags: [{ name: "Content-Type", value: "pptx" }],
-                });
-                console.log(tx);
-                console.log(`File uploaded ==> https://arweave.net/${tx.id}`);
+                if (pic && aadhar && passport && pan) {
+
+                    const arweaveLinks: string[] = []
+                    let uploadCount = 0
+                    const fileArray: fileObj[] = [{ filename: "pan", file: pan }, { filename: "aadhar", file: aadhar }, { filename: "passport", file: passport }, { filename: "pic", file: pic }]
+                    for (const fileObj of fileArray) {
+                        const id = toast.loading(`Uploading ${fileObj.filename} to Arweave..`)
+                        try {
+                            const dataStream = fileReaderStream(fileObj.file);
+
+                            const tx = await bundlr.upload(dataStream, {
+                                tags: [{ name: "Content-Type", value: (pic as File).type }],
+                            });
+                            console.log(tx);
+                            console.log(`File uploaded ==> https://arweave.net/${tx.id}`);
+                            const link = `https://arweave.net/${tx.id}`
+                            toast.dismiss(id);
+                            toast.success(`${fileObj.filename} upload Success`)
+                            arweaveUploads.push(link);
+                            uploadCount++;
+                        }
+                        catch (e) {
+                            toast.dismiss(id)
+                            toast.error(`${fileObj.filename} Upload Failed`)
+                            console.error(e)
+                        }
+
+                    }
+                    toast.success(`${uploadCount} files uploaded to Arweave Successfully`);
+
+                    if (uploadCount === 4 && walletProvider?.publicKey) {
+                        setArweaveUploads(arweaveLinks);
+                        //smart contract call
+                        const id = toast.loading("Creating Proofs Account");
+                        try {
+                            const [digitalIdentityAcc, bump1] = PublicKey.findProgramAddressSync([Buffer.from("dig_identity"), walletProvider?.publicKey.toBuffer()], digitalIdentity.PROGRAM_ID)
+                            const [digitalProofsAcc, bump2] = PublicKey.findProgramAddressSync([Buffer.from("dig_proof"), digitalIdentityAcc.toBuffer()], digitalIdentity.PROGRAM_ID);
+                            const proofsAccount: digitalIdentity.CreateProofsInstructionAccounts = {
+                                digIdentityAcc: digitalIdentityAcc,
+                                authority: walletProvider?.publicKey,
+                                digProofsAcc: digitalProofsAcc,
+                                systemProgram: solana.SystemProgram.programId
+
+                            }
+                            const proofsAccArgs: digitalIdentity.CreateProofsInstructionArgs = {
+                                createProofsParam: {
+                                    panUpload: arweaveUploads[0],
+                                    aadharUpload: arweaveUploads[1],
+                                    passportUpload: arweaveUploads[2],
+                                    pictureUpload: arweaveUploads[3],
+                                }
+
+                            }
+                            const ix0 = digitalIdentity.createCreateProofsInstruction(proofsAccount, proofsAccArgs);
+
+                            if (walletProvider.signTransaction) {
+                                const tx0 = new solana.Transaction().add(ix0);
+
+                                tx0.recentBlockhash = (await rpcCon.getLatestBlockhash()).blockhash
+                                tx0.feePayer = walletProvider.publicKey
+                                // const signedTx0 = await walletProvider.signTransaction(tx0);
+                                console.log("sending tx");
+
+                                const signature = await walletProvider.sendTransaction(tx0, rpcCon);
+                                // const signature = solana.sendAndConfirmTransaction(rpcCon, signedTx0, [walletProvider.wallet as solana.Signer])
+                                if (signature) {
+                                    const txSig = `https://explorer.solana.com/tx/${signature} `
+                                    toast.dismiss(id)
+                                    toast.success(<>
+                                        <Box>
+                                            <p style={{ color: "black" }}>Digital Proofs Account has been created Successfully with tx</p>
+                                            <a href={txSig}>Tx</a>
+                                        </Box>
+                                    </>)
+                                }
+
+                            }
+                        }
+                        catch (e) {
+                            toast.dismiss(id);
+                            toast.error(" proofs Account creation failed")
+                        }
+
+                    }
+
+
+                }
+                else {
+                    toast.error("upload all assets to create Proofs Account")
+                }
+
             }
         }
         catch (e) {
@@ -100,7 +196,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         if (pic && pan && passport && aadhar) {
             // console.log('Selected files:', pic, pan, passport, aadhar);
             const newArray = [...fileArray, pic, pan, passport, aadhar];
-            console.log(newArray[0]);
+            console.log(newArray[0])
 
 
             // Perform file upload logic here
@@ -157,16 +253,19 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                         <Box>
                             <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
                                 passportUploaded:{data.passportAttached.toString()}
-                            </Typography>{!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}</Box>
+                            </Typography>{!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
+                        </Box>
                         <Box>
                             <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
                                 panUploaded:{data.panAttached.toString()}
-                            </Typography>{!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}</Box>
+                            </Typography>{!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
+                        </Box>
 
                         <Box>
                             <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
                                 aadharUploaded:{data.aadharAttached.toString()}
-                            </Typography>{!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}</Box>
+                            </Typography>{!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
+                        </Box>
                         <button type="submit" onClick={() => uploadFile()}>Upload</button>
                     </form>
 
