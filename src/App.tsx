@@ -16,6 +16,7 @@ import BundlrUpload from "./components/BundlrUpload/BundlrUpload"
 import { Box } from '@mui/material';
 import { Toaster } from 'react-hot-toast';
 import './App.css';
+import Navigation from './components/Navbar/Navigation';
 require('bootstrap/dist/css/bootstrap.min.css');
 
 function App() {
@@ -39,10 +40,11 @@ function App() {
             <ConnectionProvider endpoint={endpoint}>
                 <WalletProvider wallets={wallets}>
                     <WalletModalProvider>
-                        <Toaster position='bottom-left' toastOptions={{ style: { color: "black", backgroundColor: "lightskyblue" } }} />
+                        <Toaster position='bottom-left' toastOptions={{ style: { color: "black", backgroundColor: "lightskyblue", width: "100vw" } }} />
                         <Box>
                             <Box>
-                                <Navibar />
+                                {/* <Navibar /> */}
+                                <Navigation></Navigation>
                             </Box>
 
                             <Routes>

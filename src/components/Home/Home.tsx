@@ -42,7 +42,7 @@ export const Home = () => {
     return (
         <Box className="App">
             {publicKey && wallet ? (
-                <Box className="App" sx={{ gap: "25px", marginTop: "10vh" }}>
+                <Box className="App" sx={{ gap: "25px", marginTop: "20vh", width: "100vw" }}>
                     <h1 className="w3-animate-opacity">
                         <b >Create your Digital fingerprint on Solana chain!</b>
                     </h1>
@@ -72,12 +72,14 @@ export const Home = () => {
                     </Box>
                 </Box>
             ) : (
-                <Box className="w3-animate-opacity" sx={{ marginTop: "10vh" }} >
-                    <h1 >
-                        <b>Connect your Wallet!</b>
-                    </h1>
-                </Box>
+                <Box className="w3-animate-opacity App" sx={{
+                    marginTop: "20vh", width: "100vw"
+                }} >
+                    <h1>
+                        <b> Connect your Wallet!</b>
+                    </h1 >
+                </Box >
             )}
-        </Box>
+        </Box >
     );
 };
