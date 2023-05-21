@@ -5,6 +5,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { Box } from '@mui/material';
 import toast, { Toaster } from 'react-hot-toast';
 import '../../App.css';
+import RsaEncryption from '../Crypto/Crypto';
 export const Home = () => {
     const rpc = new Web3.Connection(Web3.clusterApiUrl('devnet'));
 
@@ -41,7 +42,7 @@ export const Home = () => {
     return (
         <Box className="App">
             {publicKey && wallet ? (
-                <Box className="App" sx={{ gap: "25px" }}>
+                <Box className="App" sx={{ gap: "25px", marginTop: "10vh" }}>
                     <h1 className="w3-animate-opacity">
                         <b >Create your Digital fingerprint on Solana chain!</b>
                     </h1>
@@ -51,6 +52,9 @@ export const Home = () => {
                     </Box>
                     <Box className="w3-animate-top">
                         <InputForm />
+                    </Box>
+                    <Box className="w3-animate-top">
+                        <RsaEncryption />
                     </Box>
                     <Box
                         className="w3-animate-opacity center"
@@ -68,7 +72,7 @@ export const Home = () => {
                     </Box>
                 </Box>
             ) : (
-                <Box className="w3-animate-opacity" >
+                <Box className="w3-animate-opacity" sx={{ marginTop: "10vh" }} >
                     <h1 >
                         <b>Connect your Wallet!</b>
                     </h1>

@@ -1,5 +1,10 @@
-Box{
-    display:flex;
+Box {
+    display: flex;
     justify-content: space-between;
     flex-direction: row;
+}
+
+
+a:hover {
+    color: aqua
 }

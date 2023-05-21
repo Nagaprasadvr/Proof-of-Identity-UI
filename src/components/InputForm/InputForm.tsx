@@ -30,7 +30,7 @@ export const InputForm = () => {
     const [open, setOpen] = useState<boolean>(false);
     const handleOpen = () => {
         if (isExists) {
-            toast.error("Digital Identity Already Exists, You cannoy create more than one Identity")
+            toast.error("Digital Identity Already Exists, You cannot create more than one Identity")
             return
 
         }
@@ -71,11 +71,11 @@ export const InputForm = () => {
             }
 
         }
-        if (solWallet && rpcCon) {
+        if (solWallet.publicKey && rpcCon) {
             checkIdentityAlreadyExists()
         }
 
-    }, [rpcCon, solWallet])
+    }, [rpcCon, solWallet.publicKey])
 
     const setUserData = (inputData: any) => {
         const answers: any = inputData?.answers;
@@ -197,7 +197,7 @@ export const InputForm = () => {
                                                 attributes: {
                                                     label: "Enter your date of birth",
                                                     required: true
-                                               }
+                                                }
                                             },
                                             {
                                                 id: "address",
