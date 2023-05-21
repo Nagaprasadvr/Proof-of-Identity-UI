@@ -4,7 +4,7 @@ import '../../App.css';
 
 export const Blog = () => {
     return (
-        <Box className="App">
+        <Box className="App" sx={{width: "100vw", height: "100vh"}}>
             <iframe
                 title="blog"
                 src="./blog.pdf"

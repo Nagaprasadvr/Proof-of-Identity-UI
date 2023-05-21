@@ -67,12 +67,16 @@ const Navigation = (props:any) => {
         <div className={classes.root}>
             <HideOnScroll {...props}>
                  
-                    <AppBar>
-                        <Toolbar>
-                            <Typography
+                    <AppBar style={{backgroundColor: "lightskyblue", position: "absolute", marginBottom: "20vh"}}>
+                    <Toolbar>
+                        <i
+                            className="fa-solid fa-fingerprint"
+                            style={{ color: "black", paddingRight: "15px" }}
+                        ></i> {' '}
+                        <Typography
+                            style={{color: "black"}}
                                 variant="h5"
                                 component="p"
-                                color="textSecondary"
                                 className={classes.title}
                             >
                                 Proof-of-Identity
@@ -108,7 +112,10 @@ const Navigation = (props:any) => {
                                             to="/"
                                         >
                                             <ListItemIcon>
-                                                <HomeIcon />
+                                            <i
+                                                className="fa-solid fa-house"
+                                                style={{ color: "black", paddingRight: "15px" }}
+                                            ></i> {' '}
                                         </ListItemIcon>
                                          
                                             <Typography variant="h6"> Home</Typography>
@@ -119,7 +126,10 @@ const Navigation = (props:any) => {
                                         to="/ViewIdentity"
                                         >
                                             <ListItemIcon>
-                                                <SchoolIcon />
+                                            <i
+                                                className="fas fa-fingerprint"
+                                                style={{ color: "black", paddingRight: "10px" }}
+                                            ></i>
                                             </ListItemIcon>
                                         <Typography variant="h6"> ViewIdentity </Typography>
                                         </MenuItem>
@@ -129,7 +139,10 @@ const Navigation = (props:any) => {
                                         to="/blog"
                                         >
                                             <ListItemIcon>
-                                                <PersonIcon />
+                                            <i
+                                                className="fa-solid fa-pen"
+                                                style={{ color: "black", paddingRight: "10px" }}
+                                            ></i> 
                                             </ListItemIcon>
                                         <Typography variant="h6">  blog</Typography>
                                         </MenuItem>
@@ -139,7 +152,10 @@ const Navigation = (props:any) => {
                                         to="/design"
                                         >
                                             <ListItemIcon>
-                                                <BookmarksIcon />
+                                            <i
+                                                className="fas fa-drafting-compass"
+                                                style={{ color: "black", paddingRight: "10px" }}
+                                            ></i>
                                             </ListItemIcon>
                                         <Typography variant="h6">Design </Typography>
                                             
@@ -169,8 +185,11 @@ const Navigation = (props:any) => {
                                         component={Link}
                                         to="/"
                                         color="default"
-                                    >
-                                        <HomeIcon />
+                                    > <i
+                                            className="fa-solid fa-house"
+                                        style={{ color: "black", paddingRight: "10px" }}
+                                    ></i>  
+                                         
                                         Home
                                     </Button>
                                     <Button
@@ -178,8 +197,11 @@ const Navigation = (props:any) => {
                                         component={Link}
                                         to="/ViewIdentity"
                                         color="default"
-                                    >
-                                        <SchoolIcon />
+                                    ><i
+                                            className="fas fa-fingerprint"
+                                        style={{ color: "black", paddingRight: "10px" }}
+                                    ></i>  
+                                         
                                         View Identity
                                     </Button>
                                     <Button
@@ -188,7 +210,10 @@ const Navigation = (props:any) => {
                                         to="/blog"
                                         color="default"
                                     >
-                                        <PersonIcon />
+                                        <i
+                                            className="fa-solid fa-pen"
+                                            style={{ color: "black", paddingRight: "10px" }}
+                                        ></i>  
                                         Blog
                                     </Button>
                                     <Button
@@ -197,7 +222,10 @@ const Navigation = (props:any) => {
                                         to="/design"
                                         color="default"
                                     >
-                                        <BookmarksIcon />
+                                        <i
+                                            className="fas fa-drafting-compass"
+                                            style={{ color: "black", paddingRight: "10px" }}
+                                        ></i>
                                         Design
                                     </Button>
                                     <WalletMultiButton
