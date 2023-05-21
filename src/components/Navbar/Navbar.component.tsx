@@ -34,7 +34,7 @@ export const Navibar = () => {
             {MenuData.map((menu, index) => {
               return (
                 <Nav.Link key={index}>
-                  <Link to={menu.url} className={menu.cName} style={{ marginLeft: "2vw", marginRight: "2vw", color: "black" }}>
+                  <Link to={menu.url} className={menu.cName} style={{ marginLeft: "3vw", marginRight: "3vw", color: "black" }}>
                     <i className={menu.icon} style={{ paddingRight: "10px", color: "black" }}></i>
                     {menu.title}
                   </Link>

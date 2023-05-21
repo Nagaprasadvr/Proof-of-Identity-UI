@@ -10,7 +10,8 @@ export const ViewIdentity = () => {
 
         <>
             {wallet.connected ? (
-                <Box className="w3-animate-opacity App" >
+                <Box className="w3-animate-opacity App" sx={{marginTop: "10vh"
+                }}>
                     <InputPubkey />
                 </Box >)
                 :

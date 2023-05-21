@@ -41,7 +41,7 @@ export const Home = () => {
     return (
         <Box className="App">
             {publicKey && wallet ? (
-                <Box className="App" sx={{ gap: "25px" }}>
+                <Box className="App" sx={{ gap: "25px", marginTop: "10vh", width: "100vw"}}>
                     <h1 className="w3-animate-opacity">
                         <b >Create your Digital fingerprint on Solana chain!</b>
                     </h1>
