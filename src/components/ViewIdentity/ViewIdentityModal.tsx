@@ -38,12 +38,47 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
     const [pan, setPan] = useState<File | null>(null);
     const [aadhar, setAadhar] = useState<File | null>(null);
     const [bundlr, setBundlr] = useState<WebBundlr>();
-    const [arweaveUploads, setArweaveUploads] = useState<string[]>([])
-    const rpcCon = new solana.Connection(solana.clusterApiUrl("devnet"))
+    const [arweaveUploads, setArweaveUploads] = useState<string[]>([]);
+    const [proofsCreated, setProofsCreated] = useState<boolean>(false);
+    const [digitalProofs, setDigitalProofs] = useState<digitalIdentity.DigitalProofs | null>(null);
+    const [digitalProofsPda, setDigitalProofsPda] = useState<string>("");
+    const rpcCon = useMemo(() => {
+        return new solana.Connection(solana.clusterApiUrl("devnet"))
+    }, [])
+    const arweaveLink = "https://arweave.net/"
 
-    console.log("rpcCon:", rpcCon)
+
     const walletProvider = useWallet();
-    console.log("acc:", data.authority.toBase58())
+    console.log("acc:", data.authority.toBase58());
+
+    useEffect(() => {
+        const getDigitalProofs = async () => {
+
+            try {
+                if (walletProvider?.publicKey) {
+                    const [digitalIdentityPda, bump1] = PublicKey.findProgramAddressSync([Buffer.from("dig_identity"), walletProvider?.publicKey.toBuffer()], digitalIdentity.PROGRAM_ID)
+                    const [digitalProofsPda, bump2] = PublicKey.findProgramAddressSync([Buffer.from("dig_proof"), digitalIdentityPda.toBuffer()], digitalIdentity.PROGRAM_ID);
+                    const digitalProofsAcc = await digitalIdentity.DigitalProofs.fromAccountAddress(rpcCon, digitalProofsPda);
+                    setDigitalProofs(digitalProofsAcc);
+                    setProofsCreated(true);
+                    setDigitalProofsPda(digitalProofsPda.toBase58())
+                    console.log("proofs:", digitalProofsAcc)
+                }
+
+            }
+            catch (e) {
+                console.error(e)
+            }
+
+        }
+
+        if (walletProvider.connected && data) {
+            getDigitalProofs()
+        }
+
+    }, [data, digitalIdentityPda, rpcCon, walletProvider.connected, walletProvider?.publicKey])
+
+
     useEffect(() => {
         const getBundlrInstance = async () => {
             try {
@@ -63,11 +98,14 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
             }
 
         }
+        if (walletProvider?.connected && digitalProofs === null)
+            getBundlrInstance()
+    }, [digitalProofs, walletProvider])
 
-        getBundlrInstance()
-    }, [walletProvider])
+
 
     const uploadFile = async () => {
+
         console.log("clicked")
         try {
             console.log(bundlr)
@@ -83,11 +121,11 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                             const dataStream = fileReaderStream(fileObj.file);
 
                             const tx = await bundlr.upload(dataStream, {
-                                tags: [{ name: "Content-Type", value: (pic as File).type }],
+                                tags: [{ name: "Content-Type", value: (fileObj.file as File).type }],
                             });
                             console.log(tx);
                             console.log(`File uploaded ==> https://arweave.net/${tx.id}`);
-                            const link = `https://arweave.net/${tx.id}`
+                            const link = `${tx.id}`
                             toast.dismiss(id);
                             toast.success(`${fileObj.filename} upload Success`)
                             arweaveUploads.push(link);
@@ -107,21 +145,22 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                         //smart contract call
                         const id = toast.loading("Creating Proofs Account");
                         try {
-                            const [digitalIdentityAcc, bump1] = PublicKey.findProgramAddressSync([Buffer.from("dig_identity"), walletProvider?.publicKey.toBuffer()], digitalIdentity.PROGRAM_ID)
-                            const [digitalProofsAcc, bump2] = PublicKey.findProgramAddressSync([Buffer.from("dig_proof"), digitalIdentityAcc.toBuffer()], digitalIdentity.PROGRAM_ID);
+                            const [digitalIdentityPda, bump1] = PublicKey.findProgramAddressSync([Buffer.from("dig_identity"), walletProvider?.publicKey.toBuffer()], digitalIdentity.PROGRAM_ID)
+                            const [digitalProofsPda, bump2] = PublicKey.findProgramAddressSync([Buffer.from("dig_proof"), digitalIdentityPda.toBuffer()], digitalIdentity.PROGRAM_ID);
                             const proofsAccount: digitalIdentity.CreateProofsInstructionAccounts = {
-                                digIdentityAcc: digitalIdentityAcc,
+                                digIdentityAcc: digitalIdentityPda,
                                 authority: walletProvider?.publicKey,
-                                digProofsAcc: digitalProofsAcc,
+                                digProofsAcc: digitalProofsPda,
                                 systemProgram: solana.SystemProgram.programId
 
                             }
+                            console.log("arveave uploads:", arweaveUploads)
                             const proofsAccArgs: digitalIdentity.CreateProofsInstructionArgs = {
                                 createProofsParam: {
-                                    panUpload: arweaveUploads[0],
-                                    aadharUpload: arweaveUploads[1],
-                                    passportUpload: arweaveUploads[2],
-                                    pictureUpload: arweaveUploads[3],
+                                    panUpload: arweaveUploads[0] as string,
+                                    aadharUpload: arweaveUploads[1] as string,
+                                    passportUpload: arweaveUploads[2] as string,
+                                    pictureUpload: arweaveUploads[3] as string,
                                 }
 
                             }
@@ -134,19 +173,29 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 tx0.feePayer = walletProvider.publicKey
                                 // const signedTx0 = await walletProvider.signTransaction(tx0);
                                 console.log("sending tx");
+                                try {
+                                    const signature = await walletProvider.sendTransaction(tx0, rpcCon);
+                                    // const signature = solana.sendAndConfirmTransaction(rpcCon, signedTx0, [walletProvider.wallet as solana.Signer])
+                                    if (signature) {
+                                        setProofsCreated(true);
+                                        const txSig = `https://explorer.solana.com/tx/${signature} `
+                                        toast.dismiss(id)
+                                        toast.success(<>
+                                            <Box>
+                                                <p style={{ color: "black" }}>Digital Proofs Account has been created Successfully with tx</p>
+                                                <a href={txSig}>Tx</a>
+                                            </Box>
+                                        </>)
+                                    }
 
-                                const signature = await walletProvider.sendTransaction(tx0, rpcCon);
-                                // const signature = solana.sendAndConfirmTransaction(rpcCon, signedTx0, [walletProvider.wallet as solana.Signer])
-                                if (signature) {
-                                    const txSig = `https://explorer.solana.com/tx/${signature} `
-                                    toast.dismiss(id)
-                                    toast.success(<>
-                                        <Box>
-                                            <p style={{ color: "black" }}>Digital Proofs Account has been created Successfully with tx</p>
-                                            <a href={txSig}>Tx</a>
-                                        </Box>
-                                    </>)
+
                                 }
+                                catch (e) {
+                                    toast.dismiss(id);
+                                    toast.error(" proofs Account creation failed")
+                                    console.error(e)
+                                }
+
 
                             }
                         }

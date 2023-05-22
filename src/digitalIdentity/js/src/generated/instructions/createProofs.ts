@@ -70,7 +70,7 @@ export const createProofsInstructionDiscriminator = [
 export function createCreateProofsInstruction(
   accounts: CreateProofsInstructionAccounts,
   args: CreateProofsInstructionArgs,
-  programId = new web3.PublicKey('72K1fxmt2ZGRqT68uhwQBQU2Syjj9JzgWAfzpsxNUL1w')
+  programId = new web3.PublicKey('4M2YyMwXqtZYGzaMd7U8gciyQT5B4BN1wMXpA2nQDb6o')
 ) {
   const [data] = createProofsStruct.serialize({
     instructionDiscriminator: createProofsInstructionDiscriminator,

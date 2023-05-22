@@ -68,7 +68,7 @@ export const createIdentityInstructionDiscriminator = [
 export function createCreateIdentityInstruction(
   accounts: CreateIdentityInstructionAccounts,
   args: CreateIdentityInstructionArgs,
-  programId = new web3.PublicKey('72K1fxmt2ZGRqT68uhwQBQU2Syjj9JzgWAfzpsxNUL1w')
+  programId = new web3.PublicKey('4M2YyMwXqtZYGzaMd7U8gciyQT5B4BN1wMXpA2nQDb6o')
 ) {
   const [data] = createIdentityStruct.serialize({
     instructionDiscriminator: createIdentityInstructionDiscriminator,

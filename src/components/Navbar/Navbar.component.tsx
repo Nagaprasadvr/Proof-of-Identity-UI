@@ -14,12 +14,12 @@ require("@solana/wallet-adapter-react-ui/styles.css");
 
 export const Navibar = () => {
   return (
-    <Navbar expand="lg"  sticky="top"  bg="light" style={{ zIndex: "999", width: "100vw" }} >
-      <Container>
+    <Navbar expand="lg" sticky="top" style={{ zIndex: "999", width: "100vw", backgroundColor: "lightskyblue" }} >
+      <Container >
         <Navbar.Brand href="#home" style={{ width: "30vh" }}>
           <i
             className="fa-solid fa-fingerprint"
-            style={{  color: "black", paddingRight: "15px" }}
+            style={{ color: "whitesmoke", paddingRight: "15px", }}
           ></i> {' '}
           Proof-of-Identity
         </Navbar.Brand>

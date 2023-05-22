@@ -15,7 +15,7 @@ export const ViewIdentity = () => {
                     <InputPubkey />
                 </Box >)
                 :
-                <Box className="w3-animate-opacity App" >
+                <Box className="w3-animate-opacity App" sx={{ marginTop: "20vh", width: "100vw" }} >
                     <h1 >
                         <b>Connect your Wallet!</b>
                     </h1>

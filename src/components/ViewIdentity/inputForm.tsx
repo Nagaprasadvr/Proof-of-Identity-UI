@@ -14,7 +14,7 @@ export const InputPubkey = () => {
   const [pubkey, setPubkey] = useState<string>("")
   const wallet = useWallet();
 
-
+  const rpcConn = new Connection(solana.clusterApiUrl("devnet"));
   useEffect(() => {
     if (wallet?.publicKey) {
       console.log("firing")
@@ -33,7 +33,22 @@ export const InputPubkey = () => {
 
   }
   const onSubmit = async () => {
-    const id = toast.loading("fetching Digital Identity")
+
+    try {
+      const publickey = new PublicKey(pubkey as string);
+      await rpcConn.getAccountInfo(publickey)
+      if (publickey.toBase58() !== wallet?.publicKey?.toBase58()) {
+        toast.error("Connect Account associated with input Pubkey");
+        return;
+      }
+    }
+    catch (e) {
+      console.error(e);
+      toast.error("Invalid Pubkey");
+      return;
+
+    }
+    const id = toast.loading("fetching Digital Identity");
 
     if (digIdentityAcc) {
       setTimeout(() => {
@@ -44,15 +59,19 @@ export const InputPubkey = () => {
 
     }
     else {
-
       try {
 
         if (wallet?.publicKey) {
 
           console.log(pubkey);
           // const conn = new Connection("http://127.0.0.1:8899");
-          const rpcConn = new Connection(solana.clusterApiUrl("devnet"))
-          const publickey = new PublicKey(pubkey as string);
+
+
+
+
+
+
+
           // const newP = new PublicKey("6DJX6MS53NdUCUM5pwUMNvSxssgLBCUGL7n9GwjAWSKb")
           // const auth = new PublicKey("Cwrg5APrLUcVyjCfZ8YjzpdmxH16PuLrxSNhfyeoLnkr")
           const [digitalPdaAcc, bump] = PublicKey.findProgramAddressSync([Buffer.Buffer.from("dig_identity"), wallet?.publicKey.toBuffer()], sdk.PROGRAM_ID)
