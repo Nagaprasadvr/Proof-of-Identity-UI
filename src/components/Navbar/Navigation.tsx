@@ -16,6 +16,7 @@ import {
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { BrowserRouter, Route, Link } from "react-router-dom";
+import "./Navbar.css"
 
 // IMPORTING ICONS
 import MenuIcon from "@material-ui/icons/Menu";
@@ -68,10 +69,10 @@ const Navigation = (props:any) => {
             <HideOnScroll {...props}>
                  
                     <AppBar style={{backgroundColor: "lightskyblue", position: "absolute", marginBottom: "20vh"}}>
-                    <Toolbar>
+                    <Toolbar style={{color: "white"}}>
                         <i
                             className="fa-solid fa-fingerprint"
-                            style={{ color: "black", paddingRight: "15px" }}
+                            style={{ color: "black", paddingRight: "15px", fontSize: "25px" }}
                         ></i> {' '}
                         <Typography
                             style={{color: "black"}}
@@ -87,7 +88,8 @@ const Navigation = (props:any) => {
                                         // color="textPrimary"
                                         className={classes.menuButton}
                                         edge="start"
-                                        aria-label="menu"
+                                    aria-label="menu"
+                                    
                                         onClick={handleMenu}
                                     >
                                         <MenuIcon />

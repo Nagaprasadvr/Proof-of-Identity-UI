@@ -14,6 +14,8 @@ import { PublicKey } from "@solana/web3.js";
 import { toast } from "react-hot-toast";
 import * as solana from "@solana/web3.js"
 import { sleep } from "@bundlr-network/client/build/cjs/common/upload";
+import { Container, Row, Col, Table } from "react-bootstrap";
+
 
 interface ViewIdentityModalProps {
     handleClose: () => void,
@@ -193,7 +195,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         event.preventDefault();
 
         // Perform file upload or any other necessary actions
-        if (pic && pan && passport && aadhar) {
+        if (pic || pan || passport || aadhar) {
             // console.log('Selected files:', pic, pan, passport, aadhar);
             const newArray = [...fileArray, pic, pan, passport, aadhar];
             console.log(newArray[0])
@@ -221,52 +223,81 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                 <Box style={{ backgroundColor: "black" }}>
                     <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
                 </Box>
-                <Box sx={{ color: "lightskyblue", display: "flex", flexDirection: "column", justifyContent: "center", alignContent: "center", width: "100vw", height: "100vh",  }}>
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        Name:{data.name}
-                    </Typography>
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        Pubkey:{pubkey}
-                    </Typography>
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        DIgitalIdentityAddress:{digitalIdentityPda}
-                    </Typography>
-
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"} >
-                        dob:{data.dob}
-                    </Typography>
-
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        aadharNumber:{data.aadharNumber}
-                    </Typography>
-
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        panNumber:{data.panNumber.toString()}
-                    </Typography>
-
-                    <form action="" method="get" onSubmit={handleSubmit}>
-                        <Box sx={{ display: "flex", flexDirection: "row" }}>
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                picUploaded:{data.picAttached.toString()}
-                            </Typography>{!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
-                        </Box>
-                        <Box>
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                passportUploaded:{data.passportAttached.toString()}
-                            </Typography>{!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
-                        </Box>
-                        <Box>
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                panUploaded:{data.panAttached.toString()}
-                            </Typography>{!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
-                        </Box>
-
-                        <Box>
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                aadharUploaded:{data.aadharAttached.toString()}
-                            </Typography>{!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
-                        </Box>
-                        <button type="submit" onClick={() => uploadFile()}>Upload</button>
+                <Box sx={{ color: "lightskyblue", display: "flex", flexDirection: "column", justifyContent: "center", alignContent: "center", width: "100vw", height: "100vh", fontFamily: "Roboto Mono,monospace", fontSize: "30px", fontWeight: "bold" }}>
+                     
+                    <Table style={{height: "auto", width:"90vw", marginLeft: "5vw", border: "3px solid white", marginTop: "-12vh"}}>
+                        <thead>
+                            <tr>
+                                <th style={{color: "white"}}>Name:</th>
+                                <th style={{ color: "lightskyblue" ,paddingLeft: "2vw"}}>{data.name}</th>
+                            </tr>
+                             
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style={{color: "white"}}>Pubkey</td>
+                                <td style={{color: "lightskyblue", paddingLeft: "2vw"}}>{pubkey}</td>
+                            </tr>
+                            <tr>
+                                <td style={{color: "white"}}>DIgitalIdentityAddress</td>
+                                <td style={{color: "lightskyblue",paddingLeft: "2vw"}}>{digitalIdentityPda}</td>
+                            </tr>
+                            <tr>
+                                <td style={{color: "white"}}>DOB</td>
+                                <td style={{ color: "lightskyblue",paddingLeft: "2vw" }}>{data.dob}</td>
+                            </tr>
+                            <tr>
+                                <td style={{color: "white"}}>AadharNumber</td>
+                                <td style={{color: "lightskyblue",paddingLeft: "2vw"}}>{data.aadharNumber}</td>
+                            </tr>
+                            <tr>
+                                <td style={{color: "white"}}>PanNumber</td>
+                                <td style={{color: "lightskyblue",paddingLeft: "2vw"}}>
+                                    {data.panNumber.toString()}
+                                </td>
+                            </tr>
+                            {
+                                !data.picAttached && (<tr>
+                                    <td style={{ color: "white" }}> Pic uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
+                                    </td>
+                                </tr>)   
+                            }
+                            {
+                                !data.passportAttached && (<tr>
+                                    <td style={{ color: "white" }}>Passport Uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+                            
+                            {
+                                !data.panAttached && (<tr>
+                                    <td style={{ color: "white" }}>
+                                        Pan Uploaded
+                                    </td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+                            {
+                                !data.aadharAttached && (<tr>
+                                    <td style={{ color: "white" }}>Aadhar Uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+                            
+                        </tbody>
+                        
+                         
+                    </Table>
+                     <form action="" method="get" onSubmit={handleSubmit} style={{width: "100vw", alignItems: "center"}} >      
+                        <button type="submit" style={{ position: "relative", left: "45vw", width: "auto" }} className="balance-button w3-btn w3-hover-white App" onClick={() => uploadFile()}>Upload</button>
                     </form>
 
 
