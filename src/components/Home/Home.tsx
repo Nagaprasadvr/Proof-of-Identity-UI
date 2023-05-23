@@ -54,7 +54,7 @@ export const Home = () => {
                         <InputForm />
                     </Box>
                     <Box className="w3-animate-top">
-                        <RsaEncryption />
+                        {/* <RsaEncryption /> */}
                     </Box>
                     <Box
                         className="w3-animate-opacity center"
