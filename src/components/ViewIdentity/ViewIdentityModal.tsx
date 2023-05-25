@@ -15,6 +15,7 @@ import { toast } from "react-hot-toast";
 import * as solana from "@solana/web3.js"
 import { sleep } from "@bundlr-network/client/build/cjs/common/upload";
 import "./viewstyle.css"
+import { Table } from "react-bootstrap";
 interface ViewIdentityModalProps {
     handleClose: () => void,
     open: boolean,
@@ -117,7 +118,11 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                         const id = toast.loading(`Uploading ${fileObj.filename} to Arweave..`)
                         try {
                             const dataStream = fileReaderStream(fileObj.file);
-
+                            // const size = fileObj.file.size;
+                            // console.log(size);
+                            // const price = await bundlr.getPrice(size);
+                            // console.log(price);
+                            // await bundlr.fund(price)
                             const tx = await bundlr.upload(dataStream, {
                                 tags: [{ name: "Content-Type", value: (fileObj.file as File).type }],
                             });
@@ -270,72 +275,109 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                 <Box style={{ backgroundColor: "black" }}>
                     <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
                 </Box>
-                <Box sx={{ color: "lightskyblue", display: "flex", flexDirection: "column", justifyContent: "center", alignContent: "center", width: "100vw", height: "100vh", }}>
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        Name:{data.name}
-                    </Typography>
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        Pubkey:{pubkey}
-                    </Typography>
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        DIgitalIdentityAddress:{digitalIdentityPda}
-                    </Typography>
+                <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
+                    <thead>
+                        <tr>
+                            <th style={{ color: "white" }}>Name:</th>
+                            <th style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{data.name}</th>
+                        </tr>
 
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"} >
-                        dob:{data.dob}
-                    </Typography>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style={{ color: "white" }}>Pubkey</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{pubkey}</td>
+                        </tr>
+                        <tr>
+                            <td style={{ color: "white" }}>DIgitalIdentityAddress</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{digitalIdentityPda}</td>
+                        </tr>
+                        <tr>
+                            <td style={{ color: "white" }}>DOB</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{data.dob}</td>
+                        </tr>
+                        <tr>
+                            <td style={{ color: "white" }}>AadharNumber</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{data.aadharNumber}</td>
+                        </tr>
+                        <tr>
+                            <td style={{ color: "white" }}>PanNumber</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                {data.panNumber.toString()}
+                            </td>
+                        </tr>
+                        </tbody>
+                </Table>
 
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        aadharNumber:{data.aadharNumber}
-                    </Typography>
+                {!proofsCreated ? (<form action="" method="get" onSubmit={handleSubmit}>
+                    <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
+                        <tbody>
+                    {
+                        !data.picAttached && (<tr>
+                            <td style={{ color: "white" }}> Pic uploaded</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
+                            </td>
+                        </tr>)
+                    }
+                    {
+                        !data.passportAttached && (<tr>
+                            <td style={{ color: "white" }}>Passport Uploaded</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
+                            </td>
+                        </tr>)
+                    }
 
-                    <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                        panNumber:{data.panNumber.toString()}
-                    </Typography>
-
-                    {!proofsCreated ? (<form action="" method="get" onSubmit={handleSubmit}>
-                        <Box sx={{ display: "flex", flexDirection: "row" }}>
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                picUploaded:{data.picAttached.toString()}
-                            </Typography>{!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
-                        </Box>
-                        <Box>
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                passportUploaded:{data.passportAttached.toString()}
-                            </Typography>{!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
-                        </Box>
-                        <Box>
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                panUploaded:{data.panAttached.toString()}
-                            </Typography>{!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
-                        </Box>
-
-                        <Box>
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                aadharUploaded:{data.aadharAttached.toString()}
-                            </Typography>{!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
-                        </Box>
-                        <button type="submit" onClick={() => uploadFile()}>Upload</button>
+                    {
+                        !data.panAttached && (<tr>
+                            <td style={{ color: "white" }}>
+                                Pan Uploaded
+                            </td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
+                            </td>
+                        </tr>)
+                    }
+                    {
+                        !data.aadharAttached && (<tr>
+                            <td style={{ color: "white" }}>Aadhar Uploaded</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
+                            </td>
+                        </tr>)
+                            }
+                        </tbody>
+                    </Table>
+                    <div className="container">
+                        <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
+                    </div>
                     </form>) : (
                         <>
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                digitalProofsPdaAddress:{digitalProofsPda}
-                            </Typography>
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                arweave-picUploadLink:<a href={arweaveLink + digitalProofs?.pictureUpload} style={{ color: "white" }}>picture Arweve link</a>
-                            </Typography>
-
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"} >
-                                arweave-passportLink:<a href={arweaveLink + digitalProofs?.passportUpload} style={{ color: "white" }}>passport Arweve link</a>
-                            </Typography>
-
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                arweave-panUploadLink:<a href={arweaveLink + digitalProofs?.panUpload} style={{ color: "white" }}>pan Arweve link</a>
-                            </Typography>
-
-                            <Typography fontFamily={'Roboto Mono,monospace'} fontSize={"30px"} fontWeight={"bold"}>
-                                arweave-aadharUploadLink:<a href={arweaveLink + digitalProofs?.aadharUpload} style={{ color: "white" }}>aadhar Arweve link</a>
-                            </Typography>
+                            <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
+                                <tbody>
+                                    <tr>
+                                        <td>digitalProofsPdaAddress</td>
+                                        <td>{digitalProofsPda}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>arweave-picUploadLink</td>
+                                        <td><a href={arweaveLink + digitalProofs?.pictureUpload} style={{ color: "white" }}>picture Arweve link</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>arweave-passportLink</td>
+                                        <td><a href={arweaveLink + digitalProofs?.passportUpload} style={{ color: "white" }}>passport Arweve link</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>arweave-panUploadLink</td>
+                                        <td><a href={arweaveLink + digitalProofs?.panUpload} style={{ color: "white" }}>pan Arweve link</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>arweave-aadharUploadLink</td>
+                                        <td><a href={arweaveLink + digitalProofs?.aadharUpload} style={{ color: "white" }}>aadhar Arweve link</a></td>
+                                    </tr>
+                                </tbody>
+                            </Table>
                         </>
 
                     )
@@ -345,10 +387,87 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                 </Box>
 
 
-            </Box>
+            
 
         </Modal>
     )
 }
 
 export default ViewIdentityModal;
+
+
+
+
+{/* 
+<Table style={{height: "auto", width:"90vw", marginLeft: "5vw", border: "3px solid white", marginTop: "-12vh"}}>
+                        <thead>
+                            <tr>
+                                <th style={{color: "white"}}>Name:</th>
+                                <th style={{ color: "lightskyblue" ,paddingLeft: "2vw"}}>{data.name}</th>
+                            </tr>
+                             
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style={{color: "white"}}>Pubkey</td>
+                                <td style={{color: "lightskyblue", paddingLeft: "2vw"}}>{pubkey}</td>
+                            </tr>
+                            <tr>
+                                <td style={{color: "white"}}>DIgitalIdentityAddress</td>
+                                <td style={{color: "lightskyblue",paddingLeft: "2vw"}}>{digitalIdentityPda}</td>
+                            </tr>
+                            <tr>
+                                <td style={{color: "white"}}>DOB</td>
+                                <td style={{ color: "lightskyblue",paddingLeft: "2vw" }}>{data.dob}</td>
+                            </tr>
+                            <tr>
+                                <td style={{color: "white"}}>AadharNumber</td>
+                                <td style={{color: "lightskyblue",paddingLeft: "2vw"}}>{data.aadharNumber}</td>
+                            </tr>
+                            <tr>
+                                <td style={{color: "white"}}>PanNumber</td>
+                                <td style={{color: "lightskyblue",paddingLeft: "2vw"}}>
+                                    {data.panNumber.toString()}
+                                </td>
+                            </tr>
+                            {
+                                !data.picAttached && (<tr>
+                                    <td style={{ color: "white" }}> Pic uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
+                                    </td>
+                                </tr>)   
+                            }
+                            {
+                                !data.passportAttached && (<tr>
+                                    <td style={{ color: "white" }}>Passport Uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+                            
+                            {
+                                !data.panAttached && (<tr>
+                                    <td style={{ color: "white" }}>
+                                        Pan Uploaded
+                                    </td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+                            {
+                                !data.aadharAttached && (<tr>
+                                    <td style={{ color: "white" }}>Aadhar Uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+                            
+                        </tbody>
+                        
+                         
+                    </Table>
+*/}

@@ -17,6 +17,7 @@ import { Box } from '@mui/material';
 import { Toaster } from 'react-hot-toast';
 import './App.css';
 import Navigation from './components/Navbar/Navigation';
+import Allusers from './components/AllUsers/Allusers';
 require('bootstrap/dist/css/bootstrap.min.css');
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
                             <Routes>
                                 <Route path="/" element={<Home />}></Route>
                                 <Route path="/design" element={<Design />}></Route>
+                                <Route path="/Allusers" element={<Allusers></Allusers>}></Route>
                                 <Route path="/blog" element={<Blog />}></Route>
                                 <Route path="/ViewIdentity" element={<ViewIdentity />}></Route>
                             </Routes>

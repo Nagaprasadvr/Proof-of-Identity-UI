@@ -4,7 +4,7 @@ import "../../App.css";
 
 export const DesignPage = () => {
   return (
-    <Box className="App" style={{width: "100vw",height: "100vh"  }}>
+    <Box className="App" style={{width: "100vw",height: "100vh" ,marginTop: "8.75vh", position: "fixed"  }}>
       <iframe
         title="chain-tag"
         width="100%"
