@@ -1,5 +1,3 @@
-import { Mongoose } from "mongoose";
-
 import mongoose from "mongoose";
 
 export const identitySchema = new mongoose.Schema(

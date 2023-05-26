@@ -1,19 +1,14 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
-import { Modal, Box, Typography } from "@mui/material";
+import { Modal, Box } from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import * as digitalIdentity from "../../digitalIdentity/js/src/generated";
 import "./viewstyle.css";
-import { ChangeEvent } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { WebBundlr } from "@bundlr-network/client";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
-import { PhantomWalletAdapterConfig } from "@solana/wallet-adapter-wallets";
-import { PhantomWalletName } from "@solana/wallet-adapter-wallets";
 import { useWallet } from "@solana/wallet-adapter-react";
 import fileReaderStream from "filereader-stream";
 import { PublicKey } from "@solana/web3.js";
 import { toast } from "react-hot-toast";
 import * as solana from "@solana/web3.js"
-import { sleep } from "@bundlr-network/client/build/cjs/common/upload";
 import "./viewstyle.css"
 import { Table } from "react-bootstrap";
 interface ViewIdentityModalProps {
@@ -306,88 +301,88 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 {data.panNumber.toString()}
                             </td>
                         </tr>
-                        </tbody>
+                    </tbody>
                 </Table>
 
                 {!proofsCreated ? (<form action="" method="get" onSubmit={handleSubmit}>
                     <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
                         <tbody>
-                    {
-                        !data.picAttached && (<tr>
-                            <td style={{ color: "white" }}> Pic uploaded</td>
-                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
-                            </td>
-                        </tr>)
-                    }
-                    {
-                        !data.passportAttached && (<tr>
-                            <td style={{ color: "white" }}>Passport Uploaded</td>
-                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
-                            </td>
-                        </tr>)
-                    }
+                            {
+                                !data.picAttached && (<tr>
+                                    <td style={{ color: "white" }}> Pic uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+                            {
+                                !data.passportAttached && (<tr>
+                                    <td style={{ color: "white" }}>Passport Uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
+                                    </td>
+                                </tr>)
+                            }
 
-                    {
-                        !data.panAttached && (<tr>
-                            <td style={{ color: "white" }}>
-                                Pan Uploaded
-                            </td>
-                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
-                            </td>
-                        </tr>)
-                    }
-                    {
-                        !data.aadharAttached && (<tr>
-                            <td style={{ color: "white" }}>Aadhar Uploaded</td>
-                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
-                            </td>
-                        </tr>)
+                            {
+                                !data.panAttached && (<tr>
+                                    <td style={{ color: "white" }}>
+                                        Pan Uploaded
+                                    </td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+                            {
+                                !data.aadharAttached && (<tr>
+                                    <td style={{ color: "white" }}>Aadhar Uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
+                                    </td>
+                                </tr>)
                             }
                         </tbody>
                     </Table>
                     <div className="container">
                         <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
                     </div>
-                    </form>) : (
-                        <>
-                            <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
-                                <tbody>
-                                    <tr>
-                                        <td>digitalProofsPdaAddress</td>
-                                        <td>{digitalProofsPda}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>arweave-picUploadLink</td>
-                                        <td><a href={arweaveLink + digitalProofs?.pictureUpload} style={{ color: "white" }}>picture Arweve link</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>arweave-passportLink</td>
-                                        <td><a href={arweaveLink + digitalProofs?.passportUpload} style={{ color: "white" }}>passport Arweve link</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>arweave-panUploadLink</td>
-                                        <td><a href={arweaveLink + digitalProofs?.panUpload} style={{ color: "white" }}>pan Arweve link</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>arweave-aadharUploadLink</td>
-                                        <td><a href={arweaveLink + digitalProofs?.aadharUpload} style={{ color: "white" }}>aadhar Arweve link</a></td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                        </>
+                </form>) : (
+                    <>
+                        <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
+                            <tbody>
+                                <tr>
+                                    <td>digitalProofsPdaAddress</td>
+                                    <td>{digitalProofsPda}</td>
+                                </tr>
+                                <tr>
+                                    <td>arweave-picUploadLink</td>
+                                    <td><a href={arweaveLink + digitalProofs?.pictureUpload} style={{ color: "white" }}>picture Arweve link</a></td>
+                                </tr>
+                                <tr>
+                                    <td>arweave-passportLink</td>
+                                    <td><a href={arweaveLink + digitalProofs?.passportUpload} style={{ color: "white" }}>passport Arweve link</a></td>
+                                </tr>
+                                <tr>
+                                    <td>arweave-panUploadLink</td>
+                                    <td><a href={arweaveLink + digitalProofs?.panUpload} style={{ color: "white" }}>pan Arweve link</a></td>
+                                </tr>
+                                <tr>
+                                    <td>arweave-aadharUploadLink</td>
+                                    <td><a href={arweaveLink + digitalProofs?.aadharUpload} style={{ color: "white" }}>aadhar Arweve link</a></td>
+                                </tr>
+                            </tbody>
+                        </Table>
+                    </>
 
-                    )
-                    }
-
-
-                </Box>
+                )
+                }
 
 
-            
+            </Box>
+
+
+
 
         </Modal>
     )
@@ -398,6 +393,7 @@ export default ViewIdentityModal;
 
 
 
+// eslint-disable-next-line no-lone-blocks
 {/* 
 <Table style={{height: "auto", width:"90vw", marginLeft: "5vw", border: "3px solid white", marginTop: "-12vh"}}>
                         <thead>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Connection, PublicKey, Transaction } from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 import * as sdk from "../../digitalIdentity/js/src/generated/"
 import { useWallet } from "@solana/wallet-adapter-react";
 import * as Buffer from "buffer"

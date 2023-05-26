@@ -3,7 +3,7 @@ import { InputForm } from '../InputForm/InputForm';
 import * as Web3 from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Box } from '@mui/material';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import '../../App.css';
 export const Home = () => {
     const rpc = new Web3.Connection(Web3.clusterApiUrl('devnet'));
