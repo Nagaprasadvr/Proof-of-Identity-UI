@@ -12,7 +12,6 @@ export const Home = () => {
     const { publicKey, wallet } = useWallet();
 
     const airdropSol = async () => {
-        // const id = enqueueSnackbar("Airdrop in progress...", { variant: "info", persist: true })
         const id = toast.loading("Airdrop in progress...")
         try {
             if (publicKey) {
@@ -22,16 +21,13 @@ export const Home = () => {
 
             }
             toast.dismiss(id)
-            // closeSnackbar(id);
-            // enqueueSnackbar("Airdrop Success", { variant: "success", })
+
             toast.success("Airdrop Success");
 
         }
         catch (e) {
-            // closeSnackbar(id);
             toast.dismiss(id)
             console.error(e)
-            // enqueueSnackbar("Airdrop Failed", { variant: "error" })
             toast.error("Airdrop failed , try after some time")
 
         }

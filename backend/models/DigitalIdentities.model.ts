@@ -1,6 +1,8 @@
-const mongoose = require("mongoose");
+import { Mongoose } from "mongoose";
 
-const identitySchema = new mongoose.Schema(
+import mongoose from "mongoose";
+
+export const identitySchema = new mongoose.Schema(
   {
     userPubkey: {
       type: String,
@@ -18,4 +20,4 @@ const identitySchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("DigitalIdentities", identitySchema);
+export default mongoose.model("DigitalIdentities", identitySchema);

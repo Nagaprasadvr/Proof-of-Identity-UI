@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const identityViewRequestSchema = new mongoose.Schema(
   {
@@ -23,4 +23,4 @@ const identityViewRequestSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("DigitalIdentities", identityViewRequestSchema);
+export default mongoose.model("DigitalIdentities", identityViewRequestSchema);
