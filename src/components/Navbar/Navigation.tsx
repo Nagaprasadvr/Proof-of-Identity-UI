@@ -19,11 +19,8 @@ import { BrowserRouter, Route, Link } from "react-router-dom";
 
 // IMPORTING ICONS
 import MenuIcon from "@material-ui/icons/Menu";
-import HomeIcon from "@material-ui/icons/Home";
-import SchoolIcon from "@material-ui/icons/School";
-import PersonIcon from "@material-ui/icons/Person";
-import BookmarksIcon from "@material-ui/icons/Bookmarks";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import "./Navbar.css"
 require("@solana/wallet-adapter-react-ui/styles.css");
 
 
@@ -64,7 +61,7 @@ const Navigation = (props: any) => {
         setAnchor(event.currentTarget);
     };
     return (
-        <div className={classes.root}>
+        <div className={classes.root} id="navbar">
             <HideOnScroll {...props}>
 
                 <AppBar style={{ backgroundColor: "lightskyblue", position: "absolute", marginBottom: "20vh" }}>
@@ -133,6 +130,13 @@ const Navigation = (props: any) => {
                                             ></i>
                                         </ListItemIcon>
                                         <Typography variant="h6"> ViewIdentity </Typography>
+                                    </MenuItem>
+                                    <MenuItem
+                                        onClick={() => setAnchor(null)}
+                                        component={Link}
+                                        to="/Allusers">
+                                        <i className="fa-solid fa-people-line" style={{ color: "black", paddingRight: "10px" }}></i>
+                                        <Typography variant="h6"> All </Typography>
                                     </MenuItem>
                                     <MenuItem
                                         onClick={() => setAnchor(null)}
@@ -206,7 +210,14 @@ const Navigation = (props: any) => {
                                 ></i>
 
                                     View Identity
-                                </Button>
+                                    </Button>
+                                    <Button variant="text"
+                                        component={Link}
+                                        to="/Allusers"
+                                        style={{ fontWeight: "500", color: "black" }}>
+                                        <i className="fa-solid fa-people-line" style={{ color: "black", paddingRight: "10px", fontWeight: "bolder" }}></i>
+                                            All
+                                    </Button>
                                 <Button
                                     variant="text"
                                     component={Link}

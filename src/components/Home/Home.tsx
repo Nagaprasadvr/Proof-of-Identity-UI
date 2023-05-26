@@ -5,7 +5,6 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { Box } from '@mui/material';
 import toast, { Toaster } from 'react-hot-toast';
 import '../../App.css';
-import RsaEncryption from '../Crypto/Crypto';
 export const Home = () => {
     const rpc = new Web3.Connection(Web3.clusterApiUrl('devnet'));
 
@@ -50,7 +49,7 @@ export const Home = () => {
                         <InputForm />
                     </Box>
                     <Box className="w3-animate-top">
-                        <RsaEncryption />
+                        {/* <RsaEncryption /> */}
                     </Box>
                     <Box
                         className="w3-animate-opacity center"
