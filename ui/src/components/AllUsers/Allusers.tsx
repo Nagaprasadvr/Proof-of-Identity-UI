@@ -6,6 +6,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import data from "./MOCK_DATA.json"
 import { Button } from '@material-ui/core';
 import { useState } from 'react';
+import RequestModal from './RequestModal';
 
 
 interface Data {
@@ -14,12 +15,20 @@ interface Data {
 }
 
 
+
+
 function Allusers() {
     const wallet = useWallet();
     const [tableData, setTableData] = useState(data);
     const [value, setValue] = useState('')
     const [dataSource, setDataSource] = useState<Data[]>(data)
     const [tableFilter, setTableFilter] = useState<Data[]>([]);
+    const [open, setOpen] = useState(false);
+
+    const ModalOpener = () => {
+
+        setOpen(true)
+    }
 
     const filterData = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value != "") {
@@ -49,16 +58,16 @@ function Allusers() {
                             <td style={{ textAlign: "center" }}>{index + 1}</td>
                             <td>{item.name}</td>
                             <td>{item.pubkey}</td>
-                            <td><Button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }}>Request</Button></td>
+                            <td><Button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }} onClick={ModalOpener}>Request</Button></td>
                         </tr>
                     ))
             }
         </tbody>
         )
     }
-
+  console.log(open)
     return (
-        <>
+        <> 
             {wallet.connected ? (<>
                         <div className="w3-animate-opacity App" style={{ marginTop: "10vh", width: "100vw", display: "flex", flexDirection: "row", justifyContent: 'space-around' }} >
                     <h1 >
@@ -97,6 +106,7 @@ function Allusers() {
                         <b>Connect your Wallet!</b>
                     </h1>
                 </Box>}
+            {open && (<RequestModal open={open} setOpen={setOpen}></RequestModal>)}
 
         </>
 
