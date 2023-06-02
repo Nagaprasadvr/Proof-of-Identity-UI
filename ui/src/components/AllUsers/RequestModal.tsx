@@ -1,7 +1,6 @@
 import { Box } from '@mui/material'
 import React, { Dispatch, SetStateAction, useState } from 'react'
-import { Table } from 'react-bootstrap';
-import { Modal } from "@mui/material";
+import { Modal, Table } from 'react-bootstrap'
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
@@ -15,9 +14,8 @@ interface Props {
     setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-const RequestModal = (props: Props) => {
+function RequestModal(props: Props) {
     const { open, setOpen } = props;
-    console.log("open in req modal:", open)
     const [state, setState] = React.useState({
         gilad: false,
         jason: false,
@@ -39,37 +37,35 @@ const RequestModal = (props: Props) => {
     }
 
     return (
-        <Modal open={true} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black" }}>
-            <Box>
-                <Box style={{ backgroundColor: "black" }}>
-                    <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
-                </Box>
-                <Box sx={{ display: 'flex' }}>
-                    <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-                        <FormLabel component="legend">Assign responsibility</FormLabel>
-                        <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={gilad} onChange={handleChange} name="gilad" />
-                                }
-                                label="Gilad Gray"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={jason} onChange={handleChange} name="jason" />
-                                }
-                                label="Jason Killian"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={antoine} onChange={handleChange} name="antoine" />
-                                }
-                                label="Antoine Llorca"
-                            />
-                        </FormGroup>
-                        <FormHelperText>Be careful</FormHelperText>
-                    </FormControl>
-                </Box>
+        <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black" }}>
+            <Box style={{ backgroundColor: "black" }}>
+                <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
+            </Box>
+            <Box sx={{ display: 'flex' }}>
+                <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+                    <FormLabel component="legend">Assign responsibility</FormLabel>
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <Checkbox checked={gilad} onChange={handleChange} name="gilad" />
+                            }
+                            label="Gilad Gray"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox checked={jason} onChange={handleChange} name="jason" />
+                            }
+                            label="Jason Killian"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox checked={antoine} onChange={handleChange} name="antoine" />
+                            }
+                            label="Antoine Llorca"
+                        />
+                    </FormGroup>
+                    <FormHelperText>Be careful</FormHelperText>
+                </FormControl>
             </Box>
         </Modal>
     )
