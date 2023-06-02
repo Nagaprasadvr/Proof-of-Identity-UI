@@ -300,6 +300,12 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 {data.panNumber.toString()}
                             </td>
                         </tr>
+                        <tr>
+                            <td style={{ color: "white" }}>PassportNumber</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                {data.passportId.toString()}
+                            </td>
+                        </tr>
                     </tbody>
                 </Table>
 

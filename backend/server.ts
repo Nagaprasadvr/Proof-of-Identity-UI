@@ -29,6 +29,10 @@ mongoose.connect(
   }
 );
 // Routes
+app.get('/Allusers', (req: Request, res: Response) => {
+  console.log(req.body)
+})
+
 app.get("/", (req:Request, res:Response) => {
   res.send("Hello, World!");
 });
