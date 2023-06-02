@@ -26,7 +26,7 @@ function Allusers() {
     const [open, setOpen] = useState(false);
 
     const ModalOpener = () => {
-
+        
         setOpen(true)
     }
 
@@ -65,7 +65,7 @@ function Allusers() {
         </tbody>
         )
     }
-  console.log(open)
+
     return (
         <> 
             {wallet.connected ? (<>
@@ -106,7 +106,7 @@ function Allusers() {
                         <b>Connect your Wallet!</b>
                     </h1>
                 </Box>}
-            {open && (<RequestModal open={open} setOpen={setOpen}></RequestModal>)}
+            {/* {open && (<RequestModal open={open} setOpen={setOpen}></RequestModal>)} */}
 
         </>
 
