@@ -1,7 +1,6 @@
 import { Modal, Box } from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import * as digitalIdentity from "../../digitalIdentity/js/src/generated";
-import "./viewstyle.css";
 import { useState, useMemo, useEffect } from "react";
 import { WebBundlr } from "@bundlr-network/client";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -393,4 +392,3 @@ export default ViewIdentityModal;
 
 
 
- 

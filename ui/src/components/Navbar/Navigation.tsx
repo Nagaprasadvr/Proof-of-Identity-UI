@@ -210,14 +210,14 @@ const Navigation = (props: any) => {
                                 ></i>
 
                                     View Identity
-                                    </Button>
-                                    <Button variant="text"
-                                        component={Link}
-                                        to="/Allusers"
-                                        style={{ fontWeight: "500", color: "black" }}>
-                                        <i className="fa-solid fa-people-line" style={{ color: "black", paddingRight: "10px", fontWeight: "bolder" }}></i>
-                                            All
-                                    </Button>
+                                </Button>
+                                <Button variant="text"
+                                    component={Link}
+                                    to="/Allusers"
+                                    style={{ fontWeight: "500", color: "black" }}>
+                                    <i className="fa-solid fa-people-line" style={{ color: "black", paddingRight: "10px", fontWeight: "bolder" }}></i>
+                                    All
+                                </Button>
                                 <Button
                                     variant="text"
                                     component={Link}

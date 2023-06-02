@@ -1,4 +1,4 @@
-Button{
+Button {
     border: 1px solid white;
     color: white;
     font-weight: 500;
@@ -10,4 +10,29 @@ tbody {
     border: 1px solid white;
     font-size: 25px;
     color: white;
+}
+
+Box {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+
+a:hover {
+    color: aqua
+}
+
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh; */
+    /* Adjust the height as needed */
+}
+
+.centered-button {
+    text-align: center;
 }

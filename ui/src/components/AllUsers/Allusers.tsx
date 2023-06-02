@@ -17,7 +17,7 @@ interface Data {
 
 
 
-function Allusers() {
+const Allusers = () => {
     const wallet = useWallet();
     const [tableData, setTableData] = useState(data);
     const [value, setValue] = useState('')
@@ -25,13 +25,13 @@ function Allusers() {
     const [tableFilter, setTableFilter] = useState<Data[]>([]);
     const [open, setOpen] = useState(false);
 
-    const ModalOpener = () => {
+    const modalOpener = () => {
 
         setOpen(true)
     }
 
     const filterData = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value != "") {
+        if (e.target.value !== "") {
             setValue(e.target.value)
             const filterTable = dataSource.filter(o => Object.keys(o).some((k) => String(o[k as keyof Data]).toLowerCase().includes(e.target.value.toLowerCase())));
             setTableFilter([...filterTable])
@@ -44,74 +44,88 @@ function Allusers() {
     function AllUsersData() {
         return (<tbody>
             {
-             value.length > 0 ?  tableFilter.map((item, index) => (
+                value.length > 0 ? tableFilter.map((item, index) => (
                     <tr style={{ width: "100vw" }} key={index}>
                         <td style={{ textAlign: "center" }}>{index + 1}</td>
                         <td>{item.name}</td>
                         <td>{item.pubkey}</td>
-                        <td><Button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }}>Request</Button></td>
+                        <td><Button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }} onClick={modalOpener}>Request</Button></td>
                     </tr>
-             ))
-            :
+                ))
+                    :
                     dataSource.map((item, index) => (
                         <tr style={{ width: "100vw" }} key={index}>
                             <td style={{ textAlign: "center" }}>{index + 1}</td>
                             <td>{item.name}</td>
                             <td>{item.pubkey}</td>
-                            <td><Button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }} onClick={ModalOpener}>Request</Button></td>
+                            <td><button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }} onClick={modalOpener}>Request</button></td>
                         </tr>
                     ))
             }
         </tbody>
         )
     }
-  console.log(open)
+    console.log(open)
     return (
-        <> 
-            {wallet.connected ? (<>
-                        <div className="w3-animate-opacity App" style={{ marginTop: "10vh", width: "100vw", display: "flex", flexDirection: "row", justifyContent: 'space-around' }} >
-                    <h1 >
-                        <b>ALL USERS</b>
-                    </h1>
-                    <input
-                        type="text"
-                        placeholder="Search by name"
-                        value={value}
-                        onChange={filterData}
-                        style={{
-                            padding: '8px',
-                            border: '1px solid #ccc',
-                            borderRadius: '4px',
-                            marginBottom: '16px',
-                            width: '25vw',
-                        }}
-                    />
-                </div>
-                        <Table style={{width: "90vw", height:"auto", color: "white", fontWeight: "bolder", marginTop: "2vh", zIndex: "500", marginLeft: "5vw"}}>
-                            <thead>
-                            <tr style={{ width: "100%" }}>
-                                    <td style={{textAlign: "center"}}>SL.NO</td>
-                                    <td>Name</td>
-                                    <td>Pub key</td>
-                                    <td>button</td>
-                            </tr>
-                            </thead>    
-                                <AllUsersData></AllUsersData>
-                           
-                </Table>
-                </>
-                 ):
+        <>
+            {wallet.connected ? (
+                open === false ?
+                    (
+                        <>
+                            <Box>
+
+
+                                <Box className="w3-animate-opacity App" style={{ marginTop: "10vh", width: "100vw", display: "flex", flexDirection: "row", justifyContent: 'space-around' }} >
+                                    <h1 >
+                                        <b>ALL USERS</b>
+                                    </h1>
+                                    <input
+                                        type="text"
+                                        placeholder="Search by name"
+                                        value={value}
+                                        onChange={filterData}
+                                        style={{
+                                            padding: '8px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            marginBottom: '16px',
+                                            width: '25vw',
+                                        }}
+                                    />
+                                </Box>
+                                <Table style={{ width: "90vw", height: "auto", color: "white", fontWeight: "bolder", marginTop: "2vh", zIndex: "500", marginLeft: "5vw" }}>
+                                    <thead>
+                                        <tr style={{ width: "100%" }}>
+                                            <td style={{ textAlign: "center" }}>SL.NO</td>
+                                            <td>Name</td>
+                                            <td>Pub key</td>
+                                            <td>button</td>
+                                        </tr>
+                                    </thead>
+                                    <AllUsersData></AllUsersData>
+
+                                </Table>
+                            </Box>
+                        </>) : (
+                        <Box>
+                            <RequestModal open={open} setOpen={setOpen} />
+                        </Box>
+
+                    )
+
+
+            ) :
                 <Box className="w3-animate-opacity App" sx={{ marginTop: "20vh", width: "100vw" }} >
                     <h1 >
                         <b>Connect your Wallet!</b>
                     </h1>
                 </Box>}
-            {open && (<RequestModal open={open} setOpen={setOpen}></RequestModal>)}
+
+
 
         </>
 
-    
-  )
+    )
 }
 
 export default Allusers
