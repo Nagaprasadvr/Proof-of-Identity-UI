@@ -1,17 +1,30 @@
 import React from 'react';
 import '../../App.css';
 import axios from 'axios'
+import { toast } from 'react-hot-toast';
 const RSAKeypairGenerate = () => {
 
     const generateKeypair = async () => {
+        const id = toast.loading("generating RSA Keypair...")
         try {
             console.log("hitting")
             const res = await axios.get("http://localhost:9000/cryptography/generateRSAKeyPair");
-            console.log(res);
+            const message = res.data.message;
+            const success = res.data.success;
+            toast.dismiss(id);
+            if (success) {
+                toast.success(message)
+            }
+            else {
+                toast.error(message)
+            }
+
 
         }
         catch (e) {
-            console.error(e)
+            console.error(e);
+            toast.dismiss(id);
+            toast.error("RSA keypair generation failed")
         }
 
 

@@ -19,15 +19,20 @@ router.route("/generateRSAKeyPair").get((req, res) => {
     const jsonKeypairData = JSON.stringify(keyPairObj);
     const homeDir = os_1.default.homedir();
     try {
-        if (!fs_1.default.existsSync(`${homeDir}/RSA`)) {
-            fs_1.default.mkdirSync(`${homeDir}/RSA`);
+        if (fs_1.default.existsSync(`${homeDir}/RSA/keypair.json`)) {
+            return res.json({ message: "Keypair already exists" });
         }
-        const savePath = `${homeDir}/RSA/keypair.json`;
-        fs_1.default.writeFileSync(savePath, jsonKeypairData);
-        return res.json({ message: "Keypair Generation Success" });
+        else {
+            if (!fs_1.default.existsSync(`${homeDir}/RSA`)) {
+                fs_1.default.mkdirSync(`${homeDir}/RSA`);
+            }
+            const savePath = `${homeDir}/RSA/keypair.json`;
+            fs_1.default.writeFileSync(savePath, jsonKeypairData);
+            return res.json({ success: true, message: "Keypair Generation Success" });
+        }
     }
     catch (e) {
-        return res.json(e);
+        return res.json({ success: false, message: e });
     }
 });
 exports.default = router;
