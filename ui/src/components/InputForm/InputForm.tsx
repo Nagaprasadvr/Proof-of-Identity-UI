@@ -46,24 +46,19 @@ export const InputForm = () => {
 
     }, [])
 
-    console.log("isExist:", isExists)
     useEffect(() => {
         const checkIdentityAlreadyExists = async () => {
             if (solWallet?.publicKey) {
-                console.log("firing")
                 const [identityPda, pdaBump] = solana.PublicKey.findProgramAddressSync([Buffer.from("dig_identity"), solWallet.publicKey?.toBuffer()], digitalIdentity.PROGRAM_ID);
-                console.log("idenpda:", identityPda.toBase58())
                 try {
-                    console.log("inside try")
                     const identityAcc = await digitalIdentity.DigitalIdentity.fromAccountAddress(rpcCon, identityPda);
-                    console.log("idne:", identityAcc)
+
                     if (identityAcc) {
                         setIsExist(true)
                     }
 
                 }
                 catch (e) {
-                    console.log("error")
                     setIsExist(false)
                     console.error(e)
                 }
@@ -90,8 +85,6 @@ export const InputForm = () => {
         }
 
 
-
-        console.log("data:", userData)
         return userData;
 
     }
@@ -100,18 +93,14 @@ export const InputForm = () => {
     const createIdentity = async (toastId: string, data: UserData) => {
         toast.dismiss(toastId)
 
-        console.log("calling")
         const id = toast.loading("Creating Digital Identity...")
         try {
 
-            console.log("inside try")
             if (solWallet?.publicKey) {
-                console.log("inisde")
                 const [identityPda, pdaBump] = solana.PublicKey.findProgramAddressSync([
                     Buffer.from("dig_identity"),
                     solWallet?.publicKey?.toBuffer()
                 ], digitalIdentity.PROGRAM_ID)
-                console.log("pda:", identityPda.toBase58())
                 const createDigitalIdentityAccounts: digitalIdentity.CreateIdentityInstructionAccounts = {
                     digIdentityAcc: identityPda,
                     systemProgram: solana.SystemProgram.programId,
@@ -124,13 +113,9 @@ export const InputForm = () => {
                 }
                 const ix0 = digitalIdentity.createCreateIdentityInstruction(createDigitalIdentityAccounts, args);
                 if (solWallet.signTransaction) {
-                    console.log("inx")
-                    console.log("inx:", ix0)
                     const tx0 = new solana.Transaction().add(ix0);
                     tx0.recentBlockhash = (await rpcCon.getLatestBlockhash()).blockhash
                     tx0.feePayer = solWallet.publicKey
-                    // const signedTx0 = await solWallet.signTransaction(tx0);
-                    console.log("sending tx")
                     const signature = await solWallet.sendTransaction(tx0, rpcCon);
                     if (signature) {
                         const txSig = `https://explorer.solana.com/tx/${signature} `

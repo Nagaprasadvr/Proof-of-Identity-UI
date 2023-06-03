@@ -38,7 +38,7 @@ function DecidePage() {
         })
     }, []);
 
-    
+
 
     const filterData = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value != "") {
@@ -62,33 +62,6 @@ function DecidePage() {
         }
     }
 
-    // function AllUsersData(props: any) {
-    //     console.log(typeof props.data);
-    //     console.log(typeof dataSource)
-    //     return (<tbody>
-    //         {
-    //             value.length > 0 ? tableFilter.map((item, index) => (
-    //                 <tr style={{ width: "100vw" }} key={index}>
-    //                     <td style={{ textAlign: "center" }}>{index + 1}</td>
-    //                     <td>{item.name}</td>
-    //                     <td>{item.pubkey}</td>
-    //                     <td><Button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }}>Request</Button></td>
-    //                 </tr>
-    //             ))
-    //                 :
-    //                 props.data.map((item: Data, index: number) => (
-    //                     <tr style={{ width: "100vw" }} key={index}>
-    //                         <td style={{ textAlign: "center" }}>{index + 1}</td>
-    //                         <td>{item.name}</td>
-    //                         <td>{item.pubkey}</td>
-    //                         <td><Button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }}>Request</Button></td>
-    //                     </tr>
-    //                 ))
-    //         }
-    //     </tbody>
-    //     )
-    // }
-
     function AllUsersData() {
         return (<tbody>
             {
@@ -100,7 +73,7 @@ function DecidePage() {
                     </tr>
                 ))
                     :
-                   reqData.map((item, index) => ( 
+                    reqData.map((item, index) => (
                         <tr style={{ width: "100vw" }} key={index}>
                             <td>{item.name}</td>
                             <td>{item.pubkey}</td>
@@ -111,7 +84,7 @@ function DecidePage() {
         </tbody>
         )
     }
-   
+
     function AllUsersDataRes() {
         return (<tbody>
             {
@@ -136,82 +109,82 @@ function DecidePage() {
     }
 
 
-  return (
-      <>
-          {wallet.connected ? (
-              <>
-                  <>
-              <div className="w3-animate-opacity App" style={{ marginTop: "10vh", width: "100vw", display: "flex", flexDirection: "row", justifyContent: 'space-around' }} >
-                  <h1 >
-                      <b>Requests</b>
-                  </h1>
-                  <input
-                      type="text"
-                      placeholder="Search by name"
-                      value={value}
-                      onChange={filterData}
-                      style={{
-                          padding: '8px',
-                          border: '1px solid #ccc',
-                          borderRadius: '4px',
-                          marginBottom: '16px',
-                          width: '25vw',
-                      }}
-                  />
-              </div>
-              <Table style={{ width: "90vw", height: "auto", color: "white", fontWeight: "bolder", marginTop: "2vh", zIndex: "500", marginLeft: "5vw" }}>
-                  <thead>
-                      <tr style={{ width: "100%" }}>
-                          <td>Name</td>
-                          <td>Pub key</td>
-                          <td>button</td>
-                      </tr>
-                  </thead>
-                  <AllUsersData></AllUsersData>
+    return (
+        <>
+            {wallet.connected ? (
+                <>
+                    <>
+                        <div className="w3-animate-opacity App" style={{ marginTop: "10vh", width: "100vw", display: "flex", flexDirection: "row", justifyContent: 'space-around' }} >
+                            <h1 >
+                                <b>Requests</b>
+                            </h1>
+                            <input
+                                type="text"
+                                placeholder="Search by name"
+                                value={value}
+                                onChange={filterData}
+                                style={{
+                                    padding: '8px',
+                                    border: '1px solid #ccc',
+                                    borderRadius: '4px',
+                                    marginBottom: '16px',
+                                    width: '25vw',
+                                }}
+                            />
+                        </div>
+                        <Table style={{ width: "90vw", height: "auto", color: "white", fontWeight: "bolder", marginTop: "2vh", zIndex: "500", marginLeft: "5vw" }}>
+                            <thead>
+                                <tr style={{ width: "100%" }}>
+                                    <td>Name</td>
+                                    <td>Pub key</td>
+                                    <td>button</td>
+                                </tr>
+                            </thead>
+                            <AllUsersData></AllUsersData>
 
-              </Table>
-          </>
-              <>
-              <div className="w3-animate-opacity App" style={{ marginTop: "10vh", width: "100vw", display: "flex", flexDirection: "row", justifyContent: 'space-around' }} >
-                  <h1 >
-                      <b>Responses</b>
-                  </h1>
-                  <input
-                      type="text"
-                      placeholder="Search by name"
-                      value={valueRes}
-                      onChange={filterDataRes}
-                      style={{
-                          padding: '8px',
-                          border: '1px solid #ccc',
-                          borderRadius: '4px',
-                          marginBottom: '16px',
-                          width: '25vw',
-                      }}
-                  />
-              </div>
-              <Table style={{ width: "90vw", height: "auto", color: "white", fontWeight: "bolder", marginTop: "2vh", zIndex: "500", marginLeft: "5vw" }}>
-                  <thead>
-                      <tr style={{ width: "100%" }}>
-                          <td>Name</td>
-                          <td>Pub key</td>
-                          <td>button</td>
-                      </tr>
-                  </thead>
-                  <AllUsersDataRes></AllUsersDataRes>
+                        </Table>
+                    </>
+                    <>
+                        <div className="w3-animate-opacity App" style={{ marginTop: "10vh", width: "100vw", display: "flex", flexDirection: "row", justifyContent: 'space-around' }} >
+                            <h1 >
+                                <b>Responses</b>
+                            </h1>
+                            <input
+                                type="text"
+                                placeholder="Search by name"
+                                value={valueRes}
+                                onChange={filterDataRes}
+                                style={{
+                                    padding: '8px',
+                                    border: '1px solid #ccc',
+                                    borderRadius: '4px',
+                                    marginBottom: '16px',
+                                    width: '25vw',
+                                }}
+                            />
+                        </div>
+                        <Table style={{ width: "90vw", height: "auto", color: "white", fontWeight: "bolder", marginTop: "2vh", zIndex: "500", marginLeft: "5vw" }}>
+                            <thead>
+                                <tr style={{ width: "100%" }}>
+                                    <td>Name</td>
+                                    <td>Pub key</td>
+                                    <td>button</td>
+                                </tr>
+                            </thead>
+                            <AllUsersDataRes></AllUsersDataRes>
 
-              </Table>
-          </>
-              </>
-          ) :
-              <Box className="w3-animate-opacity App" sx={{ marginTop: "20vh", width: "100vw" }} >
-                  <h1 >
-                      <b>Connect your Wallet!</b>
-                  </h1>
-              </Box>}
+                        </Table>
+                    </>
+                </>
+            ) :
+                <Box className="w3-animate-opacity App" sx={{ marginTop: "20vh", width: "100vw" }} >
+                    <h1 >
+                        <b>Connect your Wallet!</b>
+                    </h1>
+                </Box>}
 
-      </>
-  )
+        </>
+    )
 }
 
 export default DecidePage

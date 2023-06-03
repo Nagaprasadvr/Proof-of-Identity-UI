@@ -42,8 +42,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
 
     const walletProvider = useWallet();
-    console.log("acc:", data.authority.toBase58());
-
     useEffect(() => {
         const getDigitalProofs = async () => {
 
@@ -55,7 +53,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                     setDigitalProofs(digitalProofsAcc);
                     setProofsCreated(true);
                     setDigitalProofsPda(digitalProofsPda.toBase58())
-                    console.log("proofs:", digitalProofsAcc)
                 }
 
             }
@@ -79,9 +76,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                 if (walletProvider?.publicKey) {
                     const bundlr = new WebBundlr("http://node2.bundlr.network", "solana", walletProvider);
                     await bundlr.ready()
-                    console.log("firing")
                     setBundlr(bundlr)
-                    console.log("bunldr:", bundlr)
                 }
 
 
@@ -98,10 +93,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
 
     const uploadFile = async () => {
-
-        console.log("clicked")
         try {
-            console.log(bundlr)
             if (bundlr) {
                 if (pic && aadhar && passport && pan) {
 
@@ -120,8 +112,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                             const tx = await bundlr.upload(dataStream, {
                                 tags: [{ name: "Content-Type", value: (fileObj.file as File).type }],
                             });
-                            console.log(tx);
-                            console.log(`File uploaded ==> https://arweave.net/${tx.id}`);
                             const link = `${tx.id}`
                             toast.dismiss(id);
                             toast.success(`${fileObj.filename} upload Success`)
@@ -151,7 +141,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 systemProgram: solana.SystemProgram.programId
 
                             }
-                            console.log("arveave uploads:", arweaveUploads)
                             const proofsAccArgs: digitalIdentity.CreateProofsInstructionArgs = {
                                 createProofsParam: {
                                     panUpload: arweaveUploads[0] as string,
@@ -169,7 +158,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 tx0.recentBlockhash = (await rpcCon.getLatestBlockhash()).blockhash
                                 tx0.feePayer = walletProvider.publicKey
                                 // const signedTx0 = await walletProvider.signTransaction(tx0);
-                                console.log("sending tx");
                                 try {
                                     const signature = await walletProvider.sendTransaction(tx0, rpcCon);
                                     // const signature = solana.sendAndConfirmTransaction(rpcCon, signedTx0, [walletProvider.wallet as solana.Signer])
@@ -242,14 +230,10 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
         // Perform file upload or any other necessary actions
         if (pic && pan && passport && aadhar) {
-            // console.log('Selected files:', pic, pan, passport, aadhar);
             const newArray = [...fileArray, pic, pan, passport, aadhar];
-            console.log(newArray[0])
-
-
             // Perform file upload logic here
         } else {
-            console.log('Please select all files');
+            toast.error("please select all files")
         }
 
         // Reset the form

@@ -17,7 +17,6 @@ export const InputPubkey = () => {
   const rpcConn = new Connection(solana.clusterApiUrl("devnet"));
   useEffect(() => {
     if (wallet?.publicKey) {
-      console.log("firing")
       setDigIdentityAcc(null)
     }
 
@@ -62,31 +61,9 @@ export const InputPubkey = () => {
       try {
 
         if (wallet?.publicKey) {
-
-          console.log(pubkey);
-          // const conn = new Connection("http://127.0.0.1:8899");
-
-
-
-
-
-
-
-          // const newP = new PublicKey("6DJX6MS53NdUCUM5pwUMNvSxssgLBCUGL7n9GwjAWSKb")
-          // const auth = new PublicKey("Cwrg5APrLUcVyjCfZ8YjzpdmxH16PuLrxSNhfyeoLnkr")
           const [digitalPdaAcc, bump] = PublicKey.findProgramAddressSync([Buffer.Buffer.from("dig_identity"), wallet?.publicKey.toBuffer()], sdk.PROGRAM_ID)
           const acc = await sdk.DigitalIdentity.fromAccountAddress(rpcConn, digitalPdaAcc);
-          console.log("acc:", acc)
-          // const tx = new Transaction();
-          // const ix = sdk.createVerifyIdentityInstruction({ digIdentityAcc: newP, authority: auth }, sdk.PROGRAM_ID);
-          // console.log("program id:", sdk.PROGRAM_ID.toBase58())
-          // tx.instructions.push(ix);
 
-          // tx.feePayer = wallet?.publicKey as PublicKey;
-          // tx.recentBlockhash = (await rpcConn.getRecentBlockhash()).blockhash
-
-          // const txHash = await wallet.sendTransaction(tx, rpcConn);
-          // console.log(`https://explorer.solana.com/address/${txHash}`)
           toast.dismiss(id);
           setDigIdentityAcc(acc)
           setDigIdentityPda(digitalPdaAcc.toBase58())

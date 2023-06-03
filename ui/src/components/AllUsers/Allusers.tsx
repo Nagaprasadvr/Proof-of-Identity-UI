@@ -65,7 +65,6 @@ const Allusers = () => {
         </tbody>
         )
     }
-    console.log(open)
     return (
         <>
             {wallet.connected ? (

@@ -33,13 +33,3 @@ const decryptData = (encryptedData, privateKey) => {
     return decryptedBuffer.toString('utf8');
 };
 exports.decryptData = decryptData;
-// Example usage
-// const data = 'Hello, World!';
-// const keyPair = generateAsymmetricKeyPair();
-// const publicKey = keyPair.publicKey;
-// const privateKey = keyPair.privateKey;
-// const encryptedData = encryptData(data, publicKey);
-// const decryptedData = decryptData(encryptedData, privateKey);
-// console.log('Original Data:', data);
-// console.log('Encrypted Data:', encryptedData);
-// console.log('Decrypted Data:', decryptedData);

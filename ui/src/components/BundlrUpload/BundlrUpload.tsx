@@ -18,9 +18,7 @@ const BundlrUpload = () => {
                 if (walletProvider?.publicKey) {
                     const bundlr = new WebBundlr("http://node2.bundlr.network", "solana", walletProvider);
                     await bundlr.ready()
-                    console.log("firing")
                     setBundlr(bundlr)
-                    console.log("bunldr:", bundlr)
                 }
 
 
@@ -36,9 +34,7 @@ const BundlrUpload = () => {
 
 
     const uploadString = async () => {
-        console.log("clicked")
         try {
-            console.log(bundlr)
             if (bundlr) {
                 const response = await bundlr.upload("Solana Bundlr");
                 console.log(`Data uploaded ==> https://arweave.net/${response.id}`);
