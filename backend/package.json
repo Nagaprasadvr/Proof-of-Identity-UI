@@ -9,7 +9,7 @@
     "start": "node dist/server.js",
     "server": "nodemon server.ts",
     "client": "cd ../ && npm run start",
-    "dev": "NODE_OPTIONS=--openssl-legacy-provider && concurrently \"npx tsc --watch  \" \"nodemon -q dist/server.js\""
+    "dev": "concurrently \"npx tsc --watch  \" \"nodemon -q dist/server.js\""
   },
   "dependencies": {
     "bs58": "^5.0.0",

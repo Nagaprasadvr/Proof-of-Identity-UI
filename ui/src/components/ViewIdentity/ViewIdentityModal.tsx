@@ -35,6 +35,10 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
     const [proofsCreated, setProofsCreated] = useState<boolean>(false);
     const [digitalProofs, setDigitalProofs] = useState<digitalIdentity.DigitalProofs | null>(null);
     const [digitalProofsPda, setDigitalProofsPda] = useState<string>("");
+    const [refresh, setRefresh] = useState(false)
+
+
+
     const rpcCon = useMemo(() => {
         return new solana.Connection(solana.clusterApiUrl("devnet"))
     }, [])
@@ -51,6 +55,11 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                     const [digitalProofsPda, bump2] = PublicKey.findProgramAddressSync([Buffer.from("dig_proof"), digitalIdentityPda.toBuffer()], digitalIdentity.PROGRAM_ID);
                     const digitalProofsAcc = await digitalIdentity.DigitalProofs.fromAccountAddress(rpcCon, digitalProofsPda);
                     setDigitalProofs(digitalProofsAcc);
+                    // const id = toast.loading("fetching")
+                    // setTimeout(() => {
+                    //     setProofsCreated(true);
+                    // }, 3000);
+                    // toast.dismiss(id)
                     setProofsCreated(true);
                     setDigitalProofsPda(digitalProofsPda.toBase58())
                 }
@@ -66,7 +75,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
             getDigitalProofs()
         }
 
-    }, [data, digitalIdentityPda, rpcCon, walletProvider.connected, walletProvider?.publicKey])
+    }, [data, digitalIdentityPda, rpcCon, walletProvider.connected, walletProvider?.publicKey, refresh])
 
 
     useEffect(() => {
@@ -249,10 +258,16 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
     return (
         <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black" }}>
+
             <Box>
                 <Box style={{ backgroundColor: "black" }}>
                     <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
                 </Box>
+                <Box style={{}}>
+                    <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto", marginLeft: "45vw", marginBottom: "2vh" }} type="submit" onClick={() => { setRefresh(!refresh) }}>Refresh</button>
+
+                </Box>
+
                 <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
                     <thead>
                         <tr>
@@ -282,6 +297,12 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                             <td style={{ color: "white" }}>PanNumber</td>
                             <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
                                 {data.panNumber.toString()}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ color: "white" }}>PassportNumber</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                {data.passportId.toString()}
                             </td>
                         </tr>
                     </tbody>
@@ -327,6 +348,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                             }
                         </tbody>
                     </Table>
+
                     <div className="container">
                         <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
                     </div>
@@ -356,6 +378,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 </tr>
                             </tbody>
                         </Table>
+
                     </>
 
                 )

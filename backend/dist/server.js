@@ -28,6 +28,9 @@ mongoose_1.default.connect(URI, {
     console.log("Connected to MongoDB");
 });
 // Routes
+app.get('/Allusers', (req, res) => {
+    console.log(req.body);
+});
 app.get("/", (req, res) => {
     res.send("Hello, World!");
 });

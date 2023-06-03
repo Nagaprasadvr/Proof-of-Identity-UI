@@ -119,6 +119,8 @@ const Allusers = () => {
                         <b>Connect your Wallet!</b>
                     </h1>
                 </Box>}
+            {open && (<RequestModal open={open} setOpen={setOpen} ></RequestModal>)}
+
 
 
 
