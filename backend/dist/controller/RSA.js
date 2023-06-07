@@ -8,7 +8,7 @@ const crypto_1 = __importDefault(require("crypto"));
 // Generate an asymmetric key pair
 const generateAsymmetricKeyPair = () => {
     return crypto_1.default.generateKeyPairSync('rsa', {
-        modulusLength: 1028,
+        modulusLength: 512,
         publicKeyEncoding: {
             type: 'pkcs1',
             format: 'pem',
@@ -23,7 +23,6 @@ exports.generateAsymmetricKeyPair = generateAsymmetricKeyPair;
 // Encrypt data using the public key
 const encryptData = (data, publicKey) => {
     const encryptedBuffer = crypto_1.default.publicEncrypt(publicKey, Buffer.from(data));
-    console.log('len:', encryptedBuffer.toString('base64').length);
     return encryptedBuffer.toString('base64');
 };
 exports.encryptData = encryptData;

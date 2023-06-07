@@ -4,7 +4,6 @@ import {
     AppBar,
     Toolbar,
     IconButton,
-    Typography,
     useMediaQuery,
     Button,
     useScrollTrigger,
@@ -13,7 +12,7 @@ import {
     MenuItem,
     ListItemIcon
 } from "@material-ui/core";
-
+import { Typography } from "@mui/material";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { BrowserRouter, Route, Link } from "react-router-dom";
 
@@ -75,6 +74,8 @@ const Navigation = (props: any) => {
                             variant="h5"
                             component="p"
                             className={classes.title}
+                            fontWeight={"600"}
+                            fontFamily={"Roboto Mono,monospace"}
                         >
                             Proof-of-Identity
                         </Typography>
@@ -107,7 +108,7 @@ const Navigation = (props: any) => {
                                         onClick={() => setAnchor(null)}
                                         component={Link}
                                         to="/"
-                                        style={{ fontWeight: "500", color: "black" }}
+                                        style={{ fontWeight: "700", color: "black" }}
                                     >
                                         <ListItemIcon>
                                             <i
@@ -116,7 +117,7 @@ const Navigation = (props: any) => {
                                             ></i> {' '}
                                         </ListItemIcon>
 
-                                        <Typography variant="h6"> Home</Typography>
+                                        <Typography fontWeight={"bold"} fontFamily={"Roboto Mono,monospace"}> Home</Typography>
                                     </MenuItem>
                                     <MenuItem
                                         onClick={() => setAnchor(null)}
@@ -129,14 +130,14 @@ const Navigation = (props: any) => {
                                                 style={{ color: "black", paddingRight: "10px" }}
                                             ></i>
                                         </ListItemIcon>
-                                        <Typography variant="h6"> ViewIdentity </Typography>
+                                        <Typography fontWeight={"bold"} fontFamily={"Roboto Mono,monospace"}> ViewIdentity </Typography>
                                     </MenuItem>
                                     <MenuItem
                                         onClick={() => setAnchor(null)}
                                         component={Link}
                                         to="/Allusers">
                                         <i className="fa-solid fa-people-line" style={{ color: "black", paddingRight: "10px" }}></i>
-                                        <Typography variant="h6"> All </Typography>
+                                        <Typography fontWeight={"500"} fontFamily={"Roboto Mono,monospace"}> Search Identity</Typography>
                                     </MenuItem>
                                     <MenuItem
                                         onClick={() => setAnchor(null)}
@@ -150,7 +151,7 @@ const Navigation = (props: any) => {
                                                 style={{ color: "black", paddingRight: "10px" }}
                                             ></i>
                                         </ListItemIcon>
-                                        <Typography variant="h6"> blog</Typography>
+                                        <Typography fontWeight={"bold"} fontFamily={"Roboto Mono,monospace"}> blog</Typography>
                                     </MenuItem>
                                     <MenuItem
                                         onClick={() => setAnchor(null)}
@@ -164,7 +165,7 @@ const Navigation = (props: any) => {
                                                 style={{ color: "black", paddingRight: "10px" }}
                                             ></i>
                                         </ListItemIcon>
-                                        <Typography variant="h6">Design </Typography>
+                                        <Typography fontWeight={"bold"} fontFamily={"Roboto Mono,monospace"}>Design </Typography>
 
 
                                     </MenuItem>
@@ -191,7 +192,7 @@ const Navigation = (props: any) => {
                                     variant="text"
                                     component={Link}
                                     to="/"
-                                    style={{ fontWeight: "500", color: "black" }}
+                                    style={{ fontWeight: "700", color: "black", fontFamily: "Roboto Mono,monospace" }}
                                 > <i
                                     className="fa-solid fa-house"
                                     style={{ color: "black", paddingRight: "10px" }}
@@ -203,9 +204,9 @@ const Navigation = (props: any) => {
                                     variant="text"
                                     component={Link}
                                     to="/ViewIdentity"
-                                    style={{ fontWeight: "500", color: "black" }}
+                                    style={{ fontWeight: "700", color: "black", fontFamily: "Roboto Mono,monospace" }}
                                 ><i
-                                    className="fas fa-fingerprint"
+                                    className="fa-solid fa-id-card"
                                     style={{ color: "black", paddingRight: "10px" }}
                                 ></i>
 
@@ -214,16 +215,16 @@ const Navigation = (props: any) => {
                                 <Button variant="text"
                                     component={Link}
                                     to="/Allusers"
-                                    style={{ fontWeight: "500", color: "black" }}>
-                                    <i className="fa-solid fa-people-line" style={{ color: "black", paddingRight: "10px", fontWeight: "bolder" }}></i>
-                                    All
+                                    style={{ fontWeight: "700", color: "black", fontFamily: "Roboto Mono,monospace" }}>
+                                    <i className="fa-solid fa-search" style={{ color: "black", paddingRight: "10px", fontWeight: "bolder" }}></i>
+                                    Search Identity
                                 </Button>
-                                <Button
+                                {/* <Button
                                     variant="text"
                                     component={Link}
                                     to="/blog"
 
-                                    style={{ fontWeight: "500", color: "black" }}
+                                    style={{ fontWeight: "700", color: "black", fontFamily: "Roboto Mono,monospace" }}
                                 >
                                     <i
                                         className="fa-solid fa-pen"
@@ -236,14 +237,14 @@ const Navigation = (props: any) => {
                                     component={Link}
                                     to="/design"
 
-                                    style={{ fontWeight: "500", color: "black" }}
+                                    style={{ fontWeight: "700", color: "black", fontFamily: "Roboto Mono,monospace" }}
                                 >
                                     <i
                                         className="fas fa-drafting-compass"
                                         style={{ color: "black", paddingRight: "10px" }}
                                     ></i>
                                     Design
-                                </Button>
+                                </Button> */}
                                 <WalletMultiButton
                                     style={{
                                         fontFamily: "Roboto Mono,monospace",

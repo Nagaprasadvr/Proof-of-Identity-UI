@@ -7,6 +7,9 @@ import data from "./MOCK_DATA.json"
 import { Button } from '@material-ui/core';
 import { useState } from 'react';
 import RequestModal from './RequestModal';
+import { toast } from 'react-hot-toast';
+import { RowingSharp } from '@mui/icons-material';
+import { ServerConnectionProps } from '../Home/Home';
 
 
 interface Data {
@@ -17,10 +20,11 @@ interface Data {
 
 
 
-const Allusers = () => {
+const Allusers = ({ connected }: ServerConnectionProps) => {
     const wallet = useWallet();
     const [tableData, setTableData] = useState(data);
-    const [value, setValue] = useState('')
+    const [value, setValue] = useState('');
+    const [searchedRows, setSearchedRows] = useState<Data[]>([]);
     const [dataSource, setDataSource] = useState<Data[]>(data)
     const [tableFilter, setTableFilter] = useState<Data[]>([]);
     const [open, setOpen] = useState(false);
@@ -41,33 +45,92 @@ const Allusers = () => {
         }
     }
 
-    function AllUsersData() {
-        return (<tbody>
-            {
-                value.length > 0 ? tableFilter.map((item, index) => (
-                    <tr style={{ width: "100vw" }} key={index}>
-                        <td style={{ textAlign: "center" }}>{index + 1}</td>
-                        <td>{item.name}</td>
-                        <td>{item.pubkey}</td>
-                        <td><Button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }} onClick={modalOpener}>Request</Button></td>
-                    </tr>
-                ))
-                    :
-                    dataSource.map((item, index) => (
-                        <tr style={{ width: "100vw" }} key={index}>
-                            <td style={{ textAlign: "center" }}>{index + 1}</td>
-                            <td>{item.name}</td>
-                            <td>{item.pubkey}</td>
-                            <td><button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }} onClick={modalOpener}>Request</button></td>
-                        </tr>
-                    ))
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchedRows([])
+        if (e.target.value !== "") {
+            setValue(e.target.value);
+        }
+        else {
+            setValue("")
+        }
+    }
+
+
+    const onClickSubmit = () => {
+
+        let rows: Data[] = [];
+        try {
+            dataSource.forEach((data) => {
+                if (data.name.toLowerCase() === value.toLowerCase()) {
+
+                    rows.push(data)
+                }
+            })
+
+            if (rows.length > 0) {
+                setSearchedRows(rows)
             }
-        </tbody>
+            else {
+                setSearchedRows([])
+                toast.error("Searched Name Doesnt exist!")
+            }
+
+        }
+        catch (e) {
+            toast.error("Searched Name is not associated with any Digital Identity")
+        }
+    }
+
+    function AllUsersData() {
+        return (
+            <>
+                {
+                    searchedRows.length > 0 ?
+                        <tbody>
+                            {searchedRows.map((item, index) => {
+                                return (
+                                    <tr style={{ width: "100vw" }} key={index}>
+                                        <td style={{ textAlign: "center" }}>{index + 1}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.pubkey}</td>
+                                        <td> <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white App " onClick={modalOpener}>
+                                            Request
+                                        </button></td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody> : (
+                            null
+                        )
+                }
+            </>
+
         )
+        // value.length > 0 ? tableFilter.map((item, index) => (
+        //     <tr style={{ width: "100vw" }} key={index}>
+        //         <td style={{ textAlign: "center" }}>{index + 1}</td>
+        //         <td>{item.name}</td>
+        //         <td>{item.pubkey}</td>
+        //         <td><Button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }} onClick={modalOpener}>Request</Button></td>
+        //     </tr>
+        // ))
+        //     :
+        //     dataSource.map((item, index) => (
+        //         <tr style={{ width: "100vw" }} key={index}>
+        //             <td style={{ textAlign: "center" }}>{index + 1}</td>
+        //             <td>{item.name}</td>
+        //             <td>{item.pubkey}</td>
+        //             <td><button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }} onClick={modalOpener}>Request</button></td>
+        //         </tr>
+        //     ))
+
+
+
+
     }
     return (
-        <>
-            {wallet.connected ? (
+        <>{connected ? (
+            wallet.connected ? (
                 open === false ?
                     (
                         <>
@@ -75,35 +138,45 @@ const Allusers = () => {
 
 
                                 <Box className="w3-animate-opacity App" style={{ marginTop: "10vh", width: "100vw", display: "flex", flexDirection: "row", justifyContent: 'space-around' }} >
-                                    <h1 >
-                                        <b>ALL USERS</b>
+                                    <h1 style={{ fontSize: "30px" }} >
+                                        <b>Search for Digital Identities</b>
                                     </h1>
                                     <input
                                         type="text"
                                         placeholder="Search by name"
                                         value={value}
-                                        onChange={filterData}
+                                        onChange={handleInput}
                                         style={{
                                             padding: '8px',
                                             border: '1px solid #ccc',
                                             borderRadius: '4px',
                                             marginBottom: '16px',
                                             width: '25vw',
-                                        }}
-                                    />
-                                </Box>
-                                <Table style={{ width: "90vw", height: "auto", color: "white", fontWeight: "bolder", marginTop: "2vh", zIndex: "500", marginLeft: "5vw" }}>
-                                    <thead>
-                                        <tr style={{ width: "100%" }}>
-                                            <td style={{ textAlign: "center" }}>SL.NO</td>
-                                            <td>Name</td>
-                                            <td>Pub key</td>
-                                            <td>button</td>
-                                        </tr>
-                                    </thead>
-                                    <AllUsersData></AllUsersData>
+                                            marginTop: "15px",
+                                            fontSize: "20px",
+                                            fontWeight: "bold"
 
-                                </Table>
+                                        }}
+
+                                    />
+                                    <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white App " onClick={onClickSubmit}>
+                                        Search
+                                    </button>
+                                </Box>
+                                {searchedRows.length > 0 ? (
+                                    <Table style={{ width: "90vw", height: "auto", color: "lightskyblue", fontWeight: "bolder", marginTop: "2vh", zIndex: "500", marginLeft: "5vw", borderRadius: "rem" }}>
+                                        <thead style={{ color: "lightskyblue" }}>
+                                            <tr style={{ width: "100%" }}>
+                                                <td style={{ textAlign: "center", color: "lightskyblue" }}>ID</td>
+                                                <td style={{ color: "lightskyblue" }}>Name</td>
+                                                <td style={{ color: "lightskyblue" }}>Pub key</td>
+                                                <td style={{ color: "lightskyblue" }}>Action</td>
+                                            </tr>
+                                        </thead>
+                                        <AllUsersData></AllUsersData>
+
+                                    </Table>) : (null)}
+
                             </Box>
                         </>) : (
                         <Box>
@@ -118,11 +191,14 @@ const Allusers = () => {
                     <h1 >
                         <b>Connect your Wallet!</b>
                     </h1>
-                </Box>}
-            {open && (<RequestModal open={open} setOpen={setOpen} ></RequestModal>)}
-
-
-
+                </Box>
+        ) : (
+            <Box className="w3-animate-opacity App" sx={{ marginTop: "20vh", width: "100vw" }} >
+                <h1 >
+                    <b>Protocol Down!</b>
+                </h1>
+            </Box>
+        )}
 
         </>
 

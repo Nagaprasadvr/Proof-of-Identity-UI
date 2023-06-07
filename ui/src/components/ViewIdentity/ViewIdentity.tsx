@@ -3,15 +3,17 @@ import "../../App.css";
 import { InputPubkey } from "./inputForm";
 import { Box } from '@mui/material';
 import { useWallet } from "@solana/wallet-adapter-react";
-export const ViewIdentity = () => {
+import { ServerConnectionProps } from "../Home/Home";
+
+export const ViewIdentity = ({ connected }: ServerConnectionProps) => {
     const wallet = useWallet();
 
-    
+
 
     return (
 
-        <>
-            {wallet.connected ? (
+        <>{connected ? (
+            wallet.connected ? (
                 <Box className="w3-animate-opacity App" sx={{
                     marginTop: "20vh", width: "100vw"
                 }}>
@@ -22,7 +24,16 @@ export const ViewIdentity = () => {
                     <h1 >
                         <b>Connect your Wallet!</b>
                     </h1>
-                </Box>}
+                </Box>
+        ) : (
+            <Box className="w3-animate-opacity App" sx={{ marginTop: "20vh", width: "100vw" }} >
+                <h1 >
+                    <b>Protocol Down!</b>
+                </h1>
+            </Box>
+
+        )}
+
 
         </>
 

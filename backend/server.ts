@@ -5,6 +5,7 @@ import cors from 'cors';
 import digitalIdentities from "./routes/digitalIdentities.routes";
 import cryptography from "./routes/cryptography.routes"
 import dotenv from 'dotenv';
+import fs from 'fs'
 import { decryptData, encryptData, generateAsymmetricKeyPair } from "./controller/RSA"
 dotenv.config()
 const app:Express = express();
@@ -25,12 +26,10 @@ mongoose.connect(
   },
   (err) => {
     if (err) throw err;
-    console.log("Connected to MongoDB");
   }
 );
 // Routes
 app.get('/Allusers', (req: Request, res: Response) => {
-  console.log(req.body)
 })
 
 app.get("/", (req:Request, res:Response) => {
@@ -40,9 +39,12 @@ app.use("/digitalIdentities", digitalIdentities);
 
 app.use("/cryptography",cryptography)
 
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+
 
 

@@ -51,6 +51,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
             try {
                 if (walletProvider?.publicKey) {
+                    console.log("firing")
                     const [digitalIdentityPda, bump1] = PublicKey.findProgramAddressSync([Buffer.from("dig_identity"), walletProvider?.publicKey.toBuffer()], digitalIdentity.PROGRAM_ID)
                     const [digitalProofsPda, bump2] = PublicKey.findProgramAddressSync([Buffer.from("dig_proof"), digitalIdentityPda.toBuffer()], digitalIdentity.PROGRAM_ID);
                     const digitalProofsAcc = await digitalIdentity.DigitalProofs.fromAccountAddress(rpcCon, digitalProofsPda);
@@ -257,7 +258,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
 
     return (
-        <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black" }}>
+        <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black" }} sx={{ overflow: "auto" }}>
 
             <Box>
                 <Box style={{ backgroundColor: "black" }}>
@@ -348,8 +349,12 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                             }
                         </tbody>
                     </Table>
+                    <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
+                        <h6 style={{ color: "lightskyblue" }}>*File size should be less than 50KB</h6>
+                    </Box>
 
-                    <div className="container">
+
+                    <div className="container" style={{ marginBottom: "4px" }}>
                         <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
                     </div>
                 </form>) : (

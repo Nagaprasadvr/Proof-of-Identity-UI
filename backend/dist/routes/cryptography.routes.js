@@ -8,6 +8,22 @@ const express_1 = __importDefault(require("express"));
 const os_1 = __importDefault(require("os"));
 const fs_1 = __importDefault(require("fs"));
 const router = (0, express_1.default)();
+router.route("/keypairExistence").get((req, res) => {
+    const homeDir = os_1.default.homedir();
+    const path = `${homeDir}/RSA/keypair.json`;
+    try {
+        if (fs_1.default.existsSync(path)) {
+            console.log("exists");
+            return res.json({ message: true });
+        }
+        else {
+            return res.json({ message: false });
+        }
+    }
+    catch (e) {
+        res.json({ message: "error" });
+    }
+});
 router.route("/generateRSAKeyPair").get((req, res) => {
     const keyPair = (0, RSA_1.generateAsymmetricKeyPair)();
     const pubKey = keyPair.publicKey;
