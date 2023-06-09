@@ -1,0 +1,85 @@
+1.Generate an asymmetric key pair
+Algorithm : generateAsymmetricKeyPair()
+Input: Encryption method(RSA), Modulus Length(1028) Format and type 
+       used for Generating pub and Private key (PKCS1 and PEM ).
+Description: This function used to generate an asymmetric key pair 
+       using the RSA algorithm.
+Output : Public and Private Keys
+
+Step 1: [BEGIN]
+Step 2: const = generateKeyPairSync(rsa',{
+    modulusLength: 1028, // Adjust the modulus length as per your requirement
+    publicKeyEncoding: {
+      type: 'pkcs1',
+      format: 'pem',
+    },
+    privateKeyEncoding: {
+      type: 'pkcs1',
+      format: 'pem',
+    },
+  }) )
+Step 3: returns pubkey and private key.
+Step 4: [END]
+
+2.Encryption of Data
+Algorithm : EncryptData()
+Input: Data to be Encrypted and Public key of the Requester.
+Description : This function is take a data of the user and 
+              Encrypt it with the Requester publicKey.
+Output: Return the encrypted Base64 string.
+
+Step1 : [BEGIN]
+Step2 : Convert the data string to a Buffer.
+        encryptedBuffer = crypto.publicEncrypt(publicKey, Buffer.from(data));
+Step3 : encryptedBuffer = crypto.publicEncrypt(publicKey, dataBuffer);
+Step4 : Convert the encrypted data Buffer to a Base64 string
+        encryptedBase64 = encryptedBuffer.toString('base64');
+Step5 : Return the encrypted Base64 string.
+Step6 : [END] 
+
+        
+ 
+3.Decryption of Data
+Algorithm : DEcryptData()
+Input: Encrypted Data and Private key of the user.
+Description : This function is take a Encrypted data of 
+              the Sender and Decrypt it with the Recivers privateKey.
+Output: Return the decrypted data.
+
+Step1 : [BEGIN]
+ 
+Step2 : Convert the encrypted Base64 string to a Buffer.
+        decryptedBuffer = crypto.privateDecrypt(privateKey, encryptedBuffer);
+Step3 : decryptedData = decryptedBuffer.toString('utf8');
+Step4 : Return the decrypted data
+Step5 : [END] 
+
+4.Sending Request
+Algorithm : SendRequest()
+Input: Requester Pubkey,Fields Required, Description and
+       of why he needs it.
+Description : This function is used send the other member to request 
+              for their particular Details.
+Output: Stores the Request in the database.
+
+Step1 : [BEGIN]
+Step2 : Take Survey on what are the details needed for the requester.
+Step3 : Create an object of all the requests.
+Step4 : Push the requester name , object and Requesters public key 
+        to the database.
+Step5 : [END] 
+
+5.Approve/Pending Request
+Algorithm : Approve/PendingRequest()
+Input: This accept the Requester name and Pubkey nad the object of requests.
+Description : This function is used to Approve or deny the Request.
+Output: Send Data or Deny request.
+
+Step1 : [BEGIN]
+Step2 : Accept/Deny Request.
+Step3 : if Deny Request GOTO Step5.
+Step4 : else 
+        Encrypt the Data Requested and Send to the Requester.
+Step5 : [END] 
+
+ 

@@ -274,7 +274,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
 
     return (
-        <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black" }}>
+        <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black", overflow: "auto" }}>
 
             <Box>
                 <Box style={{ backgroundColor: "black" }}>
@@ -365,6 +365,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                             }
                         </tbody>
                     </Table>
+                    <h6 style={{color: "white"}}>*File size should be less than 50KB</h6>
 
                     <div className="container">
                         <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
