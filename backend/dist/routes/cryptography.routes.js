@@ -13,7 +13,6 @@ router.route("/keypairExistence").get((req, res) => {
     const path = `${homeDir}/RSA/keypair.json`;
     try {
         if (fs_1.default.existsSync(path)) {
-            console.log("exists");
             return res.json({ message: true });
         }
         else {
