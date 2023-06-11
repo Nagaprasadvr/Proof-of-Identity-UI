@@ -11,10 +11,9 @@ exports.identitySchema = new mongoose_1.default.Schema({
         required: true,
         unique: true,
     },
-    digitalIdentityPubkey: {
+    name: {
         type: String,
         required: true,
-        unique: true,
     },
 }, {
     timestamps: true,

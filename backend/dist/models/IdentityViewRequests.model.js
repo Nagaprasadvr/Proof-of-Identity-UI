@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const identityViewRequestSchema = new mongoose_1.default.Schema({
-    pubKey: {
+    pubkey: {
         type: String,
         required: true,
         unique: true,
@@ -14,12 +14,7 @@ const identityViewRequestSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
         unique: true,
-    },
-    digitalIdentityPubkey: {
-        type: String,
-        required: true,
-        unique: true,
-    },
+    }
 }, {
     timestamps: true,
 });
