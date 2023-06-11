@@ -13,10 +13,10 @@ router.route("/get").get((req, res) => {
 });
 router.route("/add").post((req, res) => {
     const userPubkey = req.body.userPubkey;
-    const digitalIdentityPubkey = req.body.digitalIdentityPubkey;
+    const name = req.body.name;
     const newdigId = new DigitalIdentities_model_1.default({
         userPubkey: userPubkey,
-        digitalIdentityPubkey: digitalIdentityPubkey,
+        name: name
     });
     newdigId
         .save()

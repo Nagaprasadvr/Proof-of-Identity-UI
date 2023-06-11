@@ -273,8 +273,12 @@ export const InputForm = () => {
                                         const encUserData = response.data.encryptedData as UserData
                                         const id = toast.loading("loading")
                                         setTimeout(async () => {
-
-                                            await createIdentity(id, encUserData)
+                                            try {
+                                                await createIdentity(id, encUserData)
+                                                await axios.post("http//localhost:9000/digitalIdentities/add",{userPubkey: solWallet.publicKey?.toBase58,name: userData.name })
+                                            } catch (err) {
+                                                toast.error("Failed to create Identity");
+                                            }
                                         }, 3000)
 
                                     }} applyLogic={true} isPreview={false} />

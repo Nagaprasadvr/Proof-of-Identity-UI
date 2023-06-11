@@ -7,10 +7,9 @@ export const identitySchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    digitalIdentityPubkey: {
+    name: {
       type: String,
       required: true,
-      unique: true,
     },
   },
   {

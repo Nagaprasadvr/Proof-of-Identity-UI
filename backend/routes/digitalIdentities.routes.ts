@@ -11,10 +11,10 @@ router.route("/get").get((req:Request, res:Response ) => {
 
 router.route("/add").post((req, res) => {
   const userPubkey = req.body.userPubkey;
-  const digitalIdentityPubkey = req.body.digitalIdentityPubkey;
+  const name = req.body.name;
   const newdigId = new DigIds({
     userPubkey: userPubkey,
-    digitalIdentityPubkey: digitalIdentityPubkey,
+    name: name
   });
   newdigId
     .save()

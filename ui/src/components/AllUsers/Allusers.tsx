@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box } from '@mui/material';
 import { Table } from 'react-bootstrap';
 import "./alluser.css";
@@ -10,6 +10,9 @@ import RequestModal from './RequestModal';
 import { toast } from 'react-hot-toast';
 import { RowingSharp } from '@mui/icons-material';
 import { ServerConnectionProps } from '../Home/Home';
+import { fetchData } from '@project-serum/anchor/dist/cjs/utils/registry';
+import axios from 'axios';
+import { publicKey } from '@metaplex-foundation/beet-solana';
 
 
 interface Data {
@@ -21,6 +24,7 @@ interface Data {
 
 
 const Allusers = ({ connected }: ServerConnectionProps) => {
+    const [allIdentities, setAllIdentities] = useState<Data[]>([]);
     const wallet = useWallet();
     const [tableData, setTableData] = useState(data);
     const [value, setValue] = useState('');
@@ -28,6 +32,27 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
     const [dataSource, setDataSource] = useState<Data[]>(data)
     const [tableFilter, setTableFilter] = useState<Data[]>([]);
     const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get("http://localhost:9000/digitalIdentities/get");
+                console.log(response)
+                const userData: Data[] = [];
+                response.data.map((data:any) => {
+                    const pubkey = data.userPubkey
+                    const name = data.name
+                    userData.push({pubkey,name})
+                })
+                setAllIdentities(userData)
+                // console.log(allIdentities)
+
+            } catch (err) {
+                console.error(err)
+            }
+    }
+    fetchData();
+    }, [])
 
     const modalOpener = () => {
 
@@ -60,7 +85,7 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
 
         let rows: Data[] = [];
         try {
-            dataSource.forEach((data) => {
+            allIdentities.forEach((data) => {
                 if (data.name.toLowerCase() === value.toLowerCase()) {
 
                     rows.push(data)
@@ -106,23 +131,7 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
             </>
 
         )
-        // value.length > 0 ? tableFilter.map((item, index) => (
-        //     <tr style={{ width: "100vw" }} key={index}>
-        //         <td style={{ textAlign: "center" }}>{index + 1}</td>
-        //         <td>{item.name}</td>
-        //         <td>{item.pubkey}</td>
-        //         <td><Button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }} onClick={modalOpener}>Request</Button></td>
-        //     </tr>
-        // ))
-        //     :
-        //     dataSource.map((item, index) => (
-        //         <tr style={{ width: "100vw" }} key={index}>
-        //             <td style={{ textAlign: "center" }}>{index + 1}</td>
-        //             <td>{item.name}</td>
-        //             <td>{item.pubkey}</td>
-        //             <td><button style={{ color: "white", backgroundColor: "lightskyblue", borderRadius: "5px" }} onClick={modalOpener}>Request</button></td>
-        //         </tr>
-        //     ))
+       
 
 
 

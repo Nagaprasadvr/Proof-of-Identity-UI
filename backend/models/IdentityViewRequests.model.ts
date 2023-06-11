@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const identityViewRequestSchema = new mongoose.Schema(
   {
-    pubKey: {
+    pubkey: {
       type: String,
       required: true,
       unique: true,
@@ -11,12 +11,7 @@ const identityViewRequestSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-    },
-    digitalIdentityPubkey: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+    }
   },
   {
     timestamps: true,
