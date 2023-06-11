@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import '../../App.css';
 import axios from 'axios'
 import { toast } from 'react-hot-toast';
-const RSAKeypairGenerate = () => {
+interface RSAKeypairGenerateProps {
+    setTrigger: Dispatch<SetStateAction<boolean>>
+}
+const RSAKeypairGenerate = ({ setTrigger }: RSAKeypairGenerateProps) => {
 
     const generateKeypair = async () => {
         const id = toast.loading("generating RSA Keypair...")
@@ -17,7 +20,7 @@ const RSAKeypairGenerate = () => {
             else {
                 toast.error(message)
             }
-
+            setTrigger(true)
 
         }
         catch (e) {

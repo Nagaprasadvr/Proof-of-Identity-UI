@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.decryptData = exports.encryptData = exports.generateAsymmetricKeyPair = void 0;
 const crypto_1 = __importDefault(require("crypto"));
 // Generate an asymmetric key pair
-const generateAsymmetricKeyPair = () => {
+const generateAsymmetricKeyPair = (modulus) => {
     return crypto_1.default.generateKeyPairSync('rsa', {
-        modulusLength: 512,
+        modulusLength: modulus,
         publicKeyEncoding: {
             type: 'pkcs1',
             format: 'pem',

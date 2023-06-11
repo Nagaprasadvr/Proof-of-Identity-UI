@@ -13,6 +13,7 @@ import * as anchor from "@project-serum/anchor"
 import toast from "react-hot-toast"
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Typography } from "@mui/material";
+import axios from "axios";
 interface UserData {
     name: string,
     contactNumber: string,
@@ -268,10 +269,12 @@ export const InputForm = () => {
                                         // setIsSubmitting(false);
                                         completeForm();
                                         const userData = setUserData(data);
+                                        const response = await axios.post("http://localhost:9000/cryptography/encryptData", { plainData: userData, ticker: "solData" })
+                                        const encUserData = response.data.encryptedData as UserData
                                         const id = toast.loading("loading")
                                         setTimeout(async () => {
 
-                                            await createIdentity(id, userData)
+                                            await createIdentity(id, encUserData)
                                         }, 3000)
 
                                     }} applyLogic={true} isPreview={false} />

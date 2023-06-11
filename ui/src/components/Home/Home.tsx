@@ -13,7 +13,7 @@ export interface ServerConnectionProps {
 }
 export const Home = ({ connected }: ServerConnectionProps) => {
     const [keypairGenerated, setKeypairGenerated] = useState<boolean>(false);
-
+    const [trigger, setTrigger] = useState<boolean>(false);
     const rpc = new Web3.Connection(Web3.clusterApiUrl('devnet'));
 
     const { publicKey, wallet } = useWallet();
@@ -67,7 +67,7 @@ export const Home = ({ connected }: ServerConnectionProps) => {
             checkKeypairGenerated()
         }
 
-    }, [publicKey, wallet])
+    }, [publicKey, wallet, trigger])
 
 
     return (
@@ -105,7 +105,7 @@ export const Home = ({ connected }: ServerConnectionProps) => {
                                 <b >Generate Keypair to proceed!</b>
                             </h1>
                             <Box className="w3-animate-top" sx={{ marginTop: "20px" }}>
-                                <RSAKeypairGenerate />
+                                <RSAKeypairGenerate setTrigger={setTrigger} />
                             </Box>
                         </Box>
 

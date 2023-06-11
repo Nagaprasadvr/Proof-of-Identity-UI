@@ -57,7 +57,7 @@ function App() {
             <ConnectionProvider endpoint={endpoint}>
                 <WalletProvider wallets={wallets}>
                     <WalletModalProvider>
-                        <Toaster position='bottom-left' toastOptions={{ style: { color: "black", backgroundColor: "lightskyblue", width: "100vw" } }} />
+                        <Toaster position='bottom-left' toastOptions={{ style: { color: "black", backgroundColor: "lightskyblue", width: "100vw", fontFamily: "Roboto Mono,monospace", fontWeight: "600" } }} />
                         <Box>
                             <Box>
                                 <Navigation></Navigation>

@@ -2,9 +2,9 @@ import crypto from 'crypto';
 import base58 from 'bs58'
 import bs16 from 'bs58'
 // Generate an asymmetric key pair
-export const generateAsymmetricKeyPair = () => {
+export const generateAsymmetricKeyPair = (modulus:number) => {
   return crypto.generateKeyPairSync('rsa', {
-    modulusLength: 512, // Adjust the modulus length as per your requirement
+    modulusLength: modulus, // Adjust the modulus length as per your requirement
     publicKeyEncoding: {
       type: 'pkcs1',
       format: 'pem',

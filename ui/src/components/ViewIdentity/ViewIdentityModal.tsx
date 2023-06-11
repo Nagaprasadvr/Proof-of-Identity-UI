@@ -38,7 +38,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
     const [refresh, setRefresh] = useState(false)
 
 
-
     const rpcCon = useMemo(() => {
         return new solana.Connection(solana.clusterApiUrl("devnet"))
     }, [])
@@ -253,10 +252,160 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         setAadhar(null);
     };
 
+    const RenderUploadedLinksTable = useMemo(() => {
+        if (open === true) {
+            return (
+                <>
+                    <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
+                        <tbody>
+                            <tr>
+                                <td>digitalProofsPdaAddress</td>
+                                <td>{digitalProofsPda}</td>
+                            </tr>
+                            <tr>
+                                <td>arweave-picUploadLink</td>
+                                <td><a href={arweaveLink + digitalProofs?.pictureUpload} style={{ color: "white" }}>picture Arweve link</a></td>
+                            </tr>
+                            <tr>
+                                <td>arweave-passportLink</td>
+                                <td><a href={arweaveLink + digitalProofs?.passportUpload} style={{ color: "white" }}>passport Arweve link</a></td>
+                            </tr>
+                            <tr>
+                                <td>arweave-panUploadLink</td>
+                                <td><a href={arweaveLink + digitalProofs?.panUpload} style={{ color: "white" }}>pan Arweve link</a></td>
+                            </tr>
+                            <tr>
+                                <td>arweave-aadharUploadLink</td>
+                                <td><a href={arweaveLink + digitalProofs?.aadharUpload} style={{ color: "white" }}>aadhar Arweve link</a></td>
+                            </tr>
+                            <tr>
+
+                            </tr>
+                        </tbody>
+                    </Table>
+
+                </>
+
+            )
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, refresh, digitalProofsPda, digitalProofs?.pictureUpload, digitalProofs?.passportUpload, digitalProofs?.panUpload, digitalProofs?.aadharUpload])
+
+    const RenderUploadLinksTable = useMemo(() => {
+        if (open) {
+
+            return (
+
+                < form action="" method="get" onSubmit={handleSubmit} >
+                    <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
+                        <tbody>
+                            {
+                                !data.picAttached && (<tr>
+                                    <td style={{ color: "white" }}> Pic uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        <form action="" method="get" onSubmit={handleSubmit}>
+                                            <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
+                                                <tbody>
+                                                    {
+                                                        !data.picAttached && (<tr>
+                                                            <td style={{ color: "white" }}> Pic uploaded</td>
+                                                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                                                {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
+                                                            </td>
+                                                        </tr>)
+                                                    }
+                                                    {
+                                                        !data.passportAttached && (<tr>
+                                                            <td style={{ color: "white" }}>Passport Uploaded</td>
+                                                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                                                {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
+                                                            </td>
+                                                        </tr>)
+                                                    }
+
+                                                    {
+                                                        !data.panAttached && (<tr>
+                                                            <td style={{ color: "white" }}>
+                                                                Pan Uploaded
+                                                            </td>
+                                                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                                                {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
+                                                            </td>
+                                                        </tr>)
+                                                    }
+                                                    {
+                                                        !data.aadharAttached && (<tr>
+                                                            <td style={{ color: "white" }}>Aadhar Uploaded</td>
+                                                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                                                {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
+                                                            </td>
+                                                        </tr>)
+                                                    }
+                                                </tbody>
+                                            </Table>
+                                            <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
+                                                <h6 style={{ color: "lightskyblue" }}>*File size should be less than 50KB</h6>
+                                            </Box>
 
 
+                                            <div className="container" style={{ marginBottom: "4px" }}>
+                                                <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
+                                            </div>
+                                        </form>                       {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+                            {
+                                !data.passportAttached && (<tr>
+                                    <td style={{ color: "white" }}>Passport Uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+
+                            {
+                                !data.panAttached && (<tr>
+                                    <td style={{ color: "white" }}>
+                                        Pan Uploaded
+                                    </td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+                            {
+                                !data.aadharAttached && (<tr>
+                                    <td style={{ color: "white" }}>Aadhar Uploaded</td>
+                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                        {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
+                                    </td>
+                                </tr>)
+                            }
+                        </tbody>
+                    </Table>
+                    <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
+                        <h6 style={{ color: "lightskyblue" }}>*File size should be less than 50KB</h6>
+                    </Box>
 
 
+                    <div className="container" style={{ marginBottom: "4px" }}>
+                        <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
+                    </div>
+                </form >
+
+            )
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, refresh, data.picAttached, data.passportAttached, data.panAttached, data.aadharAttached])
+
+
+    const handleRefresh = () => {
+        toast.loading("Refreshing data", { duration: 2000 });
+        setRefresh(!refresh);
+    }
     return (
         <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black" }} sx={{ overflow: "auto" }}>
 
@@ -265,7 +414,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                     <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
                 </Box>
                 <Box style={{}}>
-                    <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto", marginLeft: "45vw", marginBottom: "2vh" }} type="submit" onClick={() => { setRefresh(!refresh) }}>Refresh</button>
+                    <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto", marginLeft: "45vw", marginBottom: "2vh" }} type="submit" onClick={handleRefresh}>Refresh</button>
 
                 </Box>
 
@@ -309,84 +458,20 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                     </tbody>
                 </Table>
 
-                {!proofsCreated ? (<form action="" method="get" onSubmit={handleSubmit}>
-                    <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
-                        <tbody>
-                            {
-                                !data.picAttached && (<tr>
-                                    <td style={{ color: "white" }}> Pic uploaded</td>
-                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                        {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
-                                    </td>
-                                </tr>)
-                            }
-                            {
-                                !data.passportAttached && (<tr>
-                                    <td style={{ color: "white" }}>Passport Uploaded</td>
-                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                        {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
-                                    </td>
-                                </tr>)
-                            }
+                {!proofsCreated ?
+                    (
 
-                            {
-                                !data.panAttached && (<tr>
-                                    <td style={{ color: "white" }}>
-                                        Pan Uploaded
-                                    </td>
-                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                        {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
-                                    </td>
-                                </tr>)
-                            }
-                            {
-                                !data.aadharAttached && (<tr>
-                                    <td style={{ color: "white" }}>Aadhar Uploaded</td>
-                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                        {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
-                                    </td>
-                                </tr>)
-                            }
-                        </tbody>
-                    </Table>
-                    <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
-                        <h6 style={{ color: "lightskyblue" }}>*File size should be less than 50KB</h6>
-                    </Box>
+                        <>
+                            {RenderUploadLinksTable}
+                        </>
+                    )
+                    :
+                    (
+                        <>
+                            {RenderUploadedLinksTable}
+                        </>
 
-
-                    <div className="container" style={{ marginBottom: "4px" }}>
-                        <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
-                    </div>
-                </form>) : (
-                    <>
-                        <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
-                            <tbody>
-                                <tr>
-                                    <td>digitalProofsPdaAddress</td>
-                                    <td>{digitalProofsPda}</td>
-                                </tr>
-                                <tr>
-                                    <td>arweave-picUploadLink</td>
-                                    <td><a href={arweaveLink + digitalProofs?.pictureUpload} style={{ color: "white" }}>picture Arweve link</a></td>
-                                </tr>
-                                <tr>
-                                    <td>arweave-passportLink</td>
-                                    <td><a href={arweaveLink + digitalProofs?.passportUpload} style={{ color: "white" }}>passport Arweve link</a></td>
-                                </tr>
-                                <tr>
-                                    <td>arweave-panUploadLink</td>
-                                    <td><a href={arweaveLink + digitalProofs?.panUpload} style={{ color: "white" }}>pan Arweve link</a></td>
-                                </tr>
-                                <tr>
-                                    <td>arweave-aadharUploadLink</td>
-                                    <td><a href={arweaveLink + digitalProofs?.aadharUpload} style={{ color: "white" }}>aadhar Arweve link</a></td>
-                                </tr>
-                            </tbody>
-                        </Table>
-
-                    </>
-
-                )
+                    )
                 }
 
 
@@ -395,7 +480,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
 
 
-        </Modal>
+        </Modal >
     )
 }
 
