@@ -7,6 +7,8 @@ import cryptography from "./routes/cryptography.routes"
 import dotenv from 'dotenv';
 import fs from 'fs'
 import { decryptData, encryptData, generateAsymmetricKeyPair } from "./controller/RSA"
+import request from "./routes/requests.routes";
+
 dotenv.config()
 const app:Express = express();
 const port = 9000;
@@ -37,7 +39,9 @@ app.get("/", (req:Request, res:Response) => {
 });
 app.use("/digitalIdentities", digitalIdentities);
 
-app.use("/cryptography",cryptography)
+app.use("/cryptography", cryptography)
+
+app.use("/requests", request);
 
 
 // Start the server

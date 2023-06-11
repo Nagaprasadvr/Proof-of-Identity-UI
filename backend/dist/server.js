@@ -9,6 +9,7 @@ const cors_1 = __importDefault(require("cors"));
 const digitalIdentities_routes_1 = __importDefault(require("./routes/digitalIdentities.routes"));
 const cryptography_routes_1 = __importDefault(require("./routes/cryptography.routes"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const requests_routes_1 = __importDefault(require("./routes/requests.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = 9000;
@@ -34,6 +35,7 @@ app.get("/", (req, res) => {
 });
 app.use("/digitalIdentities", digitalIdentities_routes_1.default);
 app.use("/cryptography", cryptography_routes_1.default);
+app.use("/requests", requests_routes_1.default);
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
