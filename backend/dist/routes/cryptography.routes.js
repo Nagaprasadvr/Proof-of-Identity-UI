@@ -21,7 +21,7 @@ router.route("/keypairExistence").get((req, res) => {
         }
     }
     catch (e) {
-        res.json({ message: "error" });
+        return res.json({ message: "error" });
     }
 });
 router.route("/generateRSAKeyPair").get((req, res) => {
@@ -68,7 +68,9 @@ router.route("/encryptData").post((req, res) => {
     }
     const ticker = req.body.ticker;
     if (ticker === "solData") {
+        console.log("inside");
         const plainData = req.body.plainData;
+        console.log("plaindata:", plainData);
         const keypairpath = `${homeDir}/RSA/keypair_512.json`;
         const keypair = fs_1.default.readFileSync(keypairpath);
         const keypairObj = JSON.parse(keypair.toString());
@@ -88,8 +90,8 @@ router.route("/encryptData").post((req, res) => {
             passportId: encryptedPassportID,
             dob: encryptedDob
         };
-        res.json({ encryptData: encryptedUserData });
-        res.json({ encryptedData: RSA_1.encryptData });
+        console.log("encczf:", encryptedUserData);
+        return res.json({ encryptedData: encryptedUserData });
     }
     else if (ticker === "arweaveData") {
         const plainData = req.body.plainData;
@@ -106,7 +108,57 @@ router.route("/encryptData").post((req, res) => {
             passportUploadLink: encryptedpassportLink,
             aadharUploadLink: encryptedaadharLink
         };
-        res.json({ encryptedData: encryptedArweaveData });
+        return res.json({ encryptedData: encryptedArweaveData });
+    }
+});
+router.route("/decryptData").post((req, res) => {
+    const homeDir = os_1.default.homedir();
+    if (!(fs_1.default.existsSync(`${homeDir}/RSA/keypair_512.json`) && fs_1.default.existsSync(`${homeDir}/RSA/keypair_1028.json`))) {
+        return res.json({ message: "Keypair doesn't exist" });
+    }
+    const ticker = req.body.ticker;
+    if (ticker === "solData") {
+        console.log("inside");
+        const encData = req.body.encData;
+        console.log("plaindata:", encData);
+        const keypairpath = `${homeDir}/RSA/keypair_512.json`;
+        const keypair = fs_1.default.readFileSync(keypairpath);
+        const keypairObj = JSON.parse(keypair.toString());
+        const decryptedName = (0, RSA_1.decryptData)(encData.name, keypairObj.privateKey);
+        const decryptedContactNumber = (0, RSA_1.decryptData)(encData.contactNumber, keypairObj.privateKey);
+        const decryptedDob = (0, RSA_1.decryptData)(encData.dob, keypairObj.privateKey);
+        const decryptedAddress = (0, RSA_1.decryptData)(encData.residenceAddress, keypairObj.privateKey);
+        const decryptedPanNo = (0, RSA_1.decryptData)(encData.panNumber, keypairObj.privateKey);
+        const decryptedPassportID = (0, RSA_1.decryptData)(encData.passportId, keypairObj.privateKey);
+        const decryptedAadharNumber = (0, RSA_1.decryptData)(encData.aadharNumber, keypairObj.privateKey);
+        const decryptedUserData = {
+            name: decryptedName,
+            residenceAddress: decryptedAddress,
+            contactNumber: decryptedContactNumber,
+            panNumber: decryptedPanNo,
+            aadharNumber: decryptedAadharNumber,
+            passportId: decryptedPassportID,
+            dob: decryptedDob
+        };
+        console.log("encczf:", decryptedUserData);
+        return res.json({ encryptedData: decryptedUserData });
+    }
+    else if (ticker === "arweaveData") {
+        const encData = req.body.encData;
+        const keypairpath = `${homeDir}/RSA/keypair_1028.json`;
+        const keypair = fs_1.default.readFileSync(keypairpath);
+        const keypairObj = JSON.parse(keypair.toString());
+        const decryptedpicLink = (0, RSA_1.encryptData)(encData.picUploadLink, keypairObj.privateKey);
+        const decryptedaadharLink = (0, RSA_1.encryptData)(encData.aadharUploadLink, keypairObj.privateKey);
+        const decryptedpanLink = (0, RSA_1.encryptData)(encData.panUploadlink, keypairObj.privateKey);
+        const decryptedpassportLink = (0, RSA_1.encryptData)(encData.passportUploadLink, keypairObj.privateKey);
+        const decryptedArweaveData = {
+            panUploadlink: decryptedpanLink,
+            picUploadLink: decryptedpicLink,
+            passportUploadLink: decryptedpassportLink,
+            aadharUploadLink: decryptedaadharLink
+        };
+        return res.json({ encryptedData: decryptedArweaveData });
     }
 });
 exports.default = router;

@@ -14,7 +14,7 @@ import toast from "react-hot-toast"
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Typography } from "@mui/material";
 import axios from "axios";
-interface UserData {
+export interface UserData {
     name: string,
     contactNumber: string,
     dob: string,
@@ -270,12 +270,21 @@ export const InputForm = () => {
                                         completeForm();
                                         const userData = setUserData(data);
                                         const response = await axios.post("http://localhost:9000/cryptography/encryptData", { plainData: userData, ticker: "solData" })
-                                        const encUserData = response.data.encryptedData as UserData
-                                        const id = toast.loading("loading")
-                                        setTimeout(async () => {
+                                        console.log("res:", response)
+                                        const encUserData = response.data.encryptedData as UserData;
+                                        console.log('end:', encUserData)
+                                        const id = toast.loading("loading");
+                                        if (encUserData) {
+                                            setTimeout(async () => {
 
-                                            await createIdentity(id, encUserData)
-                                        }, 3000)
+                                                await createIdentity(id, encUserData)
+                                            }, 3000)
+                                        }
+                                        else {
+                                            toast.dismiss(id);
+                                            toast.error("Failed to create Identity")
+                                        }
+
 
                                     }} applyLogic={true} isPreview={false} />
                             </Box>)

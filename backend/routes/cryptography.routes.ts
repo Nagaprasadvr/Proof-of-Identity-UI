@@ -43,7 +43,7 @@ router.route("/keypairExistence").get((req:Request,res:Response)=>{
     }
     catch(e)
     {
-        res.json({message:"error"})
+        return res.json({message:"error"})
     }
 
 })
@@ -105,7 +105,9 @@ router.route("/encryptData").post((req:Request,res:Response)=>{
     
     if(ticker === "solData")
     {
+        console.log("inside")
         const plainData = req.body.plainData as UserSolData;
+        console.log("plaindata:",plainData)
         const keypairpath = `${homeDir}/RSA/keypair_512.json`
         const keypair = fs.readFileSync(keypairpath);
         const keypairObj:KeyPair = JSON.parse(keypair.toString())
@@ -125,12 +127,9 @@ router.route("/encryptData").post((req:Request,res:Response)=>{
             passportId:encryptedPassportID,
             dob:encryptedDob
         }
-        res.json({encryptData:encryptedUserData})
+        console.log("encczf:",encryptedUserData)
 
-
-
-
-        res.json({encryptedData:encryptData})
+        return res.json({encryptedData:encryptedUserData})
     }
     else if(ticker === "arweaveData")
     {
@@ -150,7 +149,70 @@ router.route("/encryptData").post((req:Request,res:Response)=>{
             aadharUploadLink:encryptedaadharLink
             
         }
-        res.json({encryptedData:encryptedArweaveData})
+        return res.json({encryptedData:encryptedArweaveData})
+    }
+
+
+
+})
+
+
+router.route("/decryptData").post((req:Request,res:Response)=>{
+    const homeDir = os.homedir();
+    if(!(fs.existsSync(`${homeDir}/RSA/keypair_512.json`) && fs.existsSync(`${homeDir}/RSA/keypair_1028.json`)) )
+        {
+            return res.json({ message:"Keypair doesn't exist"})
+        }
+
+    const ticker:"solData" | "arweaveData" = req.body.ticker;
+    
+    if(ticker === "solData")
+    {
+        console.log("inside")
+        const encData = req.body.encData as UserSolData;
+        console.log("plaindata:",encData)
+        const keypairpath = `${homeDir}/RSA/keypair_512.json`
+        const keypair = fs.readFileSync(keypairpath);
+        const keypairObj:KeyPair = JSON.parse(keypair.toString())
+        const decryptedName = decryptData(encData.name,keypairObj.privateKey);
+        const decryptedContactNumber = decryptData(encData.contactNumber,keypairObj.privateKey);
+        const decryptedDob = decryptData(encData.dob,keypairObj.privateKey);
+        const decryptedAddress = decryptData(encData.residenceAddress,keypairObj.privateKey);
+        const decryptedPanNo = decryptData(encData.panNumber,keypairObj.privateKey);
+        const decryptedPassportID = decryptData(encData.passportId,keypairObj.privateKey);
+        const decryptedAadharNumber = decryptData(encData.aadharNumber,keypairObj.privateKey);
+        const decryptedUserData:UserSolData = {
+            name:decryptedName,
+            residenceAddress:decryptedAddress,
+            contactNumber:decryptedContactNumber,
+            panNumber:decryptedPanNo,
+            aadharNumber:decryptedAadharNumber,
+            passportId:decryptedPassportID,
+            dob:decryptedDob
+        }
+        console.log("encczf:",decryptedUserData)
+
+        return res.json({encryptedData:decryptedUserData})
+    }
+    else if(ticker === "arweaveData")
+    {
+        const encData = req.body.encData as ArweaveData;
+        const keypairpath = `${homeDir}/RSA/keypair_1028.json`
+        const keypair = fs.readFileSync(keypairpath);
+        const keypairObj:KeyPair = JSON.parse(keypair.toString())
+        const decryptedpicLink = encryptData((encData as ArweaveData).picUploadLink,keypairObj.privateKey);
+        const decryptedaadharLink = encryptData((encData as ArweaveData).aadharUploadLink,keypairObj.privateKey);
+        const decryptedpanLink = encryptData((encData as ArweaveData).panUploadlink,keypairObj.privateKey);
+        const decryptedpassportLink = encryptData((encData as ArweaveData).passportUploadLink,keypairObj.privateKey);
+        
+        const decryptedArweaveData :ArweaveData = {
+            panUploadlink:decryptedpanLink,
+            picUploadLink:decryptedpicLink,
+            passportUploadLink:decryptedpassportLink,
+            aadharUploadLink:decryptedaadharLink
+            
+        }
+        return res.json({encryptedData:decryptedArweaveData})
     }
 
 

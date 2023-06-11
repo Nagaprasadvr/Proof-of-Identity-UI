@@ -10,6 +10,9 @@ import { toast } from "react-hot-toast";
 import * as solana from "@solana/web3.js"
 import "./viewstyle.css"
 import { Table } from "react-bootstrap";
+import { reduceString } from "./helper";
+import { UserData } from "../InputForm/InputForm";
+import axios from "axios";
 interface ViewIdentityModalProps {
     handleClose: () => void,
     open: boolean,
@@ -301,87 +304,100 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                     <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
                         <tbody>
                             {
-                                !data.picAttached && (<tr>
-                                    <td style={{ color: "white" }}> Pic uploaded</td>
-                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                        <form action="" method="get" onSubmit={handleSubmit}>
-                                            <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
-                                                <tbody>
-                                                    {
-                                                        !data.picAttached && (<tr>
-                                                            <td style={{ color: "white" }}> Pic uploaded</td>
-                                                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                                                {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
-                                                            </td>
-                                                        </tr>)
-                                                    }
-                                                    {
-                                                        !data.passportAttached && (<tr>
-                                                            <td style={{ color: "white" }}>Passport Uploaded</td>
-                                                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                                                {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
-                                                            </td>
-                                                        </tr>)
-                                                    }
+                                !data.picAttached && (
+                                    <tr>
+                                        <td style={{ color: "white" }}>Pic uploaded</td>
+                                        <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                            {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
+                                        </td>
+                                    </tr>)
+                            }
+                            {/* {
+                                !data.picAttached && (
+                                    <tr>
+                                        <td style={{ color: "white" }}> Pic uploaded</td>
+                                        <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                            <form action="" method="get" onSubmit={handleSubmit}>
+                                                <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
+                                                    <tbody>
+                                                        {
+                                                            !data.picAttached && (<tr>
+                                                                <td style={{ color: "white" }}> Pic uploaded</td>
+                                                                <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                                                    {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
+                                                                </td>
+                                                            </tr>)
+                                                        }
+                                                        {
+                                                            !data.passportAttached && (<tr>
+                                                                <td style={{ color: "white" }}>Passport Uploaded</td>
+                                                                <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                                                    {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
+                                                                </td>
+                                                            </tr>)
+                                                        }
 
-                                                    {
-                                                        !data.panAttached && (<tr>
-                                                            <td style={{ color: "white" }}>
-                                                                Pan Uploaded
-                                                            </td>
-                                                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                                                {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
-                                                            </td>
-                                                        </tr>)
-                                                    }
-                                                    {
-                                                        !data.aadharAttached && (<tr>
-                                                            <td style={{ color: "white" }}>Aadhar Uploaded</td>
-                                                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                                                {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
-                                                            </td>
-                                                        </tr>)
-                                                    }
-                                                </tbody>
-                                            </Table>
-                                            <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
-                                                <h6 style={{ color: "lightskyblue" }}>*File size should be less than 50KB</h6>
-                                            </Box>
+                                                        {
+                                                            !data.panAttached && (<tr>
+                                                                <td style={{ color: "white" }}>
+                                                                    Pan Uploaded
+                                                                </td>
+                                                                <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                                                    {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
+                                                                </td>
+                                                            </tr>)
+                                                        }
+                                                        {
+                                                            !data.aadharAttached && (<tr>
+                                                                <td style={{ color: "white" }}>Aadhar Uploaded</td>
+                                                                <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                                                    {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
+                                                                </td>
+                                                            </tr>)
+                                                        }
+                                                    </tbody>
+                                                </Table>
+                                                <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
+                                                    <h6 style={{ color: "lightskyblue" }}>*File size should be less than 50KB</h6>
+                                                </Box>
 
 
-                                            <div className="container" style={{ marginBottom: "4px" }}>
-                                                <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
-                                            </div>
-                                        </form>                       {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
-                                    </td>
-                                </tr>)
+                                                <div className="container" style={{ marginBottom: "4px" }}>
+                                                    <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
+                                                </div>
+                                            </form>                       {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
+                                        </td>
+                                    </tr>)
+                            } */}
+                            {
+                                !data.passportAttached && (
+                                    <tr>
+                                        <td style={{ color: "white" }}>Passport Uploaded</td>
+                                        <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                            {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
+                                        </td>
+                                    </tr>)
+                            }
+
+                            {
+                                !data.panAttached && (
+                                    <tr>
+                                        <td style={{ color: "white" }}>
+                                            Pan Uploaded
+                                        </td>
+                                        <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                            {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
+                                        </td>
+                                    </tr>)
                             }
                             {
-                                !data.passportAttached && (<tr>
-                                    <td style={{ color: "white" }}>Passport Uploaded</td>
-                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                        {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
-                                    </td>
-                                </tr>)
-                            }
-
-                            {
-                                !data.panAttached && (<tr>
-                                    <td style={{ color: "white" }}>
-                                        Pan Uploaded
-                                    </td>
-                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                        {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
-                                    </td>
-                                </tr>)
-                            }
-                            {
-                                !data.aadharAttached && (<tr>
-                                    <td style={{ color: "white" }}>Aadhar Uploaded</td>
-                                    <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                        {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
-                                    </td>
-                                </tr>)
+                                !data.aadharAttached && (
+                                    <tr>
+                                        <td style={{ color: "white" }}>Aadhar Uploaded</td>
+                                        <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
+                                            {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
+                                        </td>
+                                    </tr>)
                             }
                         </tbody>
                     </Table>
@@ -401,7 +417,12 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, refresh, data.picAttached, data.passportAttached, data.panAttached, data.aadharAttached])
 
+    const handleDecrypt = async () => {
+        toast.loading("Decrypting..", { duration: 2000 });
+        const response = await axios.post("http://localhost:9000/cryptography/decryptData", { encData: data as UserData, ticker: "solData" });
+        console.log("res:", response)
 
+    }
     const handleRefresh = () => {
         toast.loading("Refreshing data", { duration: 2000 });
         setRefresh(!refresh);
@@ -417,42 +438,46 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                     <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto", marginLeft: "45vw", marginBottom: "2vh" }} type="submit" onClick={handleRefresh}>Refresh</button>
 
                 </Box>
+                <Box style={{}}>
+                    <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto", marginLeft: "45vw", marginBottom: "2vh" }} type="submit" onClick={handleDecrypt}>Decrypt</button>
+
+                </Box>
 
                 <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
                     <thead>
                         <tr>
                             <th style={{ color: "white" }}>Name:</th>
-                            <th style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{data.name}</th>
+                            <th style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{reduceString(data.name, 5)}</th>
                         </tr>
 
                     </thead>
                     <tbody>
                         <tr>
                             <td style={{ color: "white" }}>Pubkey</td>
-                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{pubkey}</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{reduceString(pubkey, 5)}</td>
                         </tr>
                         <tr>
                             <td style={{ color: "white" }}>DIgitalIdentityAddress</td>
-                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{digitalIdentityPda}</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{reduceString(digitalIdentityPda, 5)}</td>
                         </tr>
                         <tr>
                             <td style={{ color: "white" }}>DOB</td>
-                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{data.dob}</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{reduceString(data.dob, 5)}</td>
                         </tr>
                         <tr>
                             <td style={{ color: "white" }}>AadharNumber</td>
-                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{data.aadharNumber}</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{reduceString(data.aadharNumber, 5)}</td>
                         </tr>
                         <tr>
                             <td style={{ color: "white" }}>PanNumber</td>
                             <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                {data.panNumber.toString()}
+                                {reduceString(data.panNumber.toString(), 5)}
                             </td>
                         </tr>
                         <tr>
                             <td style={{ color: "white" }}>PassportNumber</td>
                             <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                {data.passportId.toString()}
+                                {reduceString(data.passportId.toString(), 5)}
                             </td>
                         </tr>
                     </tbody>
