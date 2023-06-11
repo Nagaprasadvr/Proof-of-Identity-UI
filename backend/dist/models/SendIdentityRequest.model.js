@@ -7,7 +7,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const SendIdentityRequestSchema = new mongoose_1.default.Schema({
     pubkey: {
         type: String,
-        required: false,
+        required: true,
         unique: true,
     },
     senderName: {
@@ -16,45 +16,49 @@ const SendIdentityRequestSchema = new mongoose_1.default.Schema({
     },
     name: {
         type: Boolean,
-        required: false,
+        required: true,
+    },
+    address: {
+        type: Boolean,
+        required: true,
     },
     dob: {
         type: Boolean,
-        required: false,
+        required: true,
     },
     panNum: {
         type: Boolean,
-        required: false,
+        required: true,
     },
     aadharNum: {
         type: Boolean,
-        required: false,
+        required: true,
     },
     passportNum: {
         type: Boolean,
-        required: false,
+        required: true,
     },
-    pic: {
+    picUploadLink: {
         type: Boolean,
-        required: false,
+        required: true,
     },
     passportUploadLink: {
         type: Boolean,
-        required: false,
+        required: true,
     },
     panUploadLink: {
         type: Boolean,
-        required: false,
+        required: true,
     },
     aadharUploadLink: {
         type: Boolean,
-        required: false,
+        required: true,
     },
     description: {
-        type: Boolean,
-        required: false,
+        type: String,
+        required: true,
     },
 }, {
     timestamps: true,
 });
-exports.default = mongoose_1.default.model("DigitalIdentities", SendIdentityRequestSchema);
+exports.default = mongoose_1.default.model("IdentityRequests", SendIdentityRequestSchema);

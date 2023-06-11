@@ -4,58 +4,61 @@ const SendIdentityRequestSchema = new mongoose.Schema(
   {
     pubkey: {
       type: String,
-          required: false,
-          unique: true,
-        },
-        senderName: {
-            type: String,
-            required: true,
+      required: true,
+      unique: true,
+    },
+    senderName: {
+      type: String,
+      required: true,
     },
     name: {
       type: Boolean,
-      required: false,
-              },
+      required: true,
+    },
+    address: {
+      type: Boolean,
+      required: true,
+    },
     dob: {
       type: Boolean,
-      required: false,
-              },
+      required: true,
+    },
     panNum: {
       type: Boolean,
-      required: false,
-              },
+      required: true,
+    },
     aadharNum: {
       type: Boolean,
-      required: false,
-              },
+      required: true,
+    },
     passportNum: {
       type: Boolean,
-      required: false,
-              },
-    pic: {
+      required: true,
+    },
+    picUploadLink: {
       type: Boolean,
-      required: false,
-              },
+      required: true,
+    },
     passportUploadLink: {
       type: Boolean,
-      required: false,
-              },
+      required: true,
+    },
     panUploadLink: {
       type: Boolean,
-      required: false,
-              },
+      required: true,
+    },
     aadharUploadLink: {
       type: Boolean,
-      required: false,
-              },
-    description: {
-      type: Boolean,
-      required: false,
-              },
-        
+      required: true,
     },
+    description: {
+      type: String,
+      required: true,
+    },
+  },
   {
     timestamps: true,
   }
 );
 
-export default mongoose.model("DigitalIdentities", SendIdentityRequestSchema);
+export default mongoose.model("IdentityRequests", SendIdentityRequestSchema);
