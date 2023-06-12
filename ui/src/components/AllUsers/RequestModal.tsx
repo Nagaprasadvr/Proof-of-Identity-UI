@@ -42,7 +42,7 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
                 ...formData,
                 [event.target.name]: event.target.checked ? 'true' : 'false',
             });
-        } else{
+        } else {
             setFormData({
                 ...formData,
                 [event.target.name]: event.target.value,
@@ -50,21 +50,12 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
         }
     };
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
         // Perform form submission logic here
-        axios.post('http://localhost:9000/requests/send', { senderName: formData.senderName, publickey: wallet.publicKey, requestedPubkey: requestedPubkey,requestData: formData })
-            .then(response => {
-                // Handle successful response
-                // console.log("Sender Name: " + formData.senderName)
-                // console.log("pubkey:" + wallet.publicKey)
-                // console.log("data:" + formData);
-            })
-            .catch(error => {
-                console.error(error);
-                // Handle error
-            });
-        console.log(formData);
+        const res = await axios.post('http://localhost:9000/requests/send', { senderName: formData.senderName, userPubkey: wallet.publicKey?.toBase58(), requestedPubkey: requestedPubkey, requestData: formData })
+        console.log("res:", res)
+        // console.log(formData);
     };
 
 

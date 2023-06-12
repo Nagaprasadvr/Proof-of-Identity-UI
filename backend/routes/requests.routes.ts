@@ -5,10 +5,10 @@ import { request } from "http";
 const router = express();
 
 router.route("/send").post((req: Request, res: Response) => {
-  console.log("Sender Name: " + req.body.requestData.senderName)
-  console.log("pubkey:" + req.body.publickey)
+  console.log("Sender Name: " + req.body.requestData.senderName);
+  console.log("pubkey:" + req.body.publickey);
   console.log("data:" + JSON.stringify(req.body.requestData));
-  console.log("RequestedPubkey: " + req.body.requestedPubkey)
+  console.log("RequestedPubkey: " + req.body.requestedPubkey);
 
   const userPubkey: string = req.body.userPubkey;
   const senderName: string = req.body.senderName;
@@ -38,7 +38,7 @@ router.route("/send").post((req: Request, res: Response) => {
     panUploadLink: panUploadLink,
     passportUploadLink: passportUploadLink,
     aadharUploadLink: aadharUploadLink,
-    pic: picUploadLink,
+    picUploadLink: picUploadLink,
     description: description,
     address: address,
   });
@@ -54,7 +54,7 @@ router.route("/send").post((req: Request, res: Response) => {
 router.route("/get").get((req: Request, res: Response) => {
   SendRequest.find()
     .then((SendRequest: any) => res.json(SendRequest))
-    .catch((err:any) => res.status(400).json("Error:" + err));
-})
+    .catch((err: any) => res.status(400).json("Error:" + err));
+});
 
 export default router;

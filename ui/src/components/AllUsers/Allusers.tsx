@@ -40,10 +40,11 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
                 const response = await axios.get("http://localhost:9000/digitalIdentities/get");
                 console.log(response)
                 const userData: Data[] = [];
-                response.data.map((data:any) => {
+                // eslint-disable-next-line array-callback-return
+                response.data.map((data: any) => {
                     const pubkey = data.userPubkey
                     const name = data.name
-                    userData.push({pubkey,name})
+                    userData.push({ pubkey, name })
                 })
                 setAllIdentities(userData)
                 // console.log(allIdentities)
@@ -51,8 +52,8 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
             } catch (err) {
                 console.error(err)
             }
-    }
-    fetchData();
+        }
+        fetchData();
     }, [])
 
     const modalOpener = (props: string) => {
@@ -121,7 +122,7 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
                                         <td style={{ textAlign: "center" }}>{index + 1}</td>
                                         <td>{item.name}</td>
                                         <td>{item.pubkey}</td>
-                                        <td> <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white App " onClick={()=>modalOpener(item.pubkey)}>
+                                        <td> <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white App " onClick={() => modalOpener(item.pubkey)}>
                                             Request
                                         </button></td>
                                     </tr>
@@ -134,7 +135,7 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
             </>
 
         )
-       
+
 
 
 

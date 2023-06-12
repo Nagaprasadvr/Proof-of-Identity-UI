@@ -39,7 +39,7 @@ router.route("/send").post((req, res) => {
         panUploadLink: panUploadLink,
         passportUploadLink: passportUploadLink,
         aadharUploadLink: aadharUploadLink,
-        pic: picUploadLink,
+        picUploadLink: picUploadLink,
         description: description,
         address: address,
     });
