@@ -8,7 +8,7 @@ const express_1 = __importDefault(require("express"));
 const router = (0, express_1.default)();
 router.route("/send").post((req, res) => {
     console.log("Sender Name: " + req.body.requestData.senderName);
-    console.log("pubkey:" + req.body.publickey);
+    console.log("pubkey:" + req.body.userPubkey);
     console.log("data:" + JSON.stringify(req.body.requestData));
     console.log("RequestedPubkey: " + req.body.requestedPubkey);
     const userPubkey = req.body.userPubkey;

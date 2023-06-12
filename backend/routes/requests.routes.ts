@@ -6,7 +6,7 @@ const router = express();
 
 router.route("/send").post((req: Request, res: Response) => {
   console.log("Sender Name: " + req.body.requestData.senderName);
-  console.log("pubkey:" + req.body.publickey);
+  console.log("pubkey:" + req.body.userPubkey);
   console.log("data:" + JSON.stringify(req.body.requestData));
   console.log("RequestedPubkey: " + req.body.requestedPubkey);
 

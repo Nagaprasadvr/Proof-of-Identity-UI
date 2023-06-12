@@ -13,8 +13,7 @@ const SendIdentityRequestSchema = new mongoose.Schema(
     },
     requestedPubkey: {
       type: String,
-      required: true,
-      unique: true,
+      required: true, 
     },
     name: {
       type: Boolean,
