@@ -14,6 +14,11 @@ const SendIdentityRequestSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
+    requestedPubkey: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     name: {
         type: Boolean,
         required: true,

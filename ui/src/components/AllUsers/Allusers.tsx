@@ -32,6 +32,7 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
     const [dataSource, setDataSource] = useState<Data[]>(data)
     const [tableFilter, setTableFilter] = useState<Data[]>([]);
     const [open, setOpen] = useState(false);
+    const [pubkey, setPubkey] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,9 +55,11 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
     fetchData();
     }, [])
 
-    const modalOpener = () => {
+    const modalOpener = (props: string) => {
 
         setOpen(true)
+        console.log(props)
+        setPubkey(props)
     }
 
     const filterData = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,7 +121,7 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
                                         <td style={{ textAlign: "center" }}>{index + 1}</td>
                                         <td>{item.name}</td>
                                         <td>{item.pubkey}</td>
-                                        <td> <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white App " onClick={modalOpener}>
+                                        <td> <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white App " onClick={()=>modalOpener(item.pubkey)}>
                                             Request
                                         </button></td>
                                     </tr>
@@ -189,7 +192,7 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
                             </Box>
                         </>) : (
                         <Box>
-                            <RequestModal open={open} setOpen={setOpen} />
+                            <RequestModal open={open} setOpen={setOpen} requestedPubkey={pubkey} />
                         </Box>
 
                     )

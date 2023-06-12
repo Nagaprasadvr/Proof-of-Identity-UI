@@ -11,25 +11,29 @@ import { Modal } from '@material-ui/core';
 import { Button, Table } from 'react-bootstrap';
 import "./reqmodalstyle.css"
 import axios from 'axios';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 interface Props {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
+    requestedPubkey: string;
 }
 
-function RequestModal({ open, setOpen }: Props) {
+function RequestModal({ open, setOpen, requestedPubkey }: Props) {
+    const wallet = useWallet();
     const [formData, setFormData] = useState({
+        senderName: '',
         name: false,
-        pubkey: false,
         dob: false,
-        aadhar: false,
-        aadharnumber: false,
-        pan: false,
+        aadharUploadLink: false,
+        aadharNumber: false,
+        panUploadLink: false,
         panNumber: false,
-        passport: false,
-        passportNum: false,
-        pic: false,
-        textAreaValue: ''
+        passportUploadLink: false,
+        passportNumber: false,
+        picUploadLink: false,
+        address: false,
+        description: '',
     })
 
     const handleChange = (event: any) => {
@@ -38,7 +42,7 @@ function RequestModal({ open, setOpen }: Props) {
                 ...formData,
                 [event.target.name]: event.target.checked ? 'true' : 'false',
             });
-        } else {
+        } else{
             setFormData({
                 ...formData,
                 [event.target.name]: event.target.value,
@@ -49,9 +53,12 @@ function RequestModal({ open, setOpen }: Props) {
     const handleSubmit = (event: any) => {
         event.preventDefault();
         // Perform form submission logic here
-        axios.post('/Allusers', formData)
+        axios.post('http://localhost:9000/requests/send', { senderName: formData.senderName, publickey: wallet.publicKey, requestedPubkey: requestedPubkey,requestData: formData })
             .then(response => {
                 // Handle successful response
+                // console.log("Sender Name: " + formData.senderName)
+                // console.log("pubkey:" + wallet.publicKey)
+                // console.log("data:" + formData);
             })
             .catch(error => {
                 console.error(error);
@@ -66,7 +73,7 @@ function RequestModal({ open, setOpen }: Props) {
     };
 
     return (
-        <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black" }}>
+        <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black", overflow: "scroll" }}>
             <Box style={{ width: "100vw", height: "100vh" }}>
                 <Box style={{ backgroundColor: "black" }}>
                     <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
@@ -79,6 +86,9 @@ function RequestModal({ open, setOpen }: Props) {
                             <Table style={{ marginTop: "5vh" }}>
                                 <tbody>
                                     <tr>
+                                        <td><input type='text' name="senderName" value={formData.senderName} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Your Name</label></td>
+                                    </tr>
+                                    <tr>
                                         <td><input type='checkbox' name="name" checked={formData.name} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Name</label></td>
                                     </tr>
                                     <tr>
@@ -88,31 +98,31 @@ function RequestModal({ open, setOpen }: Props) {
                                         <td><input type='checkbox' name="panNumber" checked={formData.panNumber} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Pan Number</label></td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="passportNum" checked={formData.passportNum} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Passport Number</label></td>
+                                        <td><input type='checkbox' name="passportNumber" checked={formData.passportNumber} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Passport Number</label></td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="aadharnumber" checked={formData.aadharnumber} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Aadhar Number</label></td>
+                                        <td><input type='checkbox' name="aadharNumber" checked={formData.aadharNumber} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Aadhar Number</label></td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="pan" checked={formData.pan} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Pan</label></td>
+                                        <td><input type='checkbox' name="panUploadLink" checked={formData.panUploadLink} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Pan</label></td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="passport" checked={formData.passport} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Passport</label></td>
+                                        <td><input type='checkbox' name="passportUploadLink" checked={formData.passportUploadLink} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Passport</label></td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="aadhar" checked={formData.aadhar} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Aadhar</label></td>
+                                        <td><input type='checkbox' name="aadharUploadLink" checked={formData.aadharUploadLink} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Aadhar</label></td>
                                     </tr>
 
                                     <tr>
-                                        <td><input type='checkbox' name="pic" checked={formData.pic} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>pic</label></td>
+                                        <td><input type='checkbox' name="picUploadLink" checked={formData.picUploadLink} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>pic</label></td>
                                     </tr>
                                     <tr>
                                         <td>Description</td>
                                         <td>
                                             <textarea
-                                                name='textAreaValue'
-                                                value={formData.textAreaValue}
-                                                style={{ color: "white", fontSize: "10px", fontWeight: "medium", width: "100%", height: "100%" }}
+                                                name='description'
+                                                value={formData.description}
+                                                style={{ marginLeft: "2vw", marginRight: "2vw", color: "black" }}
                                                 onChange={handleChange}
                                             ></textarea>
                                         </td>
@@ -120,7 +130,7 @@ function RequestModal({ open, setOpen }: Props) {
                                 </tbody>
                             </Table>
                         </Box>
-                        <button style={{ width: "auto", marginTop: "10px" }} className="balance-button w3-btn w3-hover-white App " onClick={handleClose}>
+                        <button style={{ width: "auto", marginTop: "10px" }} className="balance-button w3-btn w3-hover-white App " onClick={handleSubmit}>
                             Submit Request
                         </button>
                     </form>

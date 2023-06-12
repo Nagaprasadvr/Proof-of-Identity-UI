@@ -7,8 +7,13 @@ const SendIdentityRequest_model_1 = __importDefault(require("../models/SendIdent
 const express_1 = __importDefault(require("express"));
 const router = (0, express_1.default)();
 router.route("/send").post((req, res) => {
+    console.log("Sender Name: " + req.body.requestData.senderName);
+    console.log("pubkey:" + req.body.publickey);
+    console.log("data:" + JSON.stringify(req.body.requestData));
+    console.log("RequestedPubkey: " + req.body.requestedPubkey);
     const userPubkey = req.body.userPubkey;
     const senderName = req.body.senderName;
+    const senderPubkey = req.body.SenderPubKey;
     const name = req.body.requestData.name;
     const dob = req.body.requestData.dob;
     const aadharNumber = req.body.requestData.aadharNumber;
@@ -20,9 +25,11 @@ router.route("/send").post((req, res) => {
     const picUploadLink = req.body.requestData.picUploadLink;
     const description = req.body.requestData.description;
     const address = req.body.requestData.address;
-    console.log("req data", req.body.requestData);
+    const requestedPubkey = req.body.requestedPubkey;
+    // console.log("req data", req.body.requestData);
     const newRequest = new SendIdentityRequest_model_1.default({
         pubkey: userPubkey,
+        requestedPubkey: requestedPubkey,
         senderName: senderName,
         name: name,
         dob: dob,
@@ -42,5 +49,10 @@ router.route("/send").post((req, res) => {
         res.json("the requests has been sent");
     })
         .catch((err) => res.json("Error:" + err));
+});
+router.route("/get").get((req, res) => {
+    SendIdentityRequest_model_1.default.find()
+        .then((SendRequest) => res.json(SendRequest))
+        .catch((err) => res.status(400).json("Error:" + err));
 });
 exports.default = router;
