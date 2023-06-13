@@ -2,18 +2,22 @@ import mongoose from "mongoose";
 
 const SendIdentityRequestSchema = new mongoose.Schema(
   {
-    pubkey: {
+    solPubkey: {
       type: String,
       required: true,
       unique: true,
+    },
+    rsaPubkey: {
+      type: String,
+      required: true,
     },
     senderName: {
       type: String,
       required: true,
     },
-    requestedPubkey: {
+    requestedSolPubkey: {
       type: String,
-      required: true, 
+      required: true,
     },
     name: {
       type: Boolean,

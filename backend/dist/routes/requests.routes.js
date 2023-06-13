@@ -24,11 +24,14 @@ router.route("/send").post((req, res) => {
     const picUploadLink = req.body.requestData.picUploadLink;
     const description = req.body.requestData.description;
     const address = req.body.requestData.address;
-    const senderPubkey = req.body.requestedPubkey;
+    const senderPubkey = req.body.requestedSolPubkey;
+    console.log("senderPubkey:", senderPubkey);
+    const rsaPubkey = req.body.rsaPubkey;
     // console.log("req data", req.body.requestData);
     const newRequest = new SendIdentityRequest_model_1.default({
-        pubkey: userPubkey,
-        requestedPubkey: senderPubkey,
+        solPubkey: userPubkey,
+        rsaPubkey: rsaPubkey,
+        requestedSolPubkey: senderPubkey,
         senderName: senderName,
         name: name,
         dob: dob,

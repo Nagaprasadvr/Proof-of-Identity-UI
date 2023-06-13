@@ -23,11 +23,14 @@ router.route("/send").post((req: Request, res: Response) => {
   const picUploadLink: boolean = req.body.requestData.picUploadLink;
   const description: String = req.body.requestData.description;
   const address: boolean = req.body.requestData.address;
-  const senderPubkey: string = req.body.requestedPubkey;
+  const senderPubkey: string = req.body.requestedSolPubkey;
+  console.log("senderPubkey:", senderPubkey);
+  const rsaPubkey: string = req.body.rsaPubkey;
   // console.log("req data", req.body.requestData);
   const newRequest = new SendRequest({
-    pubkey: userPubkey,
-    requestedPubkey: senderPubkey,
+    solPubkey: userPubkey,
+    rsaPubkey: rsaPubkey,
+    requestedSolPubkey: senderPubkey,
     senderName: senderName,
     name: name,
     dob: dob,

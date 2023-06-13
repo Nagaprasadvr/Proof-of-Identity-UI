@@ -5,16 +5,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const SendIdentityRequestSchema = new mongoose_1.default.Schema({
-    pubkey: {
+    solPubkey: {
         type: String,
         required: true,
         unique: true,
+    },
+    rsaPubkey: {
+        type: String,
+        required: true,
     },
     senderName: {
         type: String,
         required: true,
     },
-    requestedPubkey: {
+    requestedSolPubkey: {
         type: String,
         required: true,
     },

@@ -53,7 +53,7 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         // Perform form submission logic here
-        const res = await axios.post('http://localhost:9000/requests/send', { senderName: formData.senderName, userPubkey: wallet.publicKey?.toBase58(), requestedPubkey: requestedPubkey, requestData: formData })
+        const res = await axios.post('http://localhost:9000/requests/send', { senderName: formData.senderName, userPubkey: wallet.publicKey?.toBase58(), requestedSolPubkey: requestedPubkey, rsaPubkey: "diha", requestData: formData })
         console.log("res:", res)
         // console.log(formData);
     };
@@ -82,7 +82,7 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
                                     <tr>
                                         <td><input type='checkbox' name="name" checked={formData.name} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Name</label></td>
                                     </tr>
-                                    <tr>
+                                    <tr>identityrequests
                                         <td><input type='checkbox' name="dob" checked={formData.dob} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>DOB</label></td>
                                     </tr>
                                     <tr>
