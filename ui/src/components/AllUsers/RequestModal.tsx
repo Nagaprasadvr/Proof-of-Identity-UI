@@ -56,6 +56,9 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
         const res = await axios.post('http://localhost:9000/requests/send', { senderName: formData.senderName, userPubkey: wallet.publicKey?.toBase58(), requestedSolPubkey: requestedPubkey, rsaPubkey: "dajgczkb", requestData: formData })
         console.log("res:", res)
         // console.log(formData);
+        setTimeout(() => {
+            handleClose();
+        }, 2500);
     };
 
 

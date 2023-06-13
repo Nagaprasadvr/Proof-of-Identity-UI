@@ -54,7 +54,7 @@ export const Navibar = () => {
 
           </Nav>
         </Navbar.Collapse>
-        {/* </div> */}
+  
       </Container>
     </Navbar>
   );
