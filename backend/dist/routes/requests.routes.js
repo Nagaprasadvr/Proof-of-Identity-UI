@@ -13,7 +13,6 @@ router.route("/send").post((req, res) => {
     console.log("RequestedPubkey: " + req.body.requestedPubkey);
     const userPubkey = req.body.userPubkey;
     const senderName = req.body.senderName;
-    const senderPubkey = req.body.SenderPubKey;
     const name = req.body.requestData.name;
     const dob = req.body.requestData.dob;
     const aadharNumber = req.body.requestData.aadharNumber;
@@ -25,11 +24,11 @@ router.route("/send").post((req, res) => {
     const picUploadLink = req.body.requestData.picUploadLink;
     const description = req.body.requestData.description;
     const address = req.body.requestData.address;
-    const requestedPubkey = req.body.requestedPubkey;
+    const senderPubkey = req.body.requestedPubkey;
     // console.log("req data", req.body.requestData);
     const newRequest = new SendIdentityRequest_model_1.default({
         pubkey: userPubkey,
-        requestedPubkey: requestedPubkey,
+        requestedPubkey: senderPubkey,
         senderName: senderName,
         name: name,
         dob: dob,

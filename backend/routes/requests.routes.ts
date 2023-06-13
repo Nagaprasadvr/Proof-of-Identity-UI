@@ -12,7 +12,6 @@ router.route("/send").post((req: Request, res: Response) => {
 
   const userPubkey: string = req.body.userPubkey;
   const senderName: string = req.body.senderName;
-  const senderPubkey: string = req.body.SenderPubKey;
   const name: boolean = req.body.requestData.name;
   const dob: boolean = req.body.requestData.dob;
   const aadharNumber: boolean = req.body.requestData.aadharNumber;
@@ -24,11 +23,11 @@ router.route("/send").post((req: Request, res: Response) => {
   const picUploadLink: boolean = req.body.requestData.picUploadLink;
   const description: String = req.body.requestData.description;
   const address: boolean = req.body.requestData.address;
-  const requestedPubkey: string = req.body.requestedPubkey;
+  const senderPubkey: string = req.body.requestedPubkey;
   // console.log("req data", req.body.requestData);
   const newRequest = new SendRequest({
     pubkey: userPubkey,
-    requestedPubkey: requestedPubkey,
+    requestedPubkey: senderPubkey,
     senderName: senderName,
     name: name,
     dob: dob,
