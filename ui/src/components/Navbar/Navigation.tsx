@@ -218,7 +218,14 @@ const Navigation = (props: any) => {
                                     style={{ fontWeight: "700", color: "black", fontFamily: "Roboto Mono,monospace" }}>
                                     <i className="fa-solid fa-search" style={{ color: "black", paddingRight: "10px", fontWeight: "bolder" }}></i>
                                     Search Identity
-                                </Button>
+                                    </Button>
+                                    <Button variant="text"
+                                        component={Link}
+                                        to="/response"
+                                        style={{ fontWeight: "700", color: "black", fontFamily: "Roboto Mono,monospace" }}>
+                                        <i className="fa-solid fa-search" style={{ color: "black", paddingRight: "10px", fontWeight: "bolder" }}></i>
+                                        Response
+                                    </Button>
                                 {/* <Button
                                     variant="text"
                                     component={Link}

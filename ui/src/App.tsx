@@ -19,6 +19,7 @@ import './App.css';
 import Navigation from './components/Navbar/Navigation';
 import Allusers from './components/AllUsers/Allusers';
 import axios from 'axios';
+import DecidePage from './components/ReqRespage/DecidePage';
 require('bootstrap/dist/css/bootstrap.min.css');
 
 function App() {
@@ -69,6 +70,7 @@ function App() {
                                 <Route path="/Allusers" element={<Allusers connected={connected} />}></Route>
                                 <Route path="/blog" element={<Blog />}></Route>
                                 <Route path="/ViewIdentity" element={<ViewIdentity connected={connected} />}></Route>
+                                <Route path="/response" element={<DecidePage></DecidePage> }></Route>
                             </Routes>
                         </Box>
                     </WalletModalProvider>

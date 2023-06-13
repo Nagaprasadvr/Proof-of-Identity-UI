@@ -10,7 +10,7 @@ router.route("/send").post((req, res) => {
     console.log("Sender Name: " + req.body.requestData.senderName);
     console.log("pubkey:" + req.body.userPubkey);
     console.log("data:" + JSON.stringify(req.body.requestData));
-    console.log("RequestedPubkey: " + req.body.requestedPubkey);
+    console.log("RequestedPubkey: " + req.body.requestedSolPubkey);
     const userPubkey = req.body.userPubkey;
     const senderName = req.body.senderName;
     const name = req.body.requestData.name;
