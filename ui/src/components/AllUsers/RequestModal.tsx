@@ -12,6 +12,7 @@ import { Button, Table } from 'react-bootstrap';
 import "./reqmodalstyle.css"
 import axios from 'axios';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { toast } from 'react-hot-toast';
 
 interface Props {
     open: boolean;
@@ -53,12 +54,18 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         // Perform form submission logic here
-        const res = await axios.post('http://localhost:9000/requests/send', { senderName: formData.senderName, userPubkey: wallet.publicKey?.toBase58(), requestedSolPubkey: requestedPubkey, rsaPubkey: "dajgczkb", requestData: formData })
-        console.log("res:", res)
-        // console.log(formData);
-        setTimeout(() => {
-            handleClose();
-        }, 2500);
+        try {
+            const res = await axios.post('http://localhost:9000/requests/send', { senderName: formData.senderName, userPubkey: wallet.publicKey?.toBase58(), requestedSolPubkey: requestedPubkey, rsaPubkey: "dajgczkb", requestData: formData })
+            toast.success("Request sent successfully");
+            setTimeout(() => {
+                handleClose();
+            }, 2500);
+
+        }
+        catch (e) {
+            toast.error("failed to send")
+        }
+
     };
 
 

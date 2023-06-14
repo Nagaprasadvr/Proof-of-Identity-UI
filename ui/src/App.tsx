@@ -22,17 +22,28 @@ import axios from 'axios';
 import DecidePage from './components/ReqRespage/DecidePage';
 require('bootstrap/dist/css/bootstrap.min.css');
 
+export interface RSAKeypair {
+    pubKey: string;
+    privateKey: string;
+}
+
+export interface RSAKepairVariants {
+    keypair512: RSAKeypair,
+    keypair1028: RSAKeypair
+}
+
 function App() {
-    const [connected, setConnected] = useState<boolean>(false);
+    const [serverConnected, setServerConnected] = useState<boolean>(false);
+    const [RSAKeypairs, setRSAKeypairs] = useState<RSAKepairVariants | null>(null)
 
     useEffect(() => {
         const serverConnect = async () => {
             try {
                 await axios.get("http://localhost:9000/");
-                setConnected(true)
+                setServerConnected(true)
             }
             catch (e) {
-                setConnected(false)
+                setServerConnected(false)
             }
         }
 
@@ -52,6 +63,35 @@ function App() {
         [network]
     );
 
+
+    useEffect(() => {
+        const fetchKeypair = async () => {
+            if (serverConnected) {
+                try {
+                    const res = await axios.get("http://localhost:9000/cryptography/getRSAKeypair");
+                    if (res.data.status === true) {
+                        const rsaKeypairs: RSAKepairVariants = {
+                            keypair512: res.data.keypair_512,
+                            keypair1028: res.data.keypair_1028
+                        }
+
+                        setRSAKeypairs(rsaKeypairs)
+
+                    }
+                }
+                catch (e) {
+
+                }
+
+            }
+
+        }
+        if (serverConnected) {
+            fetchKeypair()
+        }
+
+
+    }, [serverConnected])
     return (
         <>
 
@@ -65,17 +105,17 @@ function App() {
                             </Box>
 
                             <Routes>
-                                <Route path="/" element={<Home connected={connected} />}></Route>
+                                <Route path="/" element={<Home connected={serverConnected} />}></Route>
                                 <Route path="/design" element={<Design />}></Route>
-                                <Route path="/Allusers" element={<Allusers connected={connected} />}></Route>
+                                <Route path="/Allusers" element={<Allusers connected={serverConnected} rsaKeypairs={RSAKeypairs as RSAKepairVariants} />}></Route>
                                 <Route path="/blog" element={<Blog />}></Route>
-                                <Route path="/ViewIdentity" element={<ViewIdentity connected={connected} />}></Route>
-                                <Route path="/response" element={<DecidePage></DecidePage> }></Route>
+                                <Route path="/ViewIdentity" element={<ViewIdentity connected={serverConnected} />}></Route>
+                                <Route path="/response" element={<DecidePage></DecidePage>}></Route>
                             </Routes>
                         </Box>
                     </WalletModalProvider>
                 </WalletProvider>
-            </ConnectionProvider>
+            </ConnectionProvider >
         </>
     );
 }

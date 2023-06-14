@@ -270,9 +270,9 @@ export const InputForm = () => {
                                         completeForm();
                                         const userData = setUserData(data);
                                         const response = await axios.post("http://localhost:9000/cryptography/encryptData", { plainData: userData, ticker: "solData" })
-                                        console.log("res:", response)
+
                                         const encUserData = response.data.encryptedData as UserData;
-                                        console.log('end:', encUserData)
+
                                         const id = toast.loading("loading");
                                         if (encUserData) {
                                             setTimeout(async () => {
