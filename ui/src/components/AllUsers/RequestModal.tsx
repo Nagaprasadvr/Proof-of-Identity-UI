@@ -58,7 +58,7 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
         // console.log(formData);
         setTimeout(() => {
             handleClose();
-        }, 2500);
+        }, 1000);
     };
 
 
