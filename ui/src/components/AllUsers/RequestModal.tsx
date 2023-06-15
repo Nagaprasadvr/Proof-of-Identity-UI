@@ -12,6 +12,7 @@ import { Button, Table } from 'react-bootstrap';
 import "./reqmodalstyle.css"
 import axios from 'axios';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { toast } from 'react-hot-toast';
 
 interface Props {
     open: boolean;

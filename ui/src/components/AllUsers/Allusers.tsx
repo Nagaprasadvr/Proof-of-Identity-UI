@@ -13,6 +13,7 @@ import { ServerConnectionProps } from '../Home/Home';
 import { fetchData } from '@project-serum/anchor/dist/cjs/utils/registry';
 import axios from 'axios';
 import { publicKey } from '@metaplex-foundation/beet-solana';
+import { RSAKepairVariants } from '../../App';
 
 
 interface Data {
@@ -20,10 +21,14 @@ interface Data {
     pubkey: string;
 }
 
+interface AllUsersProps {
+    connected: boolean,
+    rsaKeypairs: RSAKepairVariants
+}
 
 
 
-const Allusers = ({ connected }: ServerConnectionProps) => {
+const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
     const [allIdentities, setAllIdentities] = useState<Data[]>([]);
     const wallet = useWallet();
     const [tableData, setTableData] = useState(data);
@@ -38,7 +43,7 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
         const fetchData = async () => {
             try {
                 const response = await axios.get("http://localhost:9000/digitalIdentities/get");
-                console.log(response)
+
                 const userData: Data[] = [];
                 // eslint-disable-next-line array-callback-return
                 response.data.map((data: any) => {
@@ -47,7 +52,7 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
                     userData.push({ pubkey, name })
                 })
                 setAllIdentities(userData)
-                // console.log(allIdentities)
+
 
             } catch (err) {
                 console.error(err)
@@ -59,7 +64,6 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
     const modalOpener = (props: string) => {
 
         setOpen(true)
-        console.log(props)
         setPubkey(props)
     }
 
@@ -83,8 +87,6 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
             setValue("")
         }
     }
-
-
     const onClickSubmit = () => {
 
         let rows: Data[] = [];
@@ -109,7 +111,6 @@ const Allusers = ({ connected }: ServerConnectionProps) => {
             toast.error("Searched Name is not associated with any Digital Identity")
         }
     }
-
     function AllUsersData() {
         return (
             <>

@@ -7,10 +7,6 @@ const SendIdentityRequest_model_1 = __importDefault(require("../models/SendIdent
 const express_1 = __importDefault(require("express"));
 const router = (0, express_1.default)();
 router.route("/send").post((req, res) => {
-    console.log("Sender Name: " + req.body.requestData.senderName);
-    console.log("pubkey:" + req.body.userPubkey);
-    console.log("data:" + JSON.stringify(req.body.requestData));
-    console.log("RequestedPubkey: " + req.body.requestedSolPubkey);
     const userPubkey = req.body.userPubkey;
     const senderName = req.body.senderName;
     const name = req.body.requestData.name;
@@ -25,9 +21,7 @@ router.route("/send").post((req, res) => {
     const description = req.body.requestData.description;
     const address = req.body.requestData.address;
     const senderPubkey = req.body.requestedSolPubkey;
-    console.log("senderPubkey:", senderPubkey);
     const rsaPubkey = req.body.rsaPubkey;
-    // console.log("req data", req.body.requestData);
     const newRequest = new SendIdentityRequest_model_1.default({
         solPubkey: userPubkey,
         rsaPubkey: rsaPubkey,

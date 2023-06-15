@@ -26,6 +26,11 @@ interface fileObj {
     filename: string,
     file: File
 }
+
+enum DataState {
+    Encrypted,
+    Decrypted
+}
 const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda }: ViewIdentityModalProps
 ) => {
     const [fileArray, setFileArray] = useState<File[]>([]);
@@ -38,7 +43,9 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
     const [proofsCreated, setProofsCreated] = useState<boolean>(false);
     const [digitalProofs, setDigitalProofs] = useState<digitalIdentity.DigitalProofs | null>(null);
     const [digitalProofsPda, setDigitalProofsPda] = useState<string>("");
-    const [refresh, setRefresh] = useState(false)
+    const [refresh, setRefresh] = useState(false);
+    const [dataState, setDataState] = useState<DataState>(DataState.Encrypted);
+    const [digIdentityData, setDigitalIdentityData] = useState<digitalIdentity.DigitalIdentity>(data);
 
 
     const rpcCon = useMemo(() => {
@@ -53,16 +60,10 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
             try {
                 if (walletProvider?.publicKey) {
-                    console.log("firing")
-                    const [digitalIdentityPda, bump1] = PublicKey.findProgramAddressSync([Buffer.from("dig_identity"), walletProvider?.publicKey.toBuffer()], digitalIdentity.PROGRAM_ID)
-                    const [digitalProofsPda, bump2] = PublicKey.findProgramAddressSync([Buffer.from("dig_proof"), digitalIdentityPda.toBuffer()], digitalIdentity.PROGRAM_ID);
+                    const [digitalIdentityPda] = PublicKey.findProgramAddressSync([Buffer.from("dig_identity"), walletProvider?.publicKey.toBuffer()], digitalIdentity.PROGRAM_ID)
+                    const [digitalProofsPda] = PublicKey.findProgramAddressSync([Buffer.from("dig_proof"), digitalIdentityPda.toBuffer()], digitalIdentity.PROGRAM_ID);
                     const digitalProofsAcc = await digitalIdentity.DigitalProofs.fromAccountAddress(rpcCon, digitalProofsPda);
                     setDigitalProofs(digitalProofsAcc);
-                    // const id = toast.loading("fetching")
-                    // setTimeout(() => {
-                    //     setProofsCreated(true);
-                    // }, 3000);
-                    // toast.dismiss(id)
                     setProofsCreated(true);
                     setDigitalProofsPda(digitalProofsPda.toBase58())
                 }
@@ -80,6 +81,14 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
     }, [data, digitalIdentityPda, rpcCon, walletProvider.connected, walletProvider?.publicKey, refresh])
 
+
+    // useEffect(() => {
+    //     if (dataState === DataState.Decrypted) {
+
+
+    //     }
+
+    // }, [dataState])
 
     useEffect(() => {
         const getBundlrInstance = async () => {
@@ -169,10 +178,8 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
                                 tx0.recentBlockhash = (await rpcCon.getLatestBlockhash()).blockhash
                                 tx0.feePayer = walletProvider.publicKey
-                                // const signedTx0 = await walletProvider.signTransaction(tx0);
                                 try {
                                     const signature = await walletProvider.sendTransaction(tx0, rpcCon);
-                                    // const signature = solana.sendAndConfirmTransaction(rpcCon, signedTx0, [walletProvider.wallet as solana.Signer])
                                     if (signature) {
                                         setProofsCreated(true);
                                         const txSig = `https://explorer.solana.com/tx/${signature} `
@@ -312,63 +319,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                         </td>
                                     </tr>)
                             }
-                            {/* {
-                                !data.picAttached && (
-                                    <tr>
-                                        <td style={{ color: "white" }}> Pic uploaded</td>
-                                        <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                            <form action="" method="get" onSubmit={handleSubmit}>
-                                                <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
-                                                    <tbody>
-                                                        {
-                                                            !data.picAttached && (<tr>
-                                                                <td style={{ color: "white" }}> Pic uploaded</td>
-                                                                <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                                                    {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
-                                                                </td>
-                                                            </tr>)
-                                                        }
-                                                        {
-                                                            !data.passportAttached && (<tr>
-                                                                <td style={{ color: "white" }}>Passport Uploaded</td>
-                                                                <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                                                    {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
-                                                                </td>
-                                                            </tr>)
-                                                        }
-
-                                                        {
-                                                            !data.panAttached && (<tr>
-                                                                <td style={{ color: "white" }}>
-                                                                    Pan Uploaded
-                                                                </td>
-                                                                <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                                                    {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
-                                                                </td>
-                                                            </tr>)
-                                                        }
-                                                        {
-                                                            !data.aadharAttached && (<tr>
-                                                                <td style={{ color: "white" }}>Aadhar Uploaded</td>
-                                                                <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                                                    {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
-                                                                </td>
-                                                            </tr>)
-                                                        }
-                                                    </tbody>
-                                                </Table>
-                                                <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
-                                                    <h6 style={{ color: "lightskyblue" }}>*File size should be less than 50KB</h6>
-                                                </Box>
-
-
-                                                <div className="container" style={{ marginBottom: "4px" }}>
-                                                    <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
-                                                </div>
-                                            </form>                       {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
-                                        </td>
-                                    </tr>)
-                            } */}
                             {
                                 !data.passportAttached && (
                                     <tr>
@@ -417,10 +367,28 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, refresh, data.picAttached, data.passportAttached, data.panAttached, data.aadharAttached])
 
-    const handleDecrypt = async () => {
-        toast.loading("Decrypting..", { duration: 2000 });
-        const response = await axios.post("http://localhost:9000/cryptography/decryptData", { encData: data as UserData, ticker: "solData" });
-        console.log("res:", response)
+    const handleDecryptEncrypt = async () => {
+
+        toast.loading(dataState === DataState.Encrypted ? "Decrypting.." : "Encrypting...", { duration: 800 });
+        if (dataState === DataState.Encrypted) {
+            try {
+                console.log("inside")
+                const response = await axios.post("http://localhost:9000/cryptography/decryptData", { encData: data as UserData, ticker: "solData" });
+                setDataState(DataState.Decrypted);
+
+                setDigitalIdentityData(response.data.decryptedData)
+            }
+            catch (e) {
+                toast.error("failed to Decrypt data")
+            }
+
+        }
+        else if (dataState === DataState.Decrypted) {
+            setDigitalIdentityData(data);
+            setDataState(DataState.Encrypted)
+
+        }
+
 
     }
     const handleRefresh = () => {
@@ -434,20 +402,17 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                 <Box style={{ backgroundColor: "black" }}>
                     <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
                 </Box>
-                <Box style={{}}>
-                    <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto", marginLeft: "45vw", marginBottom: "2vh" }} type="submit" onClick={handleRefresh}>Refresh</button>
-
+                <Box style={{ width: "auto", marginBottom: "2vh", display: "flex", flexDirection: "row", justifyContent: "center" }} sx={{ gap: "30px" }}>
+                    <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={handleRefresh}>Refresh</button>
+                    <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={handleDecryptEncrypt}>{dataState === DataState.Encrypted ? "Decrypt" : "Encrypt"}</button>
                 </Box>
-                <Box style={{}}>
-                    <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto", marginLeft: "45vw", marginBottom: "2vh" }} type="submit" onClick={handleDecrypt}>Decrypt</button>
 
-                </Box>
 
                 <Table style={{ height: "auto", width: "90vw", marginLeft: "5vw", border: "3px solid white" }}>
                     <thead>
                         <tr>
                             <th style={{ color: "white" }}>Name:</th>
-                            <th style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{reduceString(data.name, 5)}</th>
+                            <th style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{dataState === DataState.Encrypted ? reduceString(digIdentityData.name, 5) : digIdentityData.name}</th>
                         </tr>
 
                     </thead>
@@ -462,22 +427,22 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                         </tr>
                         <tr>
                             <td style={{ color: "white" }}>DOB</td>
-                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{reduceString(data.dob, 5)}</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{dataState === DataState.Encrypted ? reduceString(digIdentityData.dob, 5) : digIdentityData.dob}</td>
                         </tr>
                         <tr>
                             <td style={{ color: "white" }}>AadharNumber</td>
-                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{reduceString(data.aadharNumber, 5)}</td>
+                            <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>{dataState === DataState.Encrypted ? reduceString(digIdentityData.aadharNumber, 5) : digIdentityData.aadharNumber}</td>
                         </tr>
                         <tr>
                             <td style={{ color: "white" }}>PanNumber</td>
                             <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                {reduceString(data.panNumber.toString(), 5)}
+                                {dataState === DataState.Encrypted ? reduceString(digIdentityData.panNumber.toString(), 5) : digIdentityData.panNumber}
                             </td>
                         </tr>
                         <tr>
                             <td style={{ color: "white" }}>PassportNumber</td>
                             <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                {reduceString(data.passportId.toString(), 5)}
+                                {dataState === DataState.Encrypted ? reduceString(digIdentityData.passportId.toString(), 5) : digIdentityData.passportId}
                             </td>
                         </tr>
                     </tbody>
