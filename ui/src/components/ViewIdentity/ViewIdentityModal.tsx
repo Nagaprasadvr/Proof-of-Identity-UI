@@ -31,6 +31,7 @@ enum DataState {
     Encrypted,
     Decrypted
 }
+
 const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda }: ViewIdentityModalProps
 ) => {
     const [fileArray, setFileArray] = useState<File[]>([]);
@@ -139,6 +140,10 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                         }
 
                     }
+
+                    //The array of files
+                    console.log(fileArray)
+
                     toast.success(`${uploadCount} files uploaded to Arweave Successfully`);
 
                     if (uploadCount === 4 && walletProvider?.publicKey) {
@@ -341,7 +346,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                     <tr>
                                         <td style={{ color: "white" }}>Pic uploaded</td>
                                         <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                            {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
+                                            {!data.picAttached && (<input type="file" onChange={handleFile1Change} required/>)}
                                         </td>
                                     </tr>)
                             }
@@ -350,7 +355,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                     <tr>
                                         <td style={{ color: "white" }}>Passport Uploaded</td>
                                         <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                            {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
+                                            {!data.passportAttached && (<input type="file" onChange={handleFile2Change} required/>)}
                                         </td>
                                     </tr>)
                             }
@@ -362,7 +367,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                             Pan Uploaded
                                         </td>
                                         <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                            {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
+                                            {!data.panAttached && (<input type="file" onChange={handleFile3Change} required/>)}
                                         </td>
                                     </tr>)
                             }
@@ -371,7 +376,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                     <tr>
                                         <td style={{ color: "white" }}>Aadhar Uploaded</td>
                                         <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                            {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
+                                            {!data.aadharAttached && (<input type="file" onChange={handleFile4Change}  required/>)}
                                         </td>
                                     </tr>)
                             }

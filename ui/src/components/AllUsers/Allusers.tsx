@@ -43,7 +43,7 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
         const fetchData = async () => {
             try {
                 const response = await axios.get("http://localhost:9000/digitalIdentities/get");
-
+                console.log(response)
                 const userData: Data[] = [];
                 // eslint-disable-next-line array-callback-return
                 response.data.map((data: any) => {
@@ -51,6 +51,7 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
                     const name = data.name
                     userData.push({ pubkey, name })
                 })
+                console.log(userData)
                 setAllIdentities(userData)
 
 
