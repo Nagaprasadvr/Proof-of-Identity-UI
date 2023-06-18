@@ -31,6 +31,7 @@ enum DataState {
     Encrypted,
     Decrypted
 }
+
 const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda }: ViewIdentityModalProps
 ) => {
     const [fileArray, setFileArray] = useState<File[]>([]);
@@ -146,6 +147,10 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                         }
 
                     }
+
+                    //The array of files
+                    console.log(fileArray)
+
                     toast.success(`${uploadCount} files uploaded to Arweave Successfully`);
 
                     if (uploadCount === 4 && walletProvider?.publicKey) {
@@ -226,22 +231,30 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
     const handleFile1Change = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0];
+        console.log("Pic:" + selectedFile)
         setPic(selectedFile || null);
+        console.log("Pic:"+ pic)
     };
 
     const handleFile2Change = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0];
+        console.log("Passport:" + selectedFile)
         setPassport(selectedFile || null);
+        console.log("Passport"+ passport )
     };
 
     const handleFile3Change = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0];
+        console.log("Pan:" + selectedFile)
         setPan(selectedFile || null);
+        console.log("Pan:"+ pan)
     };
 
     const handleFile4Change = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0];
+        console.log("Aadhar:" + selectedFile)
         setAadhar(selectedFile || null);
+        console.log("Aadhar :"+ aadhar)
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -250,16 +263,17 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         // Perform file upload or any other necessary actions
         if (pic && pan && passport && aadhar) {
             const newArray = [...fileArray, pic, pan, passport, aadhar];
+            console.log("NewArray: " + newArray)
             // Perform file upload logic here
         } else {
             toast.error("please select all files")
         }
 
         // Reset the form
-        setPic(null);
-        setPan(null);
-        setPassport(null);
-        setAadhar(null);
+        // setPic(null);
+        // setPan(null);
+        // setPassport(null);
+        // setAadhar(null);
     };
 
     const RenderUploadedLinksTable = useMemo(() => {
@@ -315,7 +329,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                     <tr>
                                         <td style={{ color: "white" }}>Pic uploaded</td>
                                         <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                            {!data.picAttached && (<input type="file" onChange={handleFile1Change} />)}
+                                            {!data.picAttached && (<input type="file" onChange={handleFile1Change} required/>)}
                                         </td>
                                     </tr>)
                             }
@@ -324,7 +338,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                     <tr>
                                         <td style={{ color: "white" }}>Passport Uploaded</td>
                                         <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                            {!data.passportAttached && (<input type="file" onChange={handleFile2Change} />)}
+                                            {!data.passportAttached && (<input type="file" onChange={handleFile2Change} required/>)}
                                         </td>
                                     </tr>)
                             }
@@ -336,7 +350,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                             Pan Uploaded
                                         </td>
                                         <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                            {!data.panAttached && (<input type="file" onChange={handleFile3Change} />)}
+                                            {!data.panAttached && (<input type="file" onChange={handleFile3Change} required/>)}
                                         </td>
                                     </tr>)
                             }
@@ -345,7 +359,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                     <tr>
                                         <td style={{ color: "white" }}>Aadhar Uploaded</td>
                                         <td style={{ color: "lightskyblue", paddingLeft: "2vw" }}>
-                                            {!data.aadharAttached && (<input type="file" onChange={handleFile4Change} />)}
+                                            {!data.aadharAttached && (<input type="file" onChange={handleFile4Change}  required/>)}
                                         </td>
                                     </tr>)
                             }
