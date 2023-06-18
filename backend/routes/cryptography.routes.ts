@@ -9,7 +9,7 @@ import os from "os";
 import fs from "fs";
 const router = express();
 
-interface KeyPair {
+export interface KeyPair {
   pubKey: string;
   privateKey: string;
 }
