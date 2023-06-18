@@ -2,9 +2,9 @@ import './App.css';
 import { Navibar } from './components/Navbar/Navbar.component';
 import { Blog } from './components/Blog/blog';
 import { Home } from './components/Home/Home';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { ConnectionProvider, WalletProvider, useWallet } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { clusterApiUrl } from '@solana/web3.js';
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { Routes, Route } from 'react-router-dom';
 import Design from './components/DesignPage/DesignPage';
@@ -20,6 +20,7 @@ import Navigation from './components/Navbar/Navigation';
 import Allusers from './components/AllUsers/Allusers';
 import axios from 'axios';
 import DecidePage from './components/ReqRespage/DecidePage';
+import * as sdk from "./digitalIdentity/js/src/generated"
 require('bootstrap/dist/css/bootstrap.min.css');
 
 export interface RSAKeypair {
@@ -34,8 +35,9 @@ export interface RSAKepairVariants {
 
 function App() {
     const [serverConnected, setServerConnected] = useState<boolean>(false);
-    const [RSAKeypairs, setRSAKeypairs] = useState<RSAKepairVariants | null>(null)
-
+    const [RSAKeypairs, setRSAKeypairs] = useState<RSAKepairVariants | null>(null);
+    const [digIdentityAcc, setDigIdentityAcc] = useState<sdk.DigitalIdentity | null>(null)
+    const wallet = useWallet();
     useEffect(() => {
         const serverConnect = async () => {
             try {
@@ -62,6 +64,30 @@ function App() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [network]
     );
+
+    useEffect(() => {
+        const fetchDigitalIdentity = async () => {
+            const rpcConn = new Connection(clusterApiUrl("devnet"));
+            if (wallet?.publicKey) {
+                try {
+                    const [digitalPdaAcc, bump] = PublicKey.findProgramAddressSync([Buffer.from("dig_identity"), wallet?.publicKey.toBuffer()], sdk.PROGRAM_ID)
+                    const acc = await sdk.DigitalIdentity.fromAccountAddress(rpcConn, digitalPdaAcc);
+                    setDigIdentityAcc(acc);
+                    console.log("log;", digitalPdaAcc)
+                }
+                catch (e) {
+                    console.error(e)
+                }
+
+
+            }
+
+        }
+        if (wallet?.connected && serverConnected && wallet?.publicKey) {
+            fetchDigitalIdentity()
+        }
+
+    }, [serverConnected, wallet?.connected, wallet?.publicKey])
 
 
     useEffect(() => {
@@ -109,7 +135,7 @@ function App() {
                                 <Route path="/design" element={<Design />}></Route>
                                 <Route path="/Allusers" element={<Allusers connected={serverConnected} rsaKeypairs={RSAKeypairs as RSAKepairVariants} />}></Route>
                                 <Route path="/blog" element={<Blog />}></Route>
-                                <Route path="/ViewIdentity" element={<ViewIdentity connected={serverConnected} />}></Route>
+                                <Route path="/ViewIdentity" element={<ViewIdentity connected={serverConnected} digIdentityAcc={digIdentityAcc} />}></Route>
                                 <Route path="/response" element={<DecidePage></DecidePage>}></Route>
                             </Routes>
                         </Box>

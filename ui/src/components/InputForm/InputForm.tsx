@@ -269,6 +269,7 @@ export const InputForm = () => {
                                         // setIsSubmitting(false);
                                         completeForm();
                                         const userData = setUserData(data);
+                                        await axios.post("http://localhost:9000/digitalIdentities/add",{ userPubkey:solWallet?.publicKey?.toBase58(),name:userData.name})
                                         const response = await axios.post("http://localhost:9000/cryptography/encryptData", { plainData: userData, ticker: "solData" })
 
                                         const encUserData = response.data.encryptedData as UserData;

@@ -7,9 +7,13 @@ import { Box } from '@mui/material';
 import * as solana from "@solana/web3.js"
 import toast from "react-hot-toast"
 import ViewIdentityModal from "./ViewIdentityModal";
-export const InputPubkey = () => {
+
+interface InputPubkeyProps {
+  digIdentityAccState: sdk.DigitalIdentity | null
+}
+export const InputPubkey = ({ digIdentityAccState }: InputPubkeyProps) => {
   const [open, setOpen] = useState<boolean>(false)
-  const [digIdentityAcc, setDigIdentityAcc] = useState<sdk.DigitalIdentity | null>(null);
+  const [digIdentityAcc, setDigIdentityAcc] = useState<sdk.DigitalIdentity | null>(digIdentityAccState);
   const [digitalIdentityPda, setDigIdentityPda] = useState<string>("")
   const [pubkey, setPubkey] = useState<string>("")
   const wallet = useWallet();

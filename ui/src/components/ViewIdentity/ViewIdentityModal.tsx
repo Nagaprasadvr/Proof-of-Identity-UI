@@ -83,14 +83,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
     }, [data, digitalIdentityPda, rpcCon, walletProvider.connected, walletProvider?.publicKey, refresh])
 
 
-    // useEffect(() => {
-    //     if (dataState === DataState.Decrypted) {
-
-
-    //     }
-
-    // }, [dataState])
-
     useEffect(() => {
         const getBundlrInstance = async () => {
             try {
@@ -115,6 +107,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
 
     const uploadFile = async () => {
+        console.log('firing')
         try {
             if (bundlr) {
                 if (pic && aadhar && passport && pan) {
@@ -230,40 +223,56 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
     }
 
     const handleFile1Change = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = event.target.files?.[0];
-        console.log("Pic:" + selectedFile)
-        setPic(selectedFile || null);
-        console.log("Pic:"+ pic)
+        if (event.target.files) {
+            const selectedFile = event.target.files[0];
+            if (selectedFile) {
+                setPic(selectedFile);
+            }
+
+        }
+        console.log("pic fs:", pic)
+
     };
 
     const handleFile2Change = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = event.target.files?.[0];
-        console.log("Passport:" + selectedFile)
-        setPassport(selectedFile || null);
-        console.log("Passport"+ passport )
+        if (event.target.files) {
+            const selectedFile = event.target.files[0];
+            if (selectedFile) {
+                setPassport(selectedFile);
+            }
+
+        }
     };
 
     const handleFile3Change = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = event.target.files?.[0];
-        console.log("Pan:" + selectedFile)
-        setPan(selectedFile || null);
-        console.log("Pan:"+ pan)
+        if (event.target.files) {
+            const selectedFile = event.target.files[0];
+            if (selectedFile) {
+                setPan(selectedFile);
+            }
+
+        }
     };
 
     const handleFile4Change = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = event.target.files?.[0];
-        console.log("Aadhar:" + selectedFile)
-        setAadhar(selectedFile || null);
-        console.log("Aadhar :"+ aadhar)
+        if (event.target.files) {
+            const selectedFile = event.target.files[0];
+            if (selectedFile) {
+                setAadhar(selectedFile);
+            }
+
+        }
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
+        console.log(pic, pan, passport, aadhar)
+
         // Perform file upload or any other necessary actions
         if (pic && pan && passport && aadhar) {
-            const newArray = [...fileArray, pic, pan, passport, aadhar];
-            console.log("NewArray: " + newArray)
+            // const newArray = [...fileArray, pic, pan, passport, aadhar];
+            uploadFile()
             // Perform file upload logic here
         } else {
             toast.error("please select all files")
@@ -275,6 +284,14 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         // setPassport(null);
         // setAadhar(null);
     };
+
+    console.log("pic:", pic);
+
+    console.log("pan:", pan);
+
+    console.log("aadhar:", aadhar);
+
+    console.log("pass:", passport);
 
     const RenderUploadedLinksTable = useMemo(() => {
         if (open === true) {
@@ -371,7 +388,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
 
                     <div className="container" style={{ marginBottom: "4px" }}>
-                        <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" onClick={() => uploadFile()}>Upload</button>
+                        <button className="centered-button balance-button w3-btn w3-hover-white App" style={{ width: "auto" }} type="submit" >Upload</button>
                     </div>
                 </form >
 
