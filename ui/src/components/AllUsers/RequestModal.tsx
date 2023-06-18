@@ -9,7 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Modal } from '@material-ui/core';
 import { Button, Table } from 'react-bootstrap';
-import "./reqmodalstyle.css"
+import './reqmodalstyle.css';
 import axios from 'axios';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { toast } from 'react-hot-toast';
@@ -20,6 +20,10 @@ interface Props {
     requestedPubkey: string;
 }
 
+export interface RSAKeyPair {
+    pubKey: string;
+    privateKey: string;
+}
 function RequestModal({ open, setOpen, requestedPubkey }: Props) {
     const wallet = useWallet();
     const [formData, setFormData] = useState({
@@ -35,7 +39,7 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
         picUploadLink: false,
         address: false,
         description: '',
-    })
+    });
 
     const handleChange = (event: any) => {
         if (event.target.type === 'checkbox') {
@@ -54,70 +58,221 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         // Perform form submission logic here
-        const res = await axios.post('http://localhost:9000/requests/send', { senderName: formData.senderName, userPubkey: wallet.publicKey?.toBase58(), requestedSolPubkey: requestedPubkey, rsaPubkey: "llllll", requestData: formData })
-        console.log("res:", res)
-        // console.log(formData);
-        setTimeout(() => {
-            handleClose();
-        }, 1000);
+        try {
+            const response = await axios.get('http://localhost:9000/cryptography/getRSAKeypair');
+            if (response.data.status === true) {
+                const keypair_512: RSAKeyPair = response.data.keypair_512;
+                const pubkey_512 = keypair_512.pubKey;
+                await axios.post('http://localhost:9000/requests/send', {
+                    senderName: formData.senderName,
+                    userPubkey: wallet.publicKey?.toBase58(),
+                    requestedSolPubkey: requestedPubkey,
+                    rsaPubkey: pubkey_512,
+                    requestData: formData,
+                });
+                toast.success('Request sent successfully');
+                setTimeout(() => {
+                    handleClose();
+                }, 2500);
+            }
+        } catch (e) {
+            toast.error('failed to send');
+        }
     };
-
 
     const handleClose = () => {
         setOpen(false);
     };
 
     return (
-        <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black", overflow: "scroll" }}>
-            <Box style={{ width: "100vw", height: "100vh" }}>
-                <Box style={{ backgroundColor: "black" }}>
-                    <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
+        <Modal
+            open={open}
+            onClose={handleClose}
+            style={{ width: '100vw', height: '100vh', background: 'black', overflow: 'scroll' }}
+        >
+            <Box style={{ width: '100vw', height: '100vh' }}>
+                <Box style={{ backgroundColor: 'black' }}>
+                    <button
+                        style={{ backgroundColor: 'transparent', borderColor: 'transparent', color: 'lightskyblue' }}
+                        onClick={handleClose}
+                    >
+                        <CancelIcon style={{ color: 'lightskyblue', fontSize: '50px' }}></CancelIcon>
+                    </button>
                 </Box>
-                <Box style={{ display: 'flex', color: "White", fontWeight: "bolder", fontSize: "25px", width: "100vw", justifyContent: "center" }}>
-                    <form onSubmit={handleSubmit} style={{
-                        color: "white", fontWeight: "bolder", fontSize: "25px", alignContent: "center", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"
-                    }}>
+                <Box
+                    style={{
+                        display: 'flex',
+                        color: 'White',
+                        fontWeight: 'bolder',
+                        fontSize: '25px',
+                        width: '100vw',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <form
+                        onSubmit={handleSubmit}
+                        style={{
+                            color: 'white',
+                            fontWeight: 'bolder',
+                            fontSize: '25px',
+                            alignContent: 'center',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
                         <Box>
-                            <Table style={{ marginTop: "5vh" }}>
+                            <Table style={{ marginTop: '5vh' }}>
                                 <tbody>
                                     <tr>
-                                        <td><input type='text' name="senderName" value={formData.senderName} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Your Name</label></td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                name="senderName"
+                                                value={formData.senderName}
+                                                onChange={handleChange}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                            ></input>
+                                        </td>
+                                        <td>
+                                            <label>Your Name</label>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="name" checked={formData.name} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Name</label></td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                name="name"
+                                                checked={formData.name}
+                                                onChange={handleChange}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                            ></input>
+                                        </td>
+                                        <td>
+                                            <label>Name</label>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="dob" checked={formData.dob} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>DOB</label></td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                name="dob"
+                                                checked={formData.dob}
+                                                onChange={handleChange}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                            ></input>
+                                        </td>
+                                        <td>
+                                            <label>DOB</label>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="panNumber" checked={formData.panNumber} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Pan Number</label></td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                name="panNumber"
+                                                checked={formData.panNumber}
+                                                onChange={handleChange}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                            ></input>
+                                        </td>
+                                        <td>
+                                            <label>Pan Number</label>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="passportNumber" checked={formData.passportNumber} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Passport Number</label></td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                name="passportNumber"
+                                                checked={formData.passportNumber}
+                                                onChange={handleChange}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                            ></input>
+                                        </td>
+                                        <td>
+                                            <label>Passport Number</label>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="aadharNumber" checked={formData.aadharNumber} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Aadhar Number</label></td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                name="aadharNumber"
+                                                checked={formData.aadharNumber}
+                                                onChange={handleChange}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                            ></input>
+                                        </td>
+                                        <td>
+                                            <label>Aadhar Number</label>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="panUploadLink" checked={formData.panUploadLink} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Pan</label></td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                name="panUploadLink"
+                                                checked={formData.panUploadLink}
+                                                onChange={handleChange}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                            ></input>
+                                        </td>
+                                        <td>
+                                            <label>Pan</label>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="passportUploadLink" checked={formData.passportUploadLink} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Passport</label></td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                name="passportUploadLink"
+                                                checked={formData.passportUploadLink}
+                                                onChange={handleChange}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                            ></input>
+                                        </td>
+                                        <td>
+                                            <label>Passport</label>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td><input type='checkbox' name="aadharUploadLink" checked={formData.aadharUploadLink} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>Aadhar</label></td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                name="aadharUploadLink"
+                                                checked={formData.aadharUploadLink}
+                                                onChange={handleChange}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                            ></input>
+                                        </td>
+                                        <td>
+                                            <label>Aadhar</label>
+                                        </td>
                                     </tr>
 
                                     <tr>
-                                        <td><input type='checkbox' name="picUploadLink" checked={formData.picUploadLink} onChange={handleChange} style={{ marginLeft: "2vw", marginRight: "2vw" }}></input></td><td><label>pic</label></td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                name="picUploadLink"
+                                                checked={formData.picUploadLink}
+                                                onChange={handleChange}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                            ></input>
+                                        </td>
+                                        <td>
+                                            <label>pic</label>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Description</td>
                                         <td>
                                             <textarea
-                                                name='description'
+                                                name="description"
                                                 value={formData.description}
-                                                style={{ marginLeft: "2vw", marginRight: "2vw", color: "black" }}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw', color: 'black' }}
                                                 onChange={handleChange}
                                             ></textarea>
                                         </td>
@@ -125,7 +280,11 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
                                 </tbody>
                             </Table>
                         </Box>
-                        <button style={{ width: "auto", marginTop: "10px" }} className="balance-button w3-btn w3-hover-white App " onClick={handleSubmit}>
+                        <button
+                            style={{ width: 'auto', marginTop: '10px' }}
+                            className="balance-button w3-btn w3-hover-white App "
+                            onClick={handleSubmit}
+                        >
                             Submit Request
                         </button>
                     </form>
