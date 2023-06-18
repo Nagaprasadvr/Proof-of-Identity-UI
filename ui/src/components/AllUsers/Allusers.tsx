@@ -61,6 +61,8 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
         fetchData();
     }, [])
 
+
+    console.log("setAllIdentities",allIdentities)
     const modalOpener = (props: string) => {
 
         setOpen(true)
@@ -111,6 +113,18 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
             toast.error("Searched Name is not associated with any Digital Identity")
         }
     }
+
+    const handleRequest = (item:Data) =>{
+        if(wallet?.publicKey?.toBase58() === item.pubkey)
+        {
+            toast.error("You cannot request to share your own Identity!")
+        }
+        else{
+            modalOpener(item.pubkey)
+        }
+        
+
+    }
     function AllUsersData() {
         return (
             <>
@@ -123,7 +137,7 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
                                         <td style={{ textAlign: "center" }}>{index + 1}</td>
                                         <td>{item.name}</td>
                                         <td>{item.pubkey}</td>
-                                        <td> <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white App " onClick={() => modalOpener(item.pubkey)}>
+                                        <td> <button style={{ width: "auto" }} className="balance-button w3-btn w3-hover-white App " onClick={()=>{handleRequest(item)}}>
                                             Request
                                         </button></td>
                                     </tr>
