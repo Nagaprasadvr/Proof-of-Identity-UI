@@ -9,6 +9,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { reduceString } from '../ViewIdentity/helper';
+import RequestModal from './ResponseModal';
+import ResponseModal from './ResponseModal';
 
 interface Data {
     _id: string;
@@ -39,6 +41,8 @@ function DecidePage() {
     const [reqData, setReqData] = useState<Data[]>([]);
     const [resData, setResData] = useState<Data[]>([]);
     const [refresh, setRefresh] = useState<boolean>(false);
+    const [open, setOpen] = useState(false)
+    const [id, setId] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -149,7 +153,10 @@ function DecidePage() {
                                       className="balance-button w3-btn w3-hover-white App "
                                       onClick={() => {
                                           setRefresh(!refresh);
-                                      }}
+                                          setOpen(true)
+                                          setId(item._id)
+                                    }}
+                                    
                                   >
                                       Accept
                                   </button>
@@ -185,6 +192,8 @@ function DecidePage() {
                                       className="balance-button w3-btn w3-hover-white App "
                                       onClick={() => {
                                           setRefresh(!refresh);
+                                          setOpen(true)
+                                          setId(item._id)
                                       }}
                                   >
                                       Accept
@@ -277,6 +286,7 @@ function DecidePage() {
                         ) : (
                             <></>
                         )}
+                        {open && (<ResponseModal open={open} setOpen={setOpen} id={id}></ResponseModal>)}
                     </>
                 </>
             ) : (

@@ -12,7 +12,17 @@ router.route("/:id").delete((req, res) => {
         .then((response) => res.send("the data successfully denied"))
         .catch((err) => console.log(err));
 });
-router.route("/").get((req, res) => {
-    return res.send("hello");
+router.route("/get").post((req, res) => {
+    console.log(req.body);
+    const id = req.body.id;
+    SendIdentityRequest_model_1.default.findById(id)
+        .then((response) => {
+        console.log(response);
+        res.json({ data: response });
+    })
+        .catch((err) => console.log(err));
 });
+// router.route("/").get((req: Request, res: Response) => {
+//   return res.send("hello")
+// });
 exports.default = router;

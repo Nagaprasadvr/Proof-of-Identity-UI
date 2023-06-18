@@ -10,8 +10,19 @@ router.route("/:id").delete((req: Request, res: Response) => {
         .catch((err: any) => console.log(err));
 })
 
-router.route("/").get((req: Request, res: Response) => {
-  return res.send("hello")
-});
+router.route("/get").post((req: Request, res: Response) => {
+  console.log(req.body)
+  const id = req.body.id;
+    SendRequest.findById(id)
+      .then((response: any) => {
+        console.log(response)
+        res.json({ data: response })
+      })
+        .catch((err: any) => console.log(err));
+})
+
+// router.route("/").get((req: Request, res: Response) => {
+//   return res.send("hello")
+// });
 
 export default  router;
