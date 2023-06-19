@@ -14,14 +14,16 @@ import { Button, Table } from 'react-bootstrap';
 import axios from 'axios';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { toast } from 'react-hot-toast';
+import { Data } from 'node-rsa';
 
 interface Props {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     id: string;
+    name: string;
 }
 
-function ResponseModal({ open, setOpen, id}: Props) {
+function ResponseModal({ open, setOpen, id, name}: Props) {
     const wallet = useWallet();
     const [formData, setFormData] = useState({
         senderName: '',
@@ -38,17 +40,56 @@ function ResponseModal({ open, setOpen, id}: Props) {
         description: '',
     })
 
+    interface reqprops {
+        data: Record<string, any> | undefined;
+    }
+
+    const [reqData, setReqData] = useState<reqprops>()
+    
+    function DisplayKeyValuePairs({ data }: reqprops) {
+        if (!data) {
+            return null; // or any other handling for undefined data
+        }
+
+        const entries = Object.entries(data);
+
+        return (
+            <div>
+                {entries.map(([key, value]) => {
+                    const isTrue = Boolean(value);
+                    
+                    if (isTrue && key != "_id" && key != "createdAt" && key != "updatedAt" && key != "rsaPubkey" && key != "requestedSolPubkey" && key != "solPubkey" && key != "senderName") { 
+                        return (
+                            <p key={key}>
+                                {key} 
+                                
+                            </p>
+                        );
+                    } else {
+                        return null;
+                    }
+                })}
+            </div>
+
+        );
+    }
+    
+
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.post("http://localhost:9000/response/get",{id: id});
-                console.log(response)
+                // console.log(response.data)
+                setReqData(response.data.data);
+                console.log(reqData)
             } catch (err) {
                 console.error(err)
             }
         }
         fetchData();
-    }, []);
+    }, [reqData]);
 
     
 
@@ -56,7 +97,7 @@ function ResponseModal({ open, setOpen, id}: Props) {
         if (event.target.type === 'checkbox') {
             setFormData({
                 ...formData,
-                [event.target.name]: event.target.checked ? 'true' : 'false',
+                [event.target.name]: event.target.checked ? 'true' : 'false', 
             });
         } else {
             setFormData({
@@ -88,7 +129,13 @@ function ResponseModal({ open, setOpen, id}: Props) {
                 <Box style={{ backgroundColor: "black" }}>
                     <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
                 </Box>
-                
+                <Box ><h2>Requester Name: {name}</h2></Box>
+                <Box style={{ textAlign: 'center' }}><h2>Requested Data</h2></Box>
+                <Box >
+                    
+                    <DisplayKeyValuePairs data={reqData} />
+                    
+                </Box>
             </Box>
             {/* Your modal content goes here */}
         </Modal>

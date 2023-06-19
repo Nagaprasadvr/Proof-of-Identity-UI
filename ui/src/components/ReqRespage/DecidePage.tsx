@@ -43,6 +43,8 @@ function DecidePage() {
     const [refresh, setRefresh] = useState<boolean>(false);
     const [open, setOpen] = useState(false)
     const [id, setId] = useState('');
+    const [name, setName] = useState('');
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -155,6 +157,7 @@ function DecidePage() {
                                           setRefresh(!refresh);
                                           setOpen(true)
                                           setId(item._id)
+                                          setName(item.senderName)
                                     }}
                                     
                                   >
@@ -194,6 +197,8 @@ function DecidePage() {
                                           setRefresh(!refresh);
                                           setOpen(true)
                                           setId(item._id)
+                                          setName(item.senderName)
+
                                       }}
                                   >
                                       Accept
@@ -286,7 +291,7 @@ function DecidePage() {
                         ) : (
                             <></>
                         )}
-                        {open && (<ResponseModal open={open} setOpen={setOpen} id={id}></ResponseModal>)}
+                        {open && (<ResponseModal open={open} setOpen={setOpen} id={id} name={name}></ResponseModal>)}
                     </>
                 </>
             ) : (
