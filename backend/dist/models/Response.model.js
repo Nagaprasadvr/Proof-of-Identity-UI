@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const SendIdentityResponseSchema = new mongoose_1.default.Schema({
-    pubkey: {
+const ResponseSchema = new mongoose_1.default.Schema({
+    requestId: {
         type: String,
         unique: true,
     },
@@ -29,7 +29,7 @@ const SendIdentityResponseSchema = new mongoose_1.default.Schema({
         type: String,
         unique: true,
     },
-    pic: {
+    picUploadLink: {
         type: String,
         unique: true,
     },
@@ -48,4 +48,4 @@ const SendIdentityResponseSchema = new mongoose_1.default.Schema({
 }, {
     timestamps: true,
 });
-exports.default = mongoose_1.default.model("DigitalIdentities", SendIdentityResponseSchema);
+exports.default = mongoose_1.default.model("Responses", ResponseSchema);

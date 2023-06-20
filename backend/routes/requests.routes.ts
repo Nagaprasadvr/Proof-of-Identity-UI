@@ -1,7 +1,8 @@
 import { Request, Response, response } from "express";
-import SendRequest from "../models/SendIdentityRequest.model";
+import RequestModel from "../models/Request.model";
 import express from "express";
-import { request } from "http";
+import ResponseModel from "../models/Response.model";
+import { ObjectId } from "mongodb";
 const router = express();
 
 router.route("/send").post((req: Request, res: Response) => {
@@ -21,7 +22,7 @@ router.route("/send").post((req: Request, res: Response) => {
   const senderPubkey: string = req.body.requestedSolPubkey;
   const rsaPubkey: string = req.body.rsaPubkey;
 
-  const newRequest = new SendRequest({
+  const newRequest = new RequestModel({
     solPubkey: userPubkey,
     rsaPubkey: rsaPubkey,
     requestedSolPubkey: senderPubkey,
@@ -47,10 +48,97 @@ router.route("/send").post((req: Request, res: Response) => {
     .catch((err) => res.json("Error:" + err));
 });
 
-router.route("/get").get((req: Request, res: Response) => {
-  SendRequest.find()
+router.route("/getAll").get((req: Request, res: Response) => {
+  RequestModel.find()
     .then((SendRequest: any) => res.json(SendRequest))
     .catch((err: any) => res.status(400).json("Error:" + err));
+});
+
+router.route("/get").post((req: Request, res: Response) => {
+  const id = req.body.id;
+  RequestModel.findById(id)
+    .then((response: any) => {
+      res.json({ data: response });
+    })
+    .catch((err: any) => console.log(err));
+});
+
+router.route("/approve").post((req: Request, res: Response) => {
+  const requestId: string = req.body.requestId;
+  const name: string = req.body.requestData.name;
+  const dob: string = req.body.requestData.dob;
+  const aadharNumber: string = req.body.requestData.aadharNumber;
+  const panNumber: string = req.body.requestData.panNumber;
+  const passportNumber: string = req.body.requestData.passportNumber;
+  const panUploadLink: string = req.body.requestData.panUploadLink;
+  const passportUploadLink: string = req.body.requestData.passportUploadLink;
+  const aadharUploadLink: string = req.body.requestData.aadharUploadLink;
+  const picUploadLink: string = req.body.requestData.picUploadLink;
+  const address: string = req.body.requestData.address;
+
+  const newResponse = new ResponseModel({
+    requestId: requestId,
+    name: name,
+    dob: dob,
+    address: address,
+    aadharNum: aadharNumber,
+    panNum: panNumber,
+    passportNum: passportNumber,
+    picUploadLink: picUploadLink,
+    panUploadLink: panUploadLink,
+    passportUploadLink: passportUploadLink,
+    aadharUploadLink: aadharUploadLink,
+  });
+
+  newResponse
+    .save()
+    .then(() => {
+      res.json("the requests has been sent");
+    })
+    .catch((err) => res.json("Error:" + err));
+
+  RequestModel.updateOne(
+    {
+      _id: new ObjectId(requestId),
+    },
+    {
+      $set: {
+        state: "Approved",
+      },
+    },
+    null,
+    (err: any, res: any) => {
+      if (err) {
+        console.error(err);
+        return;
+      } else {
+        console.log("update success");
+      }
+    }
+  );
+});
+
+router.route("/deny").post((req: Request, res: Response) => {
+  const id = req.body.id;
+  RequestModel.updateOne(
+    {
+      _id: new ObjectId(id),
+    },
+    {
+      $set: {
+        state: "Denied",
+      },
+    },
+    null,
+    (err: any, res: any) => {
+      if (err) {
+        console.error(err);
+        return;
+      } else {
+        console.log("update success");
+      }
+    }
+  );
 });
 
 export default router;

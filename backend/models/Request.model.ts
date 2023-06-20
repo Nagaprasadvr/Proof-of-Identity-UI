@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const SendIdentityRequestSchema = new mongoose.Schema(
+const RequestSchema = new mongoose.Schema(
   {
     solPubkey: {
       type: String,
@@ -69,4 +69,4 @@ const SendIdentityRequestSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("IdentityRequests", SendIdentityRequestSchema);
+export default mongoose.model("Requests", RequestSchema);
