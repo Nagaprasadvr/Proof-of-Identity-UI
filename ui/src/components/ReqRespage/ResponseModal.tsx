@@ -13,6 +13,7 @@ import * as sdk from '../../digitalIdentity/js/src/generated';
 import axios from 'axios';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { toast } from 'react-hot-toast';
+import { Data } from 'node-rsa';
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { UserData } from '../InputForm/InputForm';
 
@@ -50,9 +51,46 @@ interface RequestedData {
     address: string;
 }
 
-function ResponseModal({ open, setOpen, id }: Props) {
+function ResponseModal({ open, setOpen, id, name }: Props) {
     const wallet = useWallet();
     const [data, setData] = useState<RequestedData | null>(null);
+    interface reqprops {
+        data: Record<string, any> | undefined;
+    }
+
+    const [reqData, setReqData] = useState<reqprops>()
+    
+    function DisplayKeyValuePairs({ data }: reqprops) {
+        if (!data) {
+            return null; // or any other handling for undefined data
+        }
+
+        const entries = Object.entries(data);
+
+        return (
+            <div>
+                {entries.map(([key, value]) => {
+                    const isTrue = Boolean(value);
+                    
+                    if (isTrue && key != "_id" && key != "createdAt" && key != "updatedAt" && key != "rsaPubkey" && key != "requestedSolPubkey" && key != "solPubkey" && key != "senderName") { 
+                        return (
+                            <p key={key}>
+                                {key} 
+                                
+                            </p>
+                        );
+                    } else {
+                        return null;
+                    }
+                })}
+            </div>
+
+        );
+    }
+    
+
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -112,29 +150,19 @@ function ResponseModal({ open, setOpen, id }: Props) {
     const hanldeConfirm = async () => {
         console.log('confirm');
         toast.success('Confirmed');
-        if (wallet?.publicKey && data) {
+        if (wallet?.publicKey) {
             const [digitalPdaAcc, bump] = PublicKey.findProgramAddressSync(
                 [Buffer.from('dig_identity'), wallet?.publicKey.toBuffer()],
                 sdk.PROGRAM_ID
             );
             const rpcConn = new Connection(clusterApiUrl('devnet'));
             const acc = await sdk.DigitalIdentity.fromAccountAddress(rpcConn, digitalPdaAcc);
-            const response1 = await axios.post('http://localhost:9000/cryptography/decryptData', {
+            const response = await axios.post('http://localhost:9000/cryptography/decryptData', {
                 encData: acc as UserData,
                 ticker: 'solData',
             });
 
-            const decryptedData = response1.data.decryptedData;
-
-            const response2 = await axios.post('http://localhost:9000/cryptography/encryptDataWithPubkey', {
-                plainData: decryptedData,
-                pubkey: data.rsaPubkey,
-                ticker: 'solData',
-            });
-
-            const encUserData = response2.data.encryptedData as UserData;
-
-            const response3 = await axios.post('http://localhost:9000/requests/approve', {});
+            const decryptedData = response.data.decryptedData;
         }
     };
     const handleClose = () => {
@@ -162,6 +190,14 @@ function ResponseModal({ open, setOpen, id }: Props) {
                     >
                         Confirm
                     </button>
+                </Box>
+            </Box>
+                <Box ><h2>Requester Name: {name}</h2></Box>
+                <Box style={{ textAlign: 'center' }}><h2>Requested Data</h2></Box>
+                <Box >
+                    
+                    <DisplayKeyValuePairs data={reqData} />
+                    
                 </Box>
             </Box>
             {/* Your modal content goes here */}

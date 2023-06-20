@@ -43,6 +43,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
     const [refresh, setRefresh] = useState<boolean>(false);
     const [open, setOpen] = useState(false);
     const [id, setId] = useState('');
+    const [name, setName] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -159,6 +160,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                           setRefresh(!refresh);
                                           setOpen(true);
                                           setId(item._id);
+                                          setName(item.senderName);
                                       }}
                                   >
                                       Accept
@@ -197,6 +199,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                           setRefresh(!refresh);
                                           setOpen(true);
                                           setId(item._id);
+                                          setName(item.senderName);
                                       }}
                                   >
                                       Accept
