@@ -21,6 +21,7 @@ interface Props {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     id: string;
+    name: string;
 }
 
 interface RequestedData {
@@ -58,8 +59,8 @@ function ResponseModal({ open, setOpen, id, name }: Props) {
         data: Record<string, any> | undefined;
     }
 
-    const [reqData, setReqData] = useState<reqprops>()
-    
+    const [reqData, setReqData] = useState<reqprops>();
+
     function DisplayKeyValuePairs({ data }: reqprops) {
         if (!data) {
             return null; // or any other handling for undefined data
@@ -71,25 +72,25 @@ function ResponseModal({ open, setOpen, id, name }: Props) {
             <div>
                 {entries.map(([key, value]) => {
                     const isTrue = Boolean(value);
-                    
-                    if (isTrue && key != "_id" && key != "createdAt" && key != "updatedAt" && key != "rsaPubkey" && key != "requestedSolPubkey" && key != "solPubkey" && key != "senderName") { 
-                        return (
-                            <p key={key}>
-                                {key} 
-                                
-                            </p>
-                        );
+
+                    if (
+                        isTrue &&
+                        key != '_id' &&
+                        key != 'createdAt' &&
+                        key != 'updatedAt' &&
+                        key != 'rsaPubkey' &&
+                        key != 'requestedSolPubkey' &&
+                        key != 'solPubkey' &&
+                        key != 'senderName'
+                    ) {
+                        return <p key={key}>{key}</p>;
                     } else {
                         return null;
                     }
                 })}
             </div>
-
         );
     }
-    
-
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -150,19 +151,33 @@ function ResponseModal({ open, setOpen, id, name }: Props) {
     const hanldeConfirm = async () => {
         console.log('confirm');
         toast.success('Confirmed');
-        if (wallet?.publicKey) {
-            const [digitalPdaAcc, bump] = PublicKey.findProgramAddressSync(
-                [Buffer.from('dig_identity'), wallet?.publicKey.toBuffer()],
-                sdk.PROGRAM_ID
-            );
-            const rpcConn = new Connection(clusterApiUrl('devnet'));
-            const acc = await sdk.DigitalIdentity.fromAccountAddress(rpcConn, digitalPdaAcc);
-            const response = await axios.post('http://localhost:9000/cryptography/decryptData', {
-                encData: acc as UserData,
-                ticker: 'solData',
-            });
+        if (wallet?.publicKey && data) {
+            try {
+                const [digitalPdaAcc, bump] = PublicKey.findProgramAddressSync(
+                    [Buffer.from('dig_identity'), wallet?.publicKey.toBuffer()],
+                    sdk.PROGRAM_ID
+                );
+                const rpcConn = new Connection(clusterApiUrl('devnet'));
+                const acc = await sdk.DigitalIdentity.fromAccountAddress(rpcConn, digitalPdaAcc);
+                const response = await axios.post('http://localhost:9000/cryptography/decryptData', {
+                    encData: acc as UserData,
+                    ticker: 'solData',
+                });
 
-            const decryptedData = response.data.decryptedData;
+                const decryptedData = response.data.decryptedData;
+
+                const encData = (
+                    await axios.post('http://localhost:9000/cryptography/encryptDataWithPubkey', {
+                        plainData: decryptedData as UserData,
+                        ticker: 'solData',
+                        pubkey: data.requestedSolPubkey,
+                    })
+                ).data.encryptedData;
+
+                const res = await axios.post('http://localhost:9000/requests/approve', {});
+            } catch (e) {
+                console.log(e);
+            }
         }
     };
     const handleClose = () => {
@@ -191,16 +206,16 @@ function ResponseModal({ open, setOpen, id, name }: Props) {
                         Confirm
                     </button>
                 </Box>
-            </Box>
-                <Box ><h2>Requester Name: {name}</h2></Box>
-                <Box style={{ textAlign: 'center' }}><h2>Requested Data</h2></Box>
-                <Box >
-                    
+                <Box>
+                    <h2>Requester Name: {name}</h2>
+                </Box>
+                <Box style={{ textAlign: 'center' }}>
+                    <h2>Requested Data</h2>
+                </Box>
+                <Box>
                     <DisplayKeyValuePairs data={reqData} />
-                    
                 </Box>
             </Box>
-            {/* Your modal content goes here */}
         </Modal>
     );
 }

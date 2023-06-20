@@ -293,7 +293,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                             ) : (
                                 <></>
                             )}
-                            {open && <ResponseModal open={open} setOpen={setOpen} id={id}></ResponseModal>}
+                            {open && <ResponseModal open={open} setOpen={setOpen} id={id} name={name}></ResponseModal>}
                         </>
                     </>
                 ) : (
