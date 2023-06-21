@@ -25,3 +25,7 @@ td,tr,tbody{
 .centered-button {
     text-align: center;
 }
+
+.hover-table-row:hover{
+    color:white;;
+    background-color: black;}

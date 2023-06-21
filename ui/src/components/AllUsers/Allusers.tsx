@@ -125,7 +125,7 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
                                     <td style={{ textAlign: 'center' }}>{index + 1}</td>
                                     <td>{item.name}</td>
                                     <td>{item.pubkey}</td>
-                                    <td>
+                                    <td style={{ display: 'flex', justifyContent: 'center' }}>
                                         {' '}
                                         <button
                                             style={{ width: 'auto' }}
@@ -207,7 +207,7 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
                                                 <td style={{ textAlign: 'center', color: 'lightskyblue' }}>ID</td>
                                                 <td style={{ color: 'lightskyblue' }}>Name</td>
                                                 <td style={{ color: 'lightskyblue' }}>Pub key</td>
-                                                <td style={{ color: 'lightskyblue' }}>Action</td>
+                                                <td style={{ color: 'lightskyblue', textAlign: 'center' }}>Action</td>
                                             </tr>
                                         </thead>
                                         <AllUsersData></AllUsersData>

@@ -265,6 +265,7 @@ export const InputForm = () => {
                                 onSubmit={async (data, { completeForm, setIsSubmitting }) => {
                                     // setIsSubmitting(false);
                                     completeForm();
+                                    setOpen(false);
                                     const userData = setUserData(data);
                                     await axios.post('http://localhost:9000/digitalIdentities/add', {
                                         userPubkey: solWallet?.publicKey?.toBase58(),

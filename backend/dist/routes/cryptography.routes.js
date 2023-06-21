@@ -99,10 +99,10 @@ router.route("/encryptData").post((req, res) => {
         const keypairObj = JSON.parse(keypair.toString());
         const encryptedpicLink = (0, RSA_1.encryptData)(plainData.picUploadLink, keypairObj.pubKey);
         const encryptedaadharLink = (0, RSA_1.encryptData)(plainData.aadharUploadLink, keypairObj.pubKey);
-        const encryptedpanLink = (0, RSA_1.encryptData)(plainData.panUploadlink, keypairObj.pubKey);
+        const encryptedpanLink = (0, RSA_1.encryptData)(plainData.panUploadLink, keypairObj.pubKey);
         const encryptedpassportLink = (0, RSA_1.encryptData)(plainData.passportUploadLink, keypairObj.pubKey);
         const encryptedArweaveData = {
-            panUploadlink: encryptedpanLink,
+            panUploadLink: encryptedpanLink,
             picUploadLink: encryptedpicLink,
             passportUploadLink: encryptedpassportLink,
             aadharUploadLink: encryptedaadharLink,
@@ -141,10 +141,10 @@ router.route("/encryptDataWithPubkey").post((req, res) => {
         const keypairObj = JSON.parse(keypair.toString());
         const encryptedpicLink = (0, RSA_1.encryptData)(plainData.picUploadLink, keypairObj.pubKey);
         const encryptedaadharLink = (0, RSA_1.encryptData)(plainData.aadharUploadLink, keypairObj.pubKey);
-        const encryptedpanLink = (0, RSA_1.encryptData)(plainData.panUploadlink, keypairObj.pubKey);
+        const encryptedpanLink = (0, RSA_1.encryptData)(plainData.panUploadLink, keypairObj.pubKey);
         const encryptedpassportLink = (0, RSA_1.encryptData)(plainData.passportUploadLink, keypairObj.pubKey);
         const encryptedArweaveData = {
-            panUploadlink: encryptedpanLink,
+            panUploadLink: encryptedpanLink,
             picUploadLink: encryptedpicLink,
             passportUploadLink: encryptedpassportLink,
             aadharUploadLink: encryptedaadharLink,
@@ -187,12 +187,12 @@ router.route("/decryptData").post((req, res) => {
         const keypairpath = `${homeDir}/RSA/keypair_1028.json`;
         const keypair = fs_1.default.readFileSync(keypairpath);
         const keypairObj = JSON.parse(keypair.toString());
-        const decryptedpicLink = (0, RSA_1.encryptData)(encData.picUploadLink, keypairObj.privateKey);
-        const decryptedaadharLink = (0, RSA_1.encryptData)(encData.aadharUploadLink, keypairObj.privateKey);
-        const decryptedpanLink = (0, RSA_1.encryptData)(encData.panUploadlink, keypairObj.privateKey);
-        const decryptedpassportLink = (0, RSA_1.encryptData)(encData.passportUploadLink, keypairObj.privateKey);
+        const decryptedpicLink = (0, RSA_1.decryptData)(encData.picUploadLink, keypairObj.privateKey);
+        const decryptedaadharLink = (0, RSA_1.decryptData)(encData.aadharUploadLink, keypairObj.privateKey);
+        const decryptedpanLink = (0, RSA_1.decryptData)(encData.panUploadLink, keypairObj.privateKey);
+        const decryptedpassportLink = (0, RSA_1.decryptData)(encData.passportUploadLink, keypairObj.privateKey);
         const decryptedArweaveData = {
-            panUploadlink: decryptedpanLink,
+            panUploadLink: decryptedpanLink,
             picUploadLink: decryptedpicLink,
             passportUploadLink: decryptedpassportLink,
             aadharUploadLink: decryptedaadharLink,

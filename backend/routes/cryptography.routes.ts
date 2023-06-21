@@ -15,9 +15,9 @@ export interface KeyPair {
 }
 
 interface ArweaveData {
-  passportUploadLink: string;
+  panUploadLink: string;
   aadharUploadLink: string;
-  panUploadlink: string;
+  passportUploadLink: string;
   picUploadLink: string;
 }
 
@@ -151,7 +151,7 @@ router.route("/encryptData").post((req: Request, res: Response) => {
       keypairObj.pubKey
     );
     const encryptedpanLink = encryptData(
-      (plainData as ArweaveData).panUploadlink,
+      (plainData as ArweaveData).panUploadLink,
       keypairObj.pubKey
     );
     const encryptedpassportLink = encryptData(
@@ -160,7 +160,7 @@ router.route("/encryptData").post((req: Request, res: Response) => {
     );
 
     const encryptedArweaveData: ArweaveData = {
-      panUploadlink: encryptedpanLink,
+      panUploadLink: encryptedpanLink,
       picUploadLink: encryptedpicLink,
       passportUploadLink: encryptedpassportLink,
       aadharUploadLink: encryptedaadharLink,
@@ -209,7 +209,7 @@ router.route("/encryptDataWithPubkey").post((req: Request, res: Response) => {
       keypairObj.pubKey
     );
     const encryptedpanLink = encryptData(
-      (plainData as ArweaveData).panUploadlink,
+      (plainData as ArweaveData).panUploadLink,
       keypairObj.pubKey
     );
     const encryptedpassportLink = encryptData(
@@ -218,7 +218,7 @@ router.route("/encryptDataWithPubkey").post((req: Request, res: Response) => {
     );
 
     const encryptedArweaveData: ArweaveData = {
-      panUploadlink: encryptedpanLink,
+      panUploadLink: encryptedpanLink,
       picUploadLink: encryptedpicLink,
       passportUploadLink: encryptedpassportLink,
       aadharUploadLink: encryptedaadharLink,
@@ -283,25 +283,25 @@ router.route("/decryptData").post((req: Request, res: Response) => {
     const keypairpath = `${homeDir}/RSA/keypair_1028.json`;
     const keypair = fs.readFileSync(keypairpath);
     const keypairObj: KeyPair = JSON.parse(keypair.toString());
-    const decryptedpicLink = encryptData(
+    const decryptedpicLink = decryptData(
       (encData as ArweaveData).picUploadLink,
       keypairObj.privateKey
     );
-    const decryptedaadharLink = encryptData(
+    const decryptedaadharLink = decryptData(
       (encData as ArweaveData).aadharUploadLink,
       keypairObj.privateKey
     );
-    const decryptedpanLink = encryptData(
-      (encData as ArweaveData).panUploadlink,
+    const decryptedpanLink = decryptData(
+      (encData as ArweaveData).panUploadLink,
       keypairObj.privateKey
     );
-    const decryptedpassportLink = encryptData(
+    const decryptedpassportLink = decryptData(
       (encData as ArweaveData).passportUploadLink,
       keypairObj.privateKey
     );
 
     const decryptedArweaveData: ArweaveData = {
-      panUploadlink: decryptedpanLink,
+      panUploadLink: decryptedpanLink,
       picUploadLink: decryptedpicLink,
       passportUploadLink: decryptedpassportLink,
       aadharUploadLink: decryptedaadharLink,

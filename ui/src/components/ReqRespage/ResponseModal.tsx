@@ -170,11 +170,11 @@ function ResponseModal({ open, setOpen, id, name }: Props) {
                     await axios.post('http://localhost:9000/cryptography/encryptDataWithPubkey', {
                         plainData: decryptedData as UserData,
                         ticker: 'solData',
-                        pubkey: data.requestedSolPubkey,
+                        pubkey: data.rsaPubkey,
                     })
                 ).data.encryptedData;
-
-                const res = await axios.post('http://localhost:9000/requests/approve', {});
+                console.log('encData:', encData);
+                // const res = await axios.post('http://localhost:9000/requests/approve', {});
             } catch (e) {
                 console.log(e);
             }
@@ -198,13 +198,6 @@ function ResponseModal({ open, setOpen, id, name }: Props) {
                     >
                         <CancelIcon style={{ color: 'lightskyblue', fontSize: '50px' }}></CancelIcon>
                     </button>
-
-                    <button
-                        style={{ backgroundColor: 'transparent', borderColor: 'transparent', color: 'lightskyblue' }}
-                        onClick={hanldeConfirm}
-                    >
-                        Confirm
-                    </button>
                 </Box>
                 <Box>
                     <h2>Requester Name: {name}</h2>
@@ -215,6 +208,12 @@ function ResponseModal({ open, setOpen, id, name }: Props) {
                 <Box>
                     <DisplayKeyValuePairs data={reqData} />
                 </Box>
+                <button
+                    style={{ backgroundColor: 'transparent', borderColor: 'transparent', color: 'lightskyblue' }}
+                    onClick={hanldeConfirm}
+                >
+                    Confirm
+                </button>
             </Box>
         </Modal>
     );
