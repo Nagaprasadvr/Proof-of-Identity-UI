@@ -24,49 +24,42 @@ interface Props {
     name: string;
 }
 
-interface RequestedData {
-    solPubkey: string;
-    rsaPubkey: string;
-
-    requestedSolPubkey: string;
-    senderName: string;
-
-    name: boolean;
-    dob: boolean;
-
-    aadharNum: boolean;
-
-    panNum: boolean;
-
-    passportNum: boolean;
-
-    panUploadLink: boolean;
-
-    passportUploadLink: boolean;
-    aadharUploadLink: boolean;
-
-    picUploadLink: boolean;
-
-    description: string;
-
-    address: string;
-}
+// interface RequestedData {
+//     solPubkey: string;
+//     rsaPubkey: string;
+//     requestedSolPubkey: string;
+//     senderName: string;
+//     name: boolean;
+//     dob: boolean;
+//     aadharNum: boolean;
+//     panNum: boolean;
+//     passportNum: boolean;
+//     panUploadLink: boolean;
+//     passportUploadLink: boolean;
+//     aadharUploadLink: boolean;
+//     picUploadLink: boolean;
+//     description: string;
+//     address: string;
+// }
 
 function ResponseModal({ open, setOpen, id, name }: Props) {
     const wallet = useWallet();
-    const [data, setData] = useState<RequestedData | null>(null);
     interface reqprops {
         data: Record<string, any> | undefined;
+        // solPubkey: string;
     }
-
+    const [data, setData] = useState<reqprops>({ data: {} });
+    const [reqPubkey, setReqPubkey] = useState('');
     const [reqData, setReqData] = useState<reqprops>();
 
     function DisplayKeyValuePairs({ data }: reqprops) {
+        console.log(data)
         if (!data) {
             return null; // or any other handling for undefined data
         }
 
         const entries = Object.entries(data);
+        setReqData(data.solPubkey)
 
         return (
             <div>
@@ -96,32 +89,15 @@ function ResponseModal({ open, setOpen, id, name }: Props) {
         const fetchData = async () => {
             try {
                 const response = await axios.post('http://localhost:9000/requests/get', { id: id });
-
-                const reqData: RequestedData = {
-                    name: response.data.data.name,
-                    dob: response.data.data.dob,
-                    aadharNum: response.data.data.aadharNum,
-                    panNum: response.data.data.panNum,
-                    passportNum: response.data.data.passportNum,
-                    panUploadLink: response.data.data.panUploadLink,
-                    passportUploadLink: response.data.data.passportUploadLink,
-                    aadharUploadLink: response.data.data.aadharUploadLink,
-                    picUploadLink: response.data.data.picUploadLink,
-                    description: response.data.data.description,
-                    address: response.data.data.address,
-                    solPubkey: response.data.data.solPubkey,
-                    rsaPubkey: response.data.data.rsaPubkey,
-                    requestedSolPubkey: response.data.data.requestedSolPubkey,
-                    senderName: response.data.data.senderName,
-                };
-
-                setData(reqData);
+                // console.log(response.data)
+                setData(response.data.data);
+                
             } catch (err) {
                 console.error(err);
             }
         };
         fetchData();
-    }, [id]);
+    }, [id, data, reqPubkey]);
 
     // const handleChange = (event: any) => {
     //     if (event.target.type === 'checkbox') {
@@ -170,7 +146,7 @@ function ResponseModal({ open, setOpen, id, name }: Props) {
                     await axios.post('http://localhost:9000/cryptography/encryptDataWithPubkey', {
                         plainData: decryptedData as UserData,
                         ticker: 'solData',
-                        pubkey: data.rsaPubkey,
+                        pubkey: reqPubkey,
                     })
                 ).data.encryptedData;
                 console.log('encData:', encData);
@@ -206,7 +182,7 @@ function ResponseModal({ open, setOpen, id, name }: Props) {
                     <h2>Requested Data</h2>
                 </Box>
                 <Box>
-                    <DisplayKeyValuePairs data={reqData} />
+                    <DisplayKeyValuePairs data={data} />
                 </Box>
                 <button
                     style={{ backgroundColor: 'transparent', borderColor: 'transparent', color: 'lightskyblue' }}
