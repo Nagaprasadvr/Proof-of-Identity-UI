@@ -38,6 +38,7 @@ router.route("/send").post((req: Request, res: Response) => {
     picUploadLink: picUploadLink,
     description: description,
     address: address,
+    state: 'Requested'
   });
 
   newRequest

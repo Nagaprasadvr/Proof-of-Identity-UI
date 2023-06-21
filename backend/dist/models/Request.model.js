@@ -66,6 +66,10 @@ const RequestSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
+    state: {
+        type: String,
+        required: true,
+    }
 }, {
     timestamps: true,
 });

@@ -21,6 +21,7 @@ import Allusers from './components/AllUsers/Allusers';
 import axios from 'axios';
 import DecidePage from './components/ReqRespage/DecidePage';
 import * as sdk from './digitalIdentity/js/src/generated';
+import MyRequests from './components/RequestComponent/MyRequests';
 require('bootstrap/dist/css/bootstrap.min.css');
 
 export interface RSAKeypair {
@@ -146,6 +147,10 @@ function App() {
                                 <Route
                                     path="/MyResponses"
                                     element={<DecidePage serverConnected={serverConnected}></DecidePage>}
+                                ></Route>
+                                <Route
+                                    path="/MyRequests"
+                                    element={<MyRequests serverConnected={serverConnected}></MyRequests>}
                                 ></Route>
                             </Routes>
                         </Box>

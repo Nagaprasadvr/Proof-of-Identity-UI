@@ -1,9 +1,7 @@
-import './pagestyle.css';
 import React, { useEffect } from 'react';
 import { Box } from '@mui/material';
-import { Table } from 'react-bootstrap';
+import { Dropdown, Table } from 'react-bootstrap';
 import { useWallet } from '@solana/wallet-adapter-react';
-import data from './MOCK_DATA.json';
 import { Button } from '@material-ui/core';
 import { useState } from 'react';
 import axios from 'axios';
@@ -29,9 +27,10 @@ interface Data {
     picUploadLink: boolean;
     description: string;
     address: boolean;
+    state: string;
 }
 
-function DecidePage({ serverConnected }: { serverConnected: boolean }) {
+function MyRequests({ serverConnected }: { serverConnected: boolean }) {
     const wallet = useWallet();
     const [value, setValue] = useState('');
     const [valueRes, setValueRes] = useState('');
@@ -45,6 +44,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
     const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [solPub, setSolPub] = useState('');
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -70,7 +70,8 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                     const picUploadLink = data.picUploadLink;
                     const description = data.description;
                     const address = data.address;
-                    if (data.requestedSolPubkey === wallet.publicKey?.toString()) {
+                    const state = data.state;
+                    if (data.solPubkey === wallet.publicKey?.toString()) {
                         userData.push({
                             _id,
                             solPubkey,
@@ -88,6 +89,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                             picUploadLink,
                             description,
                             address,
+                            state,
                         });
                     }
                 });
@@ -144,89 +146,85 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
             <tbody>
                 {value.length > 0
                     ? tableFilterRes.map((item, index) => (
-                          <tr style={{ width: '100vw' }} key={index}>
-                              <td>{item.senderName}</td>
-                              <td>{reduceString(item.solPubkey, 10)}</td>
-                              <td>{item.description}</td>
-                              <td>
-                                  <button
-                                      style={{
-                                          width: 'auto',
-                                          display: 'flex',
-                                          justifyContent: 'space-around',
-                                          fontWeight: '600',
-                                      }}
-                                      className="balance-button w3-btn w3-hover-white App "
-                                      onClick={() => {
-                                          setRefresh(!refresh);
-                                          setOpen(true);
-                                          setId(item._id);
-                                          setName(item.senderName);
-                                          setSolPub(item.solPubkey);
-                                      }}
-                                  >
-                                      Accept
-                                  </button>
+                        <tr style={{ width: '100vw' }} key={index}>
+                            <td>{item.senderName}</td>
+                            <td>{reduceString(item.solPubkey, 10)}</td>
+                            <td>{item.description}</td>
+                            <td>
+                                {/* <button
+                                    style={{
+                                        width: 'auto',
+                                        display: 'flex',
+                                        justifyContent: 'space-around',
+                                        fontWeight: '600',
+                                    }}
+                                    className="balance-button w3-btn w3-hover-white App "
+                                    onClick={() => {
+                                        setRefresh(!refresh);
+                                        setOpen(true);
+                                        setId(item._id);
+                                        setName(item.senderName);
+                                        setSolPub(item.solPubkey);
+                                    }}
+                                >
+                                    Accept
+                                </button> */}
+                                <Dropdown>
+                                    <Dropdown.Toggle style={{ backgroundColor: "lightskyblue", color: 'black' }}  variant="success" id="dropdown-basic">
+                                        {item.state}
+                                    </Dropdown.Toggle>
 
-                                  <button
-                                      style={{
-                                          width: 'auto',
-                                          background: 'red',
-                                          color: 'white',
-                                          display: 'flex',
-                                          justifyContent: 'space-around',
-                                          fontWeight: '600',
-                                      }}
-                                      className="balance-button w3-btn w3-hover-white App "
-                                      onClick={() => {
-                                          DenyRequest(item._id);
-                                      }}
-                                  >
-                                      Deny
-                                  </button>
-                              </td>
-                          </tr>
-                      ))
+                                    <Dropdown.Menu>
+                                        {/* <Dropdown.Item href="#/action-2"></Dropdown.Item> */}
+                                        <Dropdown.Item onClick={() => {
+                                            DenyRequest(item._id);
+                                        }}>Cancel</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+
+                            
+                            </td>
+                        </tr>
+                    ))
                     : dataSource.map((item, index) => (
-                          // (item.requestedSolPubkey == wallet.publicKey?.toString() && (
-                          <tr style={{ width: '100vw' }} key={index}>
-                              <td>{item.senderName}</td>
-                              <td>{reduceString(item.solPubkey, 18)}</td>
-                              <td>{item.description}</td>
-                              <td style={{ display: 'flex', justifyContent: 'space-around' }}>
-                                  <button
-                                      style={{ width: 'auto', fontWeight: '600' }}
-                                      className="balance-button w3-btn w3-hover-white App "
-                                      onClick={() => {
-                                          setRefresh(!refresh);
-                                          setOpen(true);
-                                          setId(item._id);
-                                          setName(item.senderName);
-                                          setSolPub(item.solPubkey)
-                                      }}
-                                  >
-                                      Accept
-                                  </button>
-                                  <button
-                                      style={{
-                                          width: 'auto',
-                                          background: 'red',
-                                          color: 'white',
-                                          display: 'flex',
-                                          justifyContent: 'space-around',
-                                          fontWeight: '600',
-                                      }}
-                                      className="balance-button w3-btn w3-hover-white App "
-                                      onClick={() => {
-                                          DenyRequest(item._id);
-                                      }}
-                                  >
-                                      Deny
-                                  </button>
-                              </td>
-                          </tr>
-                          // ))
-                      ))}
+                        // (item.requestedSolPubkey == wallet.publicKey?.toString() && (
+                        <tr style={{ width: '100vw' }} key={index}>
+                            <td>{item.senderName}</td>
+                            <td>{reduceString(item.solPubkey, 18)}</td>
+                            <td>{item.description}</td>
+                            <td style={{ display: 'flex', justifyContent: 'space-around' }}>
+                            
+                                {/* <button
+                                    style={{ width: 'auto', fontWeight: '600' }}
+                                    className="balance-button w3-btn w3-hover-white App "
+                                    onClick={() => {
+                                        setRefresh(!refresh);
+                                        setOpen(true);
+                                        setId(item._id);
+                                        setName(item.senderName);
+                                        setSolPub(item.solPubkey)
+                                    }}
+                                >
+                                    Accept
+                                </button> */}
+                                <Dropdown  >
+                                    <Dropdown.Toggle style={{ backgroundColor: "lightskyblue", color: 'black' }} variant="success" id="dropdown-basic">
+                                        {item.state}
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                        {/* <Dropdown.Item href="#/action-2"></Dropdown.Item> */}
+                                        <Dropdown.Item onClick={() => {
+                                            DenyRequest(item._id);
+                                        }}>Cancel</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                                
+                                
+                            </td>
+                        </tr>
+                        // ))
+                    ))}
             </tbody>
         );
     }
@@ -248,7 +246,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                 }}
                             >
                                 <h1>
-                                    <b>Incoming Requests</b>
+                                    <b>Outgoing Requests</b>
                                 </h1>
                                 <input
                                     type="text"
@@ -317,4 +315,4 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
     );
 }
 
-export default DecidePage;
+export default MyRequests;
