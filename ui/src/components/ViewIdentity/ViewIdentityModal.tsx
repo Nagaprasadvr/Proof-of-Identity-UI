@@ -469,6 +469,14 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                     </Box>
                 </>
             );
+        } else {
+            return (
+                <>
+                    <Box>
+                        <h1>Loading ...</h1>
+                    </Box>
+                </>
+            );
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
