@@ -12,7 +12,7 @@ import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adap
 import React, { useEffect, useState } from 'react';
 import { useMemo } from 'react';
 import { ViewIdentity } from './components/ViewIdentity/ViewIdentity';
-import BundlrUpload from "./components/BundlrUpload/BundlrUpload"
+import BundlrUpload from './components/BundlrUpload/BundlrUpload';
 import { Box } from '@mui/material';
 import { Toaster, toast } from 'react-hot-toast';
 import './App.css';
@@ -20,7 +20,7 @@ import Navigation from './components/Navbar/Navigation';
 import Allusers from './components/AllUsers/Allusers';
 import axios from 'axios';
 import DecidePage from './components/ReqRespage/DecidePage';
-import * as sdk from "./digitalIdentity/js/src/generated"
+import * as sdk from './digitalIdentity/js/src/generated';
 require('bootstrap/dist/css/bootstrap.min.css');
 
 export interface RSAKeypair {
@@ -29,102 +29,96 @@ export interface RSAKeypair {
 }
 
 export interface RSAKepairVariants {
-    keypair512: RSAKeypair,
-    keypair1028: RSAKeypair
+    keypair512: RSAKeypair;
+    keypair1028: RSAKeypair;
 }
 
 function App() {
     const [serverConnected, setServerConnected] = useState<boolean>(false);
     const [RSAKeypairs, setRSAKeypairs] = useState<RSAKepairVariants | null>(null);
-    const [digIdentityAcc, setDigIdentityAcc] = useState<sdk.DigitalIdentity | null>(null)
+    const [digIdentityAcc, setDigIdentityAcc] = useState<sdk.DigitalIdentity | null>(null);
     const wallet = useWallet();
     useEffect(() => {
         const serverConnect = async () => {
             try {
-                await axios.get("http://localhost:9000/");
-                setServerConnected(true)
+                await axios.get('http://localhost:9000/');
+                setServerConnected(true);
+            } catch (e) {
+                setServerConnected(false);
             }
-            catch (e) {
-                setServerConnected(false)
-            }
-        }
+        };
 
-        serverConnect()
-    })
+        serverConnect();
+    });
     const network = WalletAdapterNetwork.Devnet;
 
     // You can also provide a custom RPC endpoint.
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
     const wallets = useMemo(
-        () => [
-            new PhantomWalletAdapter(),
-            new SolflareWalletAdapter()
-        ],
+        () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [network]
     );
 
     useEffect(() => {
         const fetchDigitalIdentity = async () => {
-            const rpcConn = new Connection(clusterApiUrl("devnet"));
+            const rpcConn = new Connection(clusterApiUrl('devnet'));
             if (wallet?.publicKey) {
                 try {
-                    const [digitalPdaAcc, bump] = PublicKey.findProgramAddressSync([Buffer.from("dig_identity"), wallet?.publicKey.toBuffer()], sdk.PROGRAM_ID)
+                    const [digitalPdaAcc, bump] = PublicKey.findProgramAddressSync(
+                        [Buffer.from('dig_identity'), wallet?.publicKey.toBuffer()],
+                        sdk.PROGRAM_ID
+                    );
                     const acc = await sdk.DigitalIdentity.fromAccountAddress(rpcConn, digitalPdaAcc);
                     setDigIdentityAcc(acc);
-                    console.log("log;", digitalPdaAcc)
+                } catch (e) {
+                    console.error(e);
                 }
-                catch (e) {
-                    console.error(e)
-                }
-
-
             }
-
-        }
+        };
         if (wallet?.connected && serverConnected && wallet?.publicKey) {
-            fetchDigitalIdentity()
+            fetchDigitalIdentity();
         }
-
-    }, [serverConnected, wallet?.connected, wallet?.publicKey])
-
+    }, [serverConnected, wallet?.connected, wallet?.publicKey]);
 
     useEffect(() => {
         const fetchKeypair = async () => {
             if (serverConnected) {
                 try {
-                    const res = await axios.get("http://localhost:9000/cryptography/getRSAKeypair");
+                    const res = await axios.get('http://localhost:9000/cryptography/getRSAKeypair');
                     if (res.data.status === true) {
                         const rsaKeypairs: RSAKepairVariants = {
                             keypair512: res.data.keypair_512,
-                            keypair1028: res.data.keypair_1028
-                        }
+                            keypair1028: res.data.keypair_1028,
+                        };
 
-                        setRSAKeypairs(rsaKeypairs)
-
+                        setRSAKeypairs(rsaKeypairs);
                     }
-                }
-                catch (e) {
-
-                }
-
+                } catch (e) {}
             }
-
-        }
+        };
         if (serverConnected) {
-            fetchKeypair()
+            fetchKeypair();
         }
-
-
-    }, [serverConnected])
+    }, [serverConnected]);
     return (
         <>
-
             <ConnectionProvider endpoint={endpoint}>
                 <WalletProvider wallets={wallets}>
                     <WalletModalProvider>
-                        <Toaster position='bottom-left' toastOptions={{ style: { color: "black", backgroundColor: "lightskyblue", width: "100vw", fontFamily: "Roboto Mono,monospace", fontWeight: "600" } }} />
+                        <Toaster
+                            position="bottom-left"
+                            toastOptions={{
+                                style: {
+                                    color: 'black',
+                                    backgroundColor: 'lightskyblue',
+                                    width: '100vw',
+                                    fontFamily: 'Roboto Mono,monospace',
+                                    fontWeight: '600',
+                                },
+                            }}
+                        />
                         <Box>
                             <Box>
                                 <Navigation></Navigation>
@@ -132,20 +126,34 @@ function App() {
 
                             <Routes>
                                 <Route path="/" element={<Home connected={serverConnected} />}></Route>
-                                <Route path="/design" element={<Design />}></Route>
-                                <Route path="/Allusers" element={<Allusers connected={serverConnected} rsaKeypairs={RSAKeypairs as RSAKepairVariants} />}></Route>
-                                <Route path="/blog" element={<Blog />}></Route>
-                                <Route path="/ViewIdentity" element={<ViewIdentity connected={serverConnected} digIdentityAcc={digIdentityAcc} />}></Route>
-                                <Route path="/response" element={<DecidePage></DecidePage>}></Route>
+                                {/* <Route path="/design" element={<Design />}></Route> */}
+                                <Route
+                                    path="/SearchIdentity"
+                                    element={
+                                        <Allusers
+                                            connected={serverConnected}
+                                            rsaKeypairs={RSAKeypairs as RSAKepairVariants}
+                                        />
+                                    }
+                                ></Route>
+                                {/* <Route path="/blog" element={<Blog />}></Route> */}
+                                <Route
+                                    path="/ViewIdentity"
+                                    element={
+                                        <ViewIdentity connected={serverConnected} digIdentityAcc={digIdentityAcc} />
+                                    }
+                                ></Route>
+                                <Route
+                                    path="/MyResponses"
+                                    element={<DecidePage serverConnected={serverConnected}></DecidePage>}
+                                ></Route>
                             </Routes>
                         </Box>
                     </WalletModalProvider>
                 </WalletProvider>
-            </ConnectionProvider >
+            </ConnectionProvider>
         </>
     );
 }
 
 export default App;
-
-

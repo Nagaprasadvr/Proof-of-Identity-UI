@@ -31,7 +31,7 @@ interface Data {
     address: boolean;
 }
 
-function DecidePage() {
+function DecidePage({ serverConnected }: { serverConnected: boolean }) {
     const wallet = useWallet();
     const [value, setValue] = useState('');
     const [valueRes, setValueRes] = useState('');
@@ -41,15 +41,14 @@ function DecidePage() {
     const [reqData, setReqData] = useState<Data[]>([]);
     const [resData, setResData] = useState<Data[]>([]);
     const [refresh, setRefresh] = useState<boolean>(false);
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
     const [id, setId] = useState('');
     const [name, setName] = useState('');
-
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:9000/requests/get');
+                const response = await axios.get('http://localhost:9000/requests/getAll');
 
                 const userData: Data[] = [];
                 // eslint-disable-next-line array-callback-return
@@ -124,16 +123,20 @@ function DecidePage() {
     };
 
     function AllUsersDataRes() {
-        const DenyRequest = (props: string) => {
-            const url = 'http://localhost:9000/response/' + props;
-            axios
-                .delete(url)
-                .then((res) => {
-                    console.log('the data has been successfully deleted');
-                    setRefresh(!refresh);
-                    toast.success('Request has been denied');
-                })
-                .catch((error) => console.log(error));
+        const DenyRequest = (id: string) => {
+            try {
+                const url = 'http://localhost:9000/requests/deny';
+                axios
+                    .post(url, { id: id })
+                    .then((res) => {
+                        console.log('request denied');
+                        setRefresh(!refresh);
+                        toast.success('Request has been denied');
+                    })
+                    .catch((error) => console.log(error));
+            } catch (e) {
+                console.log(e);
+            }
         };
 
         return (
@@ -155,11 +158,10 @@ function DecidePage() {
                                       className="balance-button w3-btn w3-hover-white App "
                                       onClick={() => {
                                           setRefresh(!refresh);
-                                          setOpen(true)
-                                          setId(item._id)
-                                          setName(item.senderName)
-                                    }}
-                                    
+                                          setOpen(true);
+                                          setId(item._id);
+                                          setName(item.senderName);
+                                      }}
                                   >
                                       Accept
                                   </button>
@@ -195,10 +197,9 @@ function DecidePage() {
                                       className="balance-button w3-btn w3-hover-white App "
                                       onClick={() => {
                                           setRefresh(!refresh);
-                                          setOpen(true)
-                                          setId(item._id)
-                                          setName(item.senderName)
-
+                                          setOpen(true);
+                                          setId(item._id);
+                                          setName(item.senderName);
                                       }}
                                   >
                                       Accept
@@ -229,75 +230,83 @@ function DecidePage() {
 
     return (
         <>
-            {wallet.connected ? (
-                <>
+            {serverConnected ? (
+                wallet?.connected ? (
                     <>
-                        <div
-                            className="w3-animate-opacity App"
-                            style={{
-                                marginTop: '10vh',
-                                width: '100vw',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-around',
-                            }}
-                        >
-                            <h1>
-                                <b>Responses</b>
-                            </h1>
-                            <input
-                                type="text"
-                                placeholder="Search by name"
-                                value={valueRes}
-                                onChange={filterDataRes}
+                        <>
+                            <div
+                                className="w3-animate-opacity App"
                                 style={{
-                                    padding: '8px',
-                                    border: '1px solid #ccc',
-                                    borderRadius: '4px',
-                                    marginBottom: '16px',
-                                    width: '25vw',
-                                }}
-                            />
-                            <button
-                                style={{ width: 'auto' }}
-                                className="balance-button w3-btn w3-hover-white App "
-                                onClick={handleRefresh}
-                            >
-                                Refresh
-                            </button>
-                        </div>
-                        {dataSource.length > 0 ? (
-                            <Table
-                                style={{
-                                    width: '90vw',
-                                    height: 'auto',
-                                    color: 'white',
-                                    fontWeight: 'bolder',
-                                    marginTop: '2vh',
-                                    zIndex: '500',
-                                    marginLeft: '5vw',
+                                    marginTop: '10vh',
+                                    width: '100vw',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-around',
                                 }}
                             >
-                                <thead>
-                                    <tr style={{ width: '100%' }}>
-                                        <td>Name</td>
-                                        <td>Pub key</td>
-                                        <td>Description</td>
-                                        <td style={{ display: 'flex', justifyContent: 'space-around' }}>Action</td>
-                                    </tr>
-                                </thead>
-                                <AllUsersDataRes></AllUsersDataRes>
-                            </Table>
-                        ) : (
-                            <></>
-                        )}
-                        {open && (<ResponseModal open={open} setOpen={setOpen} id={id} name={name}></ResponseModal>)}
+                                <h1>
+                                    <b>Responses</b>
+                                </h1>
+                                <input
+                                    type="text"
+                                    placeholder="Search by name"
+                                    value={valueRes}
+                                    onChange={filterDataRes}
+                                    style={{
+                                        padding: '8px',
+                                        border: '1px solid #ccc',
+                                        borderRadius: '4px',
+                                        marginBottom: '16px',
+                                        width: '25vw',
+                                    }}
+                                />
+                                <button
+                                    style={{ width: 'auto' }}
+                                    className="balance-button w3-btn w3-hover-white App "
+                                    onClick={handleRefresh}
+                                >
+                                    Refresh
+                                </button>
+                            </div>
+                            {dataSource.length > 0 ? (
+                                <Table
+                                    style={{
+                                        width: '90vw',
+                                        height: 'auto',
+                                        color: 'white',
+                                        fontWeight: 'bolder',
+                                        marginTop: '2vh',
+                                        zIndex: '500',
+                                        marginLeft: '5vw',
+                                    }}
+                                >
+                                    <thead>
+                                        <tr style={{ width: '100%' }}>
+                                            <td>Name</td>
+                                            <td>Pub key</td>
+                                            <td>Description</td>
+                                            <td style={{ display: 'flex', justifyContent: 'space-around' }}>Action</td>
+                                        </tr>
+                                    </thead>
+                                    <AllUsersDataRes></AllUsersDataRes>
+                                </Table>
+                            ) : (
+                                <></>
+                            )}
+                            {open && <ResponseModal open={open} setOpen={setOpen} id={id} name={name}></ResponseModal>}
+                        </>
                     </>
-                </>
+                ) : (
+                    <Box className="w3-animate-opacity App" sx={{ marginTop: '20vh', width: '100vw' }}>
+                        <h1>
+                            <b>Connect your Wallet!</b>
+                        </h1>
+                    </Box>
+                )
             ) : (
                 <Box className="w3-animate-opacity App" sx={{ marginTop: '20vh', width: '100vw' }}>
                     <h1>
-                        <b>Connect your Wallet!</b>
+                        <b>Protocol Down!</b>
                     </h1>
                 </Box>
             )}

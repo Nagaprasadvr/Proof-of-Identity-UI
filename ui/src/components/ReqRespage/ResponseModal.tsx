@@ -9,12 +9,13 @@ import Checkbox from '@mui/material/Checkbox';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Modal } from '@material-ui/core';
 import { Button, Table } from 'react-bootstrap';
- 
- 
+import * as sdk from '../../digitalIdentity/js/src/generated';
 import axios from 'axios';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { toast } from 'react-hot-toast';
 import { Data } from 'node-rsa';
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { UserData } from '../InputForm/InputForm';
 
 interface Props {
     open: boolean;
@@ -23,29 +24,43 @@ interface Props {
     name: string;
 }
 
-function ResponseModal({ open, setOpen, id, name}: Props) {
-    const wallet = useWallet();
-    const [formData, setFormData] = useState({
-        senderName: '',
-        name: false,
-        dob: false,
-        aadharUploadLink: false,
-        aadharNumber: false,
-        panUploadLink: false,
-        panNumber: false,
-        passportUploadLink: false,
-        passportNumber: false,
-        picUploadLink: false,
-        address: false,
-        description: '',
-    })
+interface RequestedData {
+    solPubkey: string;
+    rsaPubkey: string;
 
+    requestedSolPubkey: string;
+    senderName: string;
+
+    name: boolean;
+    dob: boolean;
+
+    aadharNum: boolean;
+
+    panNum: boolean;
+
+    passportNum: boolean;
+
+    panUploadLink: boolean;
+
+    passportUploadLink: boolean;
+    aadharUploadLink: boolean;
+
+    picUploadLink: boolean;
+
+    description: string;
+
+    address: string;
+}
+
+function ResponseModal({ open, setOpen, id, name }: Props) {
+    const wallet = useWallet();
+    const [data, setData] = useState<RequestedData | null>(null);
     interface reqprops {
         data: Record<string, any> | undefined;
     }
 
-    const [reqData, setReqData] = useState<reqprops>()
-    
+    const [reqData, setReqData] = useState<reqprops>();
+
     function DisplayKeyValuePairs({ data }: reqprops) {
         if (!data) {
             return null; // or any other handling for undefined data
@@ -57,55 +72,70 @@ function ResponseModal({ open, setOpen, id, name}: Props) {
             <div>
                 {entries.map(([key, value]) => {
                     const isTrue = Boolean(value);
-                    
-                    if (isTrue && key != "_id" && key != "createdAt" && key != "updatedAt" && key != "rsaPubkey" && key != "requestedSolPubkey" && key != "solPubkey" && key != "senderName") { 
-                        return (
-                            <p key={key}>
-                                {key} 
-                                
-                            </p>
-                        );
+
+                    if (
+                        isTrue &&
+                        key != '_id' &&
+                        key != 'createdAt' &&
+                        key != 'updatedAt' &&
+                        key != 'rsaPubkey' &&
+                        key != 'requestedSolPubkey' &&
+                        key != 'solPubkey' &&
+                        key != 'senderName'
+                    ) {
+                        return <p key={key}>{key}</p>;
                     } else {
                         return null;
                     }
                 })}
             </div>
-
         );
     }
-    
-
-
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.post("http://localhost:9000/response/get",{id: id});
-                // console.log(response.data)
-                setReqData(response.data.data);
-                console.log(reqData)
+                const response = await axios.post('http://localhost:9000/requests/get', { id: id });
+
+                const reqData: RequestedData = {
+                    name: response.data.data.name,
+                    dob: response.data.data.dob,
+                    aadharNum: response.data.data.aadharNum,
+                    panNum: response.data.data.panNum,
+                    passportNum: response.data.data.passportNum,
+                    panUploadLink: response.data.data.panUploadLink,
+                    passportUploadLink: response.data.data.passportUploadLink,
+                    aadharUploadLink: response.data.data.aadharUploadLink,
+                    picUploadLink: response.data.data.picUploadLink,
+                    description: response.data.data.description,
+                    address: response.data.data.address,
+                    solPubkey: response.data.data.solPubkey,
+                    rsaPubkey: response.data.data.rsaPubkey,
+                    requestedSolPubkey: response.data.data.requestedSolPubkey,
+                    senderName: response.data.data.senderName,
+                };
+
+                setData(reqData);
             } catch (err) {
-                console.error(err)
+                console.error(err);
             }
-        }
+        };
         fetchData();
-    }, [reqData]);
+    }, [id]);
 
-    
-
-    const handleChange = (event: any) => {
-        if (event.target.type === 'checkbox') {
-            setFormData({
-                ...formData,
-                [event.target.name]: event.target.checked ? 'true' : 'false', 
-            });
-        } else {
-            setFormData({
-                ...formData,
-                [event.target.name]: event.target.value,
-            });
-        }
-    };
+    // const handleChange = (event: any) => {
+    //     if (event.target.type === 'checkbox') {
+    //         setFormData({
+    //             ...formData,
+    //             [event.target.name]: event.target.checked ? 'true' : 'false',
+    //         });
+    //     } else {
+    //         setFormData({
+    //             ...formData,
+    //             [event.target.name]: event.target.value,
+    //         });
+    //     }
+    // };
 
     // const handleSubmit = async (event: any) => {
     //     event.preventDefault();
@@ -118,26 +148,73 @@ function ResponseModal({ open, setOpen, id, name}: Props) {
     //     }, 1000);
     // };
 
+    const hanldeConfirm = async () => {
+        console.log('confirm');
+        toast.success('Confirmed');
+        if (wallet?.publicKey && data) {
+            try {
+                const [digitalPdaAcc, bump] = PublicKey.findProgramAddressSync(
+                    [Buffer.from('dig_identity'), wallet?.publicKey.toBuffer()],
+                    sdk.PROGRAM_ID
+                );
+                const rpcConn = new Connection(clusterApiUrl('devnet'));
+                const acc = await sdk.DigitalIdentity.fromAccountAddress(rpcConn, digitalPdaAcc);
+                const response = await axios.post('http://localhost:9000/cryptography/decryptData', {
+                    encData: acc as UserData,
+                    ticker: 'solData',
+                });
 
+                const decryptedData = response.data.decryptedData;
+
+                const encData = (
+                    await axios.post('http://localhost:9000/cryptography/encryptDataWithPubkey', {
+                        plainData: decryptedData as UserData,
+                        ticker: 'solData',
+                        pubkey: data.rsaPubkey,
+                    })
+                ).data.encryptedData;
+                console.log('encData:', encData);
+                // const res = await axios.post('http://localhost:9000/requests/approve', {});
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    };
     const handleClose = () => {
         setOpen(false);
     };
 
     return (
-        <Modal open={open} onClose={handleClose} style={{ width: "100vw", height: "100vh", background: "black", overflow: "scroll" }}>
-            <Box style={{ width: "100vw", height: "100vh" }}>
-                <Box style={{ backgroundColor: "black" }}>
-                    <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
+        <Modal
+            open={open}
+            onClose={handleClose}
+            style={{ width: '100vw', height: '100vh', background: 'black', overflow: 'scroll' }}
+        >
+            <Box style={{ width: '100vw', height: '100vh' }}>
+                <Box style={{ backgroundColor: 'black' }}>
+                    <button
+                        style={{ backgroundColor: 'transparent', borderColor: 'transparent', color: 'lightskyblue' }}
+                        onClick={handleClose}
+                    >
+                        <CancelIcon style={{ color: 'lightskyblue', fontSize: '50px' }}></CancelIcon>
+                    </button>
                 </Box>
-                <Box ><h2>Requester Name: {name}</h2> </Box>
-                <Box style={{ textAlign: 'center' }}><h2>Requested Data</h2></Box>
-                <Box >
-                    
+                <Box>
+                    <h2>Requester Name: {name}</h2>
+                </Box>
+                <Box style={{ textAlign: 'center' }}>
+                    <h2>Requested Data</h2>
+                </Box>
+                <Box>
                     <DisplayKeyValuePairs data={reqData} />
-                    
                 </Box>
+                <button
+                    style={{ backgroundColor: 'transparent', borderColor: 'transparent', color: 'lightskyblue' }}
+                    onClick={hanldeConfirm}
+                >
+                    Confirm
+                </button>
             </Box>
-            {/* Your modal content goes here */}
         </Modal>
     );
 }

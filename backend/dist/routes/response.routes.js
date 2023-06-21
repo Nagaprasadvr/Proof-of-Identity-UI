@@ -13,11 +13,9 @@ router.route("/:id").delete((req, res) => {
         .catch((err) => console.log(err));
 });
 router.route("/get").post((req, res) => {
-    console.log(req.body);
     const id = req.body.id;
     SendIdentityRequest_model_1.default.findById(id)
         .then((response) => {
-        console.log(response);
         res.json({ data: response });
     })
         .catch((err) => console.log(err));
