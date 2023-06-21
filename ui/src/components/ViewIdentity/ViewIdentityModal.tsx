@@ -567,7 +567,18 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [open, refresh, data.picAttached, data.passportAttached, data.panAttached, data.aadharAttached]);
+    }, [
+        open,
+        refresh,
+        data.picAttached,
+        data.passportAttached,
+        data.panAttached,
+        data.aadharAttached,
+        pic,
+        pan,
+        passport,
+        aadhar,
+    ]);
 
     return (
         <Modal
