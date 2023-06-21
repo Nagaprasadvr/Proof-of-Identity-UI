@@ -129,7 +129,7 @@ function ResponseModal({ open, setOpen, id, name}: Props) {
                 <Box style={{ backgroundColor: "black" }}>
                     <button style={{ backgroundColor: "transparent", borderColor: "transparent", color: "lightskyblue" }} onClick={handleClose}><CancelIcon style={{ color: "lightskyblue", fontSize: "50px" }}></CancelIcon></button>
                 </Box>
-                <Box ><h2>Requester Name: {name}</h2></Box>
+                <Box ><h2>Requester Name: {name}</h2> </Box>
                 <Box style={{ textAlign: 'center' }}><h2>Requested Data</h2></Box>
                 <Box >
                     
