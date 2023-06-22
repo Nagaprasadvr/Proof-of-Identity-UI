@@ -57,7 +57,7 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
     const [data, setData] = useState<reqprops>({ data: {} });
     const [reqPubkey, setReqPubkey] = useState('');
     const [reqData, setReqData] = useState<reqprops>();
-
+    console.log('rsaPubkey512 mod', rsaPubkey512);
     function DisplayKeyValuePairs({ data }: reqprops) {
         console.log(data);
         if (!data) {
@@ -106,13 +106,9 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
             }
         };
         fetchData();
-    }, [id, data, reqPubkey]);
-
-    console.log(data);
+    }, [id, reqPubkey]);
 
     const hanldeConfirm = async () => {
-        console.log('confirm');
-        toast.success('Confirmed');
         let encUserData: UserData | null = null;
         let encArweaveData: ArweaveData | null = null;
         const rpcConn = new Connection(clusterApiUrl('devnet'));
@@ -144,12 +140,11 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
 
                 encUserData = (
                     await axios.post('http://localhost:9000/cryptography/encryptDataWithPubkey', {
-                        plainData: decryptedData as UserData,
+                        plainData: updatedDecryptedData as UserData,
                         ticker: 'solData',
                         pubkey: rsaPubkey512,
                     })
                 ).data.encryptedData as UserData;
-                // const res = await axios.post('http://localhost:9000/requests/approve', {});
             } catch (e) {
                 console.log(e);
                 toast.dismiss(toastId);
@@ -178,12 +173,21 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
                     ticker: 'arweaveData',
                 });
                 const decryptedData = response.data.decryptedData;
-
-                encArweaveData = await axios.post('http://localhost:9000/cryptography/encryptDataWithPubkey', {
-                    plainData: decryptedData as ArweaveData,
-                    ticker: 'arweaveData',
-                    pubkey: rsaPubkey1028,
-                });
+                const updatedDecryptedData: ArweaveData = {
+                    panUploadLink: requestedData.panUploadLink ? decryptedData.panUploadLink : 'noaccess',
+                    passportUploadLink: requestedData.passportUploadLink
+                        ? decryptedData.passportUploadLink
+                        : 'noaccess',
+                    aadharUploadLink: requestedData.aadharUploadLink ? decryptedData.aadharUploadLink : 'noaccess',
+                    picUploadLink: requestedData.picUploadLink ? decryptedData.picUploadLink : 'noaccess',
+                };
+                encArweaveData = (
+                    await axios.post('http://localhost:9000/cryptography/encryptDataWithPubkey', {
+                        plainData: updatedDecryptedData as ArweaveData,
+                        ticker: 'arweaveData',
+                        pubkey: rsaPubkey1028,
+                    })
+                ).data.encryptedData as ArweaveData;
             } catch (e) {
                 console.error(e);
                 toast.dismiss(toastId);
@@ -197,12 +201,18 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
                         encUserData: encUserData,
                         encArweaveData: encArweaveData,
                     });
+
+                    console.log(res.data);
                     if (res.data.status) {
                         toast.dismiss(toastId);
                         toast.success('Request approved');
+                    } else {
+                        toast.dismiss(toastId);
+                        toast.error('Error in approving request');
                     }
                 } catch (e) {
                     console.error(e);
+                    toast.dismiss(toastId);
                     toast.error('Error in approving request');
                 }
             }

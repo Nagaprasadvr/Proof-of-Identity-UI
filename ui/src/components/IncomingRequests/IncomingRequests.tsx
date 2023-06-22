@@ -151,53 +151,58 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
         return (
             <tbody>
                 {value.length > 0
-                    ? tableFilterRes.map((item, index) => (
-                          <tr style={{ width: '100vw' }} key={index}>
-                              <td>{item.senderName}</td>
-                              <td>{reduceString(item.solPubkey, 10)}</td>
-                              <td>{item.description}</td>
-                              <td>
-                                  <button
-                                      style={{
-                                          width: 'auto',
-                                          display: 'flex',
-                                          justifyContent: 'space-around',
-                                          fontWeight: '600',
-                                      }}
-                                      className="balance-button w3-btn w3-hover-white App "
-                                      onClick={() => {
-                                          setRefresh(!refresh);
-                                          setOpen(true);
-                                          setId(item._id);
-                                          setName(item.senderName);
-                                          setSolPub(item.solPubkey);
-                                          setRSAPubkey512(item.rsaPubkey512);
-                                          setRSAPubkey1028(item.rsaPubkey1028);
-                                          setRequestedData(item);
-                                      }}
-                                  >
-                                      Accept
-                                  </button>
+                    ? tableFilterRes.map(
+                          (item, index) => (
+                              console.log('item', item),
+                              (
+                                  <tr style={{ width: '100vw' }} key={index}>
+                                      <td>{item.senderName}</td>
+                                      <td>{reduceString(item.solPubkey, 10)}</td>
+                                      <td>{item.description}</td>
+                                      <td>
+                                          <button
+                                              style={{
+                                                  width: 'auto',
+                                                  display: 'flex',
+                                                  justifyContent: 'space-around',
+                                                  fontWeight: '600',
+                                              }}
+                                              className="balance-button w3-btn w3-hover-white App "
+                                              onClick={() => {
+                                                  setRefresh(!refresh);
+                                                  setOpen(true);
+                                                  setId(item._id);
+                                                  setName(item.senderName);
+                                                  setSolPub(item.solPubkey);
+                                                  setRSAPubkey512(item.rsaPubkey512);
+                                                  setRSAPubkey1028(item.rsaPubkey1028);
+                                                  setRequestedData(item);
+                                              }}
+                                          >
+                                              Accept
+                                          </button>
 
-                                  <button
-                                      style={{
-                                          width: 'auto',
-                                          background: 'red',
-                                          color: 'white',
-                                          display: 'flex',
-                                          justifyContent: 'space-around',
-                                          fontWeight: '600',
-                                      }}
-                                      className="balance-button w3-btn w3-hover-white App "
-                                      onClick={async () => {
-                                          await DenyRequest(item._id);
-                                      }}
-                                  >
-                                      Deny
-                                  </button>
-                              </td>
-                          </tr>
-                      ))
+                                          <button
+                                              style={{
+                                                  width: 'auto',
+                                                  background: 'red',
+                                                  color: 'white',
+                                                  display: 'flex',
+                                                  justifyContent: 'space-around',
+                                                  fontWeight: '600',
+                                              }}
+                                              className="balance-button w3-btn w3-hover-white App "
+                                              onClick={async () => {
+                                                  await DenyRequest(item._id);
+                                              }}
+                                          >
+                                              Deny
+                                          </button>
+                                      </td>
+                                  </tr>
+                              )
+                          )
+                      )
                     : dataSource.map((item, index) => (
                           // (item.requestedSolPubkey == wallet.publicKey?.toString() && (
                           <tr style={{ width: '100vw' }} key={index}>
@@ -216,6 +221,8 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                                   setId(item._id);
                                                   setName(item.senderName);
                                                   setSolPub(item.solPubkey);
+                                                  setRSAPubkey512(item.rsaPubkey512);
+                                                  setRSAPubkey1028(item.rsaPubkey1028);
                                                   setRequestedData(item);
                                               }}
                                           >

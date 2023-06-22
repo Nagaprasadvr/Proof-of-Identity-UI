@@ -7,43 +7,47 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const ResponseSchema = new mongoose_1.default.Schema({
     requestId: {
         type: String,
-        unique: true,
+        required: true,
     },
     name: {
         type: String,
-        unique: true,
+        required: true,
     },
     dob: {
         type: String,
-        unique: true,
+        required: true,
     },
     panNum: {
         type: String,
-        unique: true,
+        required: true,
     },
     aadharNum: {
         type: String,
-        unique: true,
+        required: true,
+    },
+    contactNum: {
+        type: String,
+        required: true,
     },
     passportNum: {
         type: String,
-        unique: true,
+        required: true,
     },
     picUploadLink: {
         type: String,
-        unique: true,
+        required: true,
     },
     passportUploadLink: {
         type: String,
-        unique: true,
+        required: true,
     },
     panUploadLink: {
         type: String,
-        unique: true,
+        required: true,
     },
     aadharUploadLink: {
         type: String,
-        unique: true,
+        required: true,
     },
 }, {
     timestamps: true,

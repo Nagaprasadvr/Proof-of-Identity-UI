@@ -45,7 +45,6 @@ router.route("/send").post((req: Request, res: Response) => {
     state: "Requested",
   });
 
-  console.log("new req", newRequest);
   newRequest
     .save()
     .then((result) => {
@@ -53,8 +52,6 @@ router.route("/send").post((req: Request, res: Response) => {
       res.json("the requests has been sent");
     })
     .catch((err) => res.json("Error:" + err));
-
-  console.log("saved");
 });
 
 router.route("/getAll").get((req: Request, res: Response) => {
@@ -78,19 +75,21 @@ router.route("/approve").post((req: Request, res: Response) => {
   const dob: string = req.body.encUserData.dob;
   const aadharNumber: string = req.body.encUserData.aadharNumber;
   const panNumber: string = req.body.encUserData.panNumber;
-  const passportNumber: string = req.body.encUserData.passportNumber;
+  const passportNumber: string = req.body.encUserData.passportId;
   const panUploadLink: string = req.body.encArweaveData.panUploadLink;
   const passportUploadLink: string = req.body.encArweaveData.passportUploadLink;
   const aadharUploadLink: string = req.body.encArweaveData.aadharUploadLink;
   const picUploadLink: string = req.body.encArweaveData.picUploadLink;
   const address: string = req.body.encUserData.address;
-
+  const contactNum: string = req.body.encUserData.contactNumber;
+  console.log("requestId", req.body);
   const newResponse = new ResponseModel({
     requestId: requestId,
     name: name,
     dob: dob,
     address: address,
     aadharNum: aadharNumber,
+    contactNum: contactNum,
     panNum: panNumber,
     passportNum: passportNumber,
     picUploadLink: picUploadLink,
@@ -103,28 +102,27 @@ router.route("/approve").post((req: Request, res: Response) => {
     .save()
     .then(() => {
       res.json({ message: "the response has been sent", status: true });
+      RequestModel.updateOne(
+        {
+          _id: new ObjectId(requestId),
+        },
+        {
+          $set: {
+            state: "Approved",
+          },
+        },
+        null,
+        (err: any, res: any) => {
+          if (err) {
+            console.error(err);
+            return;
+          } else {
+            console.log("update success");
+          }
+        }
+      );
     })
     .catch((err) => res.json("Error:" + err));
-
-  RequestModel.updateOne(
-    {
-      _id: new ObjectId(requestId),
-    },
-    {
-      $set: {
-        state: "Approved",
-      },
-    },
-    null,
-    (err: any, res: any) => {
-      if (err) {
-        console.error(err);
-        return;
-      } else {
-        console.log("update success");
-      }
-    }
-  );
 });
 
 router.route("/deny").post((req: Request, res: Response) => {
