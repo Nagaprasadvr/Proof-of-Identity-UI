@@ -171,4 +171,12 @@ router.route("/cancel").post((req: Request, res: Response) => {
   );
 });
 
+router.route("/getResponseById").post((req: Request, res: Response) => {
+  const id = req.body.id;
+  console.log(id)
+  ResponseModel.find({requestId: id})
+    .then((response: any) => res.json(response))
+    .catch((err: any) => console.log(err));
+});
+
 export default router;

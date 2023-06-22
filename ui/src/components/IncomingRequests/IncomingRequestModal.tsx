@@ -77,15 +77,22 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
                         key !== '_id' &&
                         key !== 'createdAt' &&
                         key !== 'updatedAt' &&
-                        key !== 'rsaPubkey' &&
+                        key !== 'rsaPubkey512' &&
+                        key !== 'rsaPubkey1028' &&
                         key !== 'requestedSolPubkey' &&
                         key !== 'solPubkey' &&
-                        key !== 'senderName'
+                        key !== 'senderName' &&
+                        key !== 'state'
+                        
                     ) {
-                        return (
-                            <h3 key={key} style={{ color: 'white' }}>
-                                {key}
-                            </h3>
+                        return (key === 'description' ? (<h3 key={key} style={{ color: 'white' }}>
+                            { key }:{value}
+                        </h3>) : (
+                                <h3 key={key} style={{ color: 'white' }}>
+                                    {key}
+                                </h3>
+                        )
+                          
                         );
                     } else {
                         return null;

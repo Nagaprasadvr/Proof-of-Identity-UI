@@ -43,6 +43,7 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
     const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [solPub, setSolPub] = useState('');
+    const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -173,8 +174,9 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                           style={{ backgroundColor: 'lightskyblue', color: 'black' }}
                                           variant="success"
                                           id="dropdown-basic"
-                                      >
-                                          {item.state}
+                                    >
+                                         
+                                        <span onClick={()=>viewApprove(item.state, item._id)}>{item.state}</span>
                                       </Dropdown.Toggle>
                                       {item.state === 'Requested' && (
                                           <Dropdown.Menu
@@ -236,7 +238,7 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                           variant="success"
                                           id="dropdown-basic"
                                       >
-                                          {item.state}
+                                        <span onClick={()=>viewApprove(item.state, item._id)}>{item.state}</span>
                                       </Dropdown.Toggle>
                                       {item.state === 'Requested' && (
                                           <Dropdown.Menu
@@ -271,6 +273,14 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
             </tbody>
         );
     }, [cancelRequest, dataSource, refresh, tableFilterRes, value.length]);
+
+    const viewApprove = (state: string, id:string) => {
+        if (state === 'Approved') {
+            setOpenModal(true)
+            setId(id)
+            console.log(openModal)
+        }
+    }
 
     return (
         <>
@@ -337,13 +347,12 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                             ) : (
                                 <></>
                             )}
-                            {open && (
+                            {openModal && (
                                 <OutgoingRequestModal
-                                    open={open}
-                                    setOpen={setOpen}
+                                    open={openModal}
+                                    setOpen={setOpenModal}
                                     id={id}
-                                    name={name}
-                                    pubkey={solPub}
+                                     
                                 ></OutgoingRequestModal>
                             )}
                         </>

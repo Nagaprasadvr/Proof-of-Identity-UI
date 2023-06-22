@@ -153,4 +153,11 @@ router.route("/cancel").post((req, res) => {
         }
     });
 });
+router.route("/getResponseById").post((req, res) => {
+    const id = req.body.id;
+    console.log(id);
+    Response_model_1.default.find({ requestId: id })
+        .then((response) => res.json(response))
+        .catch((err) => console.log(err));
+});
 exports.default = router;

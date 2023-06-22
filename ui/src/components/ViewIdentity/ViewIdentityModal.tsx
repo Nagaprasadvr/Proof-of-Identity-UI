@@ -13,6 +13,7 @@ import { Table } from 'react-bootstrap';
 import { reduceString } from './helper';
 import { UserData } from '../InputForm/InputForm';
 import axios from 'axios';
+
 interface ViewIdentityModalProps {
     handleClose: () => void;
     open: boolean;
@@ -114,6 +115,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         };
         if (walletProvider?.connected && digitalProofs === null) getBundlrInstance();
     }, [digitalProofs, walletProvider]);
+
     const handleDecryptEncryptData = async () => {
         toast.loading(dataState === DataState.Encrypted ? 'Decrypting..' : 'Encrypting...', { duration: 800 });
         if (dataState === DataState.Encrypted) {
@@ -134,6 +136,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
             setDataState(DataState.Encrypted);
         }
     };
+
     const handleDecryptEncryptProofs = async () => {
         toast.loading(proofsState === DataState.Encrypted ? 'Decrypting..' : 'Encrypting...', { duration: 800 });
         if (digitalProofs) {
@@ -161,10 +164,12 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
             }
         }
     };
+
     const handleRefresh = () => {
         toast.loading('Refreshing data', { duration: 2000 });
         setRefresh(!refresh);
     };
+    
     const handleFile1Change = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const selectedFile = event.target.files[0];

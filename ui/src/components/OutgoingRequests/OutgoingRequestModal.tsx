@@ -1,184 +1,186 @@
-import React, { Dispatch, SetStateAction, useState, useEffect } from 'react';
-import Box from '@material-ui/core/Box';
-import FormLabel from '@mui/material/FormLabel';
-import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormHelperText from '@mui/material/FormHelperText';
-import Checkbox from '@mui/material/Checkbox';
+import React, { Dispatch, SetStateAction } from 'react'
+import { Modal, Box } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { Modal } from '@material-ui/core';
-import { Button, Table } from 'react-bootstrap';
-import * as sdk from '../../digitalIdentity/js/src/generated';
-import axios from 'axios';
+import * as digitalIdentity from '../../digitalIdentity/js/src/generated';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { WebBundlr } from '@bundlr-network/client';
 import { useWallet } from '@solana/wallet-adapter-react';
+import fileReaderStream from 'filereader-stream';
+import { PublicKey } from '@solana/web3.js';
 import { toast } from 'react-hot-toast';
-import { Data } from 'node-rsa';
-import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import * as solana from '@solana/web3.js';
+import { Table } from 'react-bootstrap';
+import { reduceString } from '../ViewIdentity/helper'; 
 import { UserData } from '../InputForm/InputForm';
-import { reduceString } from '../ViewIdentity/helper';
-
-interface Props {
+import './viewstyle.css'
+import axios from 'axios';
+interface OutgoingProps {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     id: string;
-    name: string;
-    pubkey: string;
 }
 
-// interface RequestedData {
-//     solPubkey: string;
-//     rsaPubkey: string;
-//     requestedSolPubkey: string;
-//     senderName: string;
-//     name: boolean;
-//     dob: boolean;
-//     aadharNum: boolean;
-//     panNum: boolean;
-//     passportNum: boolean;
-//     panUploadLink: boolean;
-//     passportUploadLink: boolean;
-//     aadharUploadLink: boolean;
-//     picUploadLink: boolean;
-//     description: string;
-//     address: string;
-// }
+interface Data {
+    [key: string]: string;
+    aadharNum: string;
+    aadharUploadLink: string;
+    contactNum: string;
+    dob: string;
+    name: string;
+    panNum: string;
+    panUploadLink: string;
+    passportNum: string;
+    passportUploadLink: string;
+    picUploadLink: string;
+    requestId: string;
+}
 
-function OutgoingRequestModal({ open, setOpen, id, name, pubkey }: Props) {
-    const wallet = useWallet();
-    interface reqprops {
-        data: Record<string, any> | undefined;
-        // solPubkey: string;
-    }
-    const [data, setData] = useState<reqprops>({ data: {} });
-    const [reqPubkey, setReqPubkey] = useState('');
-    const [reqData, setReqData] = useState<reqprops>();
+function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
 
-    function DisplayKeyValuePairs({ data }: reqprops) {
-        console.log(data);
-        if (!data) {
-            return null; // or any other handling for undefined data
-        }
-
-        const entries = Object.entries(data);
-        setReqData(data.solPubkey);
-
-        return (
-            <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                {entries.map(([key, value]) => {
-                    const isTrue = Boolean(value);
-                    console.log(key, value);
-                    if (
-                        isTrue &&
-                        key !== '_id' &&
-                        key !== 'createdAt' &&
-                        key !== 'updatedAt' &&
-                        key !== 'rsaPubkey512' &&
-                        key !== 'rsaPubkey1028' &&
-                        key !== 'requestedSolPubkey' &&
-                        key !== 'solPubkey' &&
-                        key !== 'senderName'
-                    ) {
-                        return (
-                            <h3 key={key} style={{ color: 'white' }}>
-                                {key}
-                            </h3>
-                        );
-                    } else {
-                        return null;
-                    }
-                })}
-            </div>
-        );
-    }
+    const [refresh, setRefresh] = useState(false)
+    const [data, setData] = useState<Data | null>(null);
+    console.log(id)
 
     useEffect(() => {
-        const fetchData = async () => {
+
+        const fetch = async () => {
             try {
-                const response = await axios.post('http://localhost:9000/requests/get', { id: id });
-                // console.log(response.data)
-                setData(response.data.data);
+                const response = await axios.post('http://localhost:9000/requests/getResponseById', { id: id })
+                console.log(response.data)
+                const responseData: Data = {
+                    aadharNum: response.data[0].aadharNum,
+                    aadharUploadLink: response.data[0].aadharUploadLink,
+                    contactNum: response.data[0].contactNum,
+                    dob: response.data[0].dob,
+                    name: response.data[0].name,
+                    panNum: response.data[0].panNum,
+                    panUploadLink: response.data[0].panUploadLink,
+                    passportNum: response.data[0].passportNum,
+                    passportUploadLink: response.data[0].passportUploadLink,
+                    picUploadLink: response.data[0].picUploadLink,
+                    requestId: response.data[0].requestId
+                }
+                setData(responseData)
+                console.log(data)
+
             } catch (err) {
-                console.error(err);
+                console.error(err)
             }
-        };
-        fetchData();
-    }, [id, data, reqPubkey]);
+            
+        } 
+        
+        fetch();
+    },[refresh])
 
-    const hanldeConfirm = async () => {
-        console.log('confirm');
-        toast.success('Confirmed');
-        if (wallet?.publicKey && data) {
-            try {
-                const [digitalPdaAcc, bump] = PublicKey.findProgramAddressSync(
-                    [Buffer.from('dig_identity'), wallet?.publicKey.toBuffer()],
-                    sdk.PROGRAM_ID
-                );
-                const rpcConn = new Connection(clusterApiUrl('devnet'));
-                const acc = await sdk.DigitalIdentity.fromAccountAddress(rpcConn, digitalPdaAcc);
-                const response = await axios.post('http://localhost:9000/cryptography/decryptData', {
-                    encData: acc as UserData,
-                    ticker: 'solData',
-                });
+    // const handleDecryptEncryptData = async () => {
+    //     toast.loading(dataState === DataState.Encrypted ? 'Decrypting..' : 'Encrypting...', { duration: 800 });
+    //     if (dataState === DataState.Encrypted) {
+    //         try {
+    //             const response1 = await axios.post('http://localhost:9000/cryptography/decryptData', {
+    //                 encData: data as UserData,
+    //                 ticker: 'solData',
+    //             });
 
-                const decryptedData = response.data.decryptedData;
+    //             setDataState(DataState.Decrypted);
 
-                const encData = (
-                    await axios.post('http://localhost:9000/cryptography/encryptDataWithPubkey', {
-                        plainData: decryptedData as UserData,
-                        ticker: 'solData',
-                        pubkey: reqPubkey,
-                    })
-                ).data.encryptedData;
-                console.log('encData:', encData);
-                // const res = await axios.post('http://localhost:9000/requests/approve', {});
-            } catch (e) {
-                console.log(e);
-            }
-        }
+    //             setDigitalIdentityData(response1.data.decryptedData);
+    //         } catch (e) {
+    //             toast.error('failed to Decrypt data');
+    //         }
+    //     } else if (dataState === DataState.Decrypted) {
+    //         setDigitalIdentityData(data);
+    //         setDataState(DataState.Encrypted);
+    //     }
+    // };
+
+    // const handleDecryptEncryptProofs = async () => {
+    //     toast.loading(proofsState === DataState.Encrypted ? 'Decrypting..' : 'Encrypting...', { duration: 800 });
+    //     if (digitalProofs) {
+    //         const arweaveData: ArweaveData = {
+    //             panUploadLink: digitalProofs.panUpload,
+    //             aadharUploadLink: digitalProofs.aadharUpload,
+    //             passportUploadLink: digitalProofs.passportUpload,
+    //             picUploadLink: digitalProofs.pictureUpload,
+    //         };
+    //         try {
+    //             if (proofsState === DataState.Encrypted) {
+    //                 const response2 = await axios.post('http://localhost:9000/cryptography/decryptData', {
+    //                     encData: arweaveData,
+    //                     ticker: 'arweaveData',
+    //                 });
+    //                 const decryptedArweaveData = response2.data.decryptedData as ArweaveData;
+    //                 setProofsState(DataState.Decrypted);
+    //                 setArweaveData(decryptedArweaveData);
+    //             } else if (proofsState === DataState.Decrypted) {
+    //                 setProofsState(DataState.Encrypted);
+    //                 setArweaveData(arweaveData);
+    //             }
+    //         } catch (e) {
+    //             toast.error('failed to Decrypt data');
+    //         }
+    //     }
+    // };
+
+    const handleRefresh = () => {
+        toast.loading('Refreshing data', { duration: 2000 });
+        setRefresh(!refresh);
     };
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    return (
-        <Modal
-            open={open}
-            onClose={handleClose}
-            style={{ width: '100vw', height: '100vh', background: 'black', overflow: 'scroll' }}
-        >
-            <Box style={{ width: '100vw', height: '100vh' }}>
-                <Box style={{ backgroundColor: 'black' }}>
-                    <button
-                        style={{ backgroundColor: 'transparent', borderColor: 'transparent', color: 'lightskyblue' }}
-                        onClick={handleClose}
-                    >
-                        <CancelIcon style={{ color: 'lightskyblue', fontSize: '50px' }}></CancelIcon>
-                    </button>
-                </Box>
-                <Box style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row' }}>
-                    <h2 style={{ color: 'white', marginLeft: '3vw', fontWeight: 'bold' }}>
-                        <span style={{ color: 'lightskyblue', fontWeight: 'bold' }}>Requester Name:</span> {name}
-                    </h2>
-                    <h2 style={{ color: 'white', marginRight: '3vw', fontWeight: 'bold' }}>
-                        <span style={{ color: 'lightskyblue', fontWeight: 'bold' }}>Pubkey:</span>{' '}
-                        {reduceString(pubkey, 10)}
-                    </h2>
-                </Box>
-                <Box style={{ textAlign: 'center' }}>
-                    <h1 style={{ color: 'white', fontWeight: 'bolder' }}>Requested Data</h1>
-                </Box>
-                <Box>
-                    <DisplayKeyValuePairs data={data} />
-                </Box>
-                <Box style={{ display: 'flex', justifyContent: 'space-around' }}>
-                    <button className="balance-button w3-btn w3-hover-white" onClick={hanldeConfirm}>
-                        Confirm
-                    </button>
-                </Box>
-            </Box>
-        </Modal>
-    );
+     
+  return (
+      <Modal open={open}
+          onClose={() => setOpen(false)}
+          style={{ width: '100vw', height: '100vh', background: 'black' }}
+          sx={{ overflow: 'auto' }}>
+          <Box>
+              <Box style={{ backgroundColor: 'black' }}>
+                  <button
+                      style={{ backgroundColor: 'transparent', borderColor: 'transparent', color: 'lightskyblue' }}
+                    //   onClick={handleClose}
+                  >
+                      <CancelIcon style={{ color: 'lightskyblue', fontSize: '50px' }}></CancelIcon>
+                  </button>
+              </Box>
+              <Box
+                  style={{
+                      width: 'auto',
+                      marginBottom: '2vh',
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                  }}
+                  sx={{ gap: '30px' }}
+              >
+                  <button
+                      className="centered-button balance-button w3-btn w3-hover-white App"
+                      style={{ width: 'auto' }}
+                      type="submit"
+                      onClick={handleRefresh}
+                  >
+                      Refresh
+                  </button>
+                  {/* <button
+                      className="centered-button balance-button w3-btn w3-hover-white App"
+                      style={{ width: 'auto' }}
+                      type="submit"
+                    //   onClick={handleDecryptEncryptData}
+                  >
+                      {dataState === DataState.Encrypted ? 'Decrypt Data' : 'Encrypt Data'}
+                  </button> */}
+              </Box>
+              <table>
+                  <tbody>
+                      {data && Object.keys(data as Data).map((key) => (
+                          <tr key={key}>
+                              <td>{key}</td>
+                              <td>{data[key]}</td>
+                          </tr>
+                      ))}
+                  </tbody>
+              </table>
+             
+          </Box>
+      </Modal>
+  )
 }
 
-export default OutgoingRequestModal;
+export default OutgoingRequestModal
