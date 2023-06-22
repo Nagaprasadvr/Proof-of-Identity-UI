@@ -138,7 +138,7 @@ const Navigation = (props: any) => {
                                             Search Identity
                                         </Typography>
                                     </MenuItem>
-                                    <MenuItem
+                                    {/* <MenuItem
                                         onClick={() => setAnchor(null)}
                                         component={Link}
                                         to="/blog"
@@ -184,7 +184,7 @@ const Navigation = (props: any) => {
                                                 }}
                                             />
                                         </ListItemIcon>
-                                    </MenuItem>
+                                    </MenuItem> */}
                                 </Menu>
                             </>
                         ) : (
@@ -241,23 +241,23 @@ const Navigation = (props: any) => {
                                     style={{ fontWeight: '700', color: 'black', fontFamily: 'Roboto Mono,monospace' }}
                                 >
                                     <i
-                                        className="fa-solid fa-search"
+                                        className="fa-solid fa-arrow-down"
                                         style={{ color: 'black', paddingRight: '10px', fontWeight: 'bolder' }}
                                     ></i>
                                     Incoming Requests
-                                    </Button>
-                                    <Button
-                                        variant="text"
-                                        component={Link}
-                                        to="/MyRequests"
-                                        style={{ fontWeight: '700', color: 'black', fontFamily: 'Roboto Mono,monospace' }}
-                                    >
-                                        <i
-                                            className="fa-solid fa-search"
-                                            style={{ color: 'black', paddingRight: '10px', fontWeight: 'bolder' }}
-                                        ></i>
-                                        Outgoing Requests
-                                    </Button>
+                                </Button>
+                                <Button
+                                    variant="text"
+                                    component={Link}
+                                    to="/MyRequests"
+                                    style={{ fontWeight: '700', color: 'black', fontFamily: 'Roboto Mono,monospace' }}
+                                >
+                                    <i
+                                        className="fa-solid fa-arrow-up"
+                                        style={{ color: 'black', paddingRight: '10px', fontWeight: 'bolder' }}
+                                    ></i>
+                                    Outgoing Requests
+                                </Button>
                                 {/* <Button
                                     variant="text"
                                     component={Link}

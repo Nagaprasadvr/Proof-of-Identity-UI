@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { Box } from '@mui/material';
 import { Table } from 'react-bootstrap';
-import './alluser.css';
+import './searchIdentity.css';
 import { useWallet } from '@solana/wallet-adapter-react';
 import data from './MOCK_DATA.json';
 import { Button } from '@material-ui/core';
 import { useState } from 'react';
-import RequestModal from './RequestModal';
+import RequestModal from './SendRequestModal';
 import { toast } from 'react-hot-toast';
 import { RowingSharp } from '@mui/icons-material';
 import { ServerConnectionProps } from '../Home/Home';

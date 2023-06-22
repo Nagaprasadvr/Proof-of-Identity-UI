@@ -1,17 +1,13 @@
-import './pagestyle.css';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Box } from '@mui/material';
-import { Table } from 'react-bootstrap';
+import { Dropdown, Table } from 'react-bootstrap';
 import { useWallet } from '@solana/wallet-adapter-react';
-import data from './MOCK_DATA.json';
 import { Button } from '@material-ui/core';
 import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { reduceString } from '../ViewIdentity/helper';
-import RequestModal from './ResponseModal';
-import ResponseModal from './ResponseModal';
-
+import OutgoingRequestModal from './OutgoingRequestModal';
 interface Data {
     _id: string;
     solPubkey: string;
@@ -20,6 +16,7 @@ interface Data {
     senderName: string;
     name: boolean;
     dob: boolean;
+    contactNum: boolean;
     aadharNum: boolean;
     panNum: boolean;
     passportNum: boolean;
@@ -29,9 +26,10 @@ interface Data {
     picUploadLink: boolean;
     description: string;
     address: boolean;
+    state: string;
 }
 
-function DecidePage({ serverConnected }: { serverConnected: boolean }) {
+function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
     const wallet = useWallet();
     const [value, setValue] = useState('');
     const [valueRes, setValueRes] = useState('');
@@ -50,7 +48,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
         const fetchData = async () => {
             try {
                 const response = await axios.get('http://localhost:9000/requests/getAll');
-                console.log(response)
+                console.log(response);
                 const userData: Data[] = [];
                 // eslint-disable-next-line array-callback-return
                 response.data.map((data: Data) => {
@@ -70,7 +68,9 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                     const picUploadLink = data.picUploadLink;
                     const description = data.description;
                     const address = data.address;
-                    if (data.requestedSolPubkey === wallet.publicKey?.toString()) {
+                    const state = data.state;
+                    const contactNum = data.contactNum;
+                    if (data.solPubkey === wallet.publicKey?.toString()) {
                         userData.push({
                             _id,
                             solPubkey,
@@ -88,6 +88,8 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                             picUploadLink,
                             description,
                             address,
+                            state,
+                            contactNum,
                         });
                     }
                 });
@@ -122,24 +124,23 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
 
         toast.loading('Refreshing...', { duration: 3000 });
     };
-
-    function AllUsersDataRes() {
-        const DenyRequest = (id: string) => {
+    const cancelRequest = useCallback(
+        async (id: string) => {
             try {
-                const url = 'http://localhost:9000/requests/deny';
-                axios
-                    .post(url, { id: id })
-                    .then((res) => {
-                        console.log('request denied');
-                        setRefresh(!refresh);
-                        toast.success('Request has been denied');
-                    })
-                    .catch((error) => console.log(error));
+                console.log('click');
+                const url = 'http://localhost:9000/requests/cancel';
+                await axios.post(url, { id: id });
+
+                console.log('request denied');
+                setRefresh(!refresh);
+                toast.success('Request has been cancelled');
             } catch (e) {
                 console.log(e);
             }
-        };
-
+        },
+        [refresh]
+    );
+    const RenderOutgoingRequests = useMemo(() => {
         return (
             <tbody>
                 {value.length > 0
@@ -149,41 +150,58 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                               <td>{reduceString(item.solPubkey, 10)}</td>
                               <td>{item.description}</td>
                               <td>
-                                  <button
-                                      style={{
-                                          width: 'auto',
-                                          display: 'flex',
-                                          justifyContent: 'space-around',
-                                          fontWeight: '600',
-                                      }}
-                                      className="balance-button w3-btn w3-hover-white App "
-                                      onClick={() => {
-                                          setRefresh(!refresh);
-                                          setOpen(true);
-                                          setId(item._id);
-                                          setName(item.senderName);
-                                          setSolPub(item.solPubkey);
-                                      }}
-                                  >
-                                      Accept
-                                  </button>
-
-                                  <button
-                                      style={{
-                                          width: 'auto',
-                                          background: 'red',
-                                          color: 'white',
-                                          display: 'flex',
-                                          justifyContent: 'space-around',
-                                          fontWeight: '600',
-                                      }}
-                                      className="balance-button w3-btn w3-hover-white App "
-                                      onClick={() => {
-                                          DenyRequest(item._id);
-                                      }}
-                                  >
-                                      Deny
-                                  </button>
+                                  {/* <button
+                                    style={{
+                                        width: 'auto',
+                                        display: 'flex',
+                                        justifyContent: 'space-around',
+                                        fontWeight: '600',
+                                    }}
+                                    className="balance-button w3-btn w3-hover-white App "
+                                    onClick={() => {
+                                        setRefresh(!refresh);
+                                        setOpen(true);
+                                        setId(item._id);
+                                        setName(item.senderName);
+                                        setSolPub(item.solPubkey);
+                                    }}
+                                >
+                                    Accept
+                                </button> */}
+                                  <Dropdown>
+                                      <Dropdown.Toggle
+                                          style={{ backgroundColor: 'lightskyblue', color: 'black' }}
+                                          variant="success"
+                                          id="dropdown-basic"
+                                      >
+                                          {item.state}
+                                      </Dropdown.Toggle>
+                                      {item.state === 'Requested' && (
+                                          <Dropdown.Menu
+                                              style={{
+                                                  backgroundColor: 'lightskyblue',
+                                                  color: 'black',
+                                                  fontFamily: 'Roboto Mono,monospace',
+                                                  fontWeight: 'bold',
+                                              }}
+                                          >
+                                              <Dropdown.Item
+                                                  style={{
+                                                      backgroundColor: 'lightskyblue',
+                                                      color: 'black',
+                                                      fontFamily: 'Roboto Mono,monospace',
+                                                      fontWeight: 'bold',
+                                                  }}
+                                                  className="dropdown"
+                                                  onClick={() => {
+                                                      cancelRequest(item._id);
+                                                  }}
+                                              >
+                                                  Cancel
+                                              </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                      )}
+                                  </Dropdown>
                               </td>
                           </tr>
                       ))
@@ -194,42 +212,65 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                               <td>{reduceString(item.solPubkey, 18)}</td>
                               <td>{item.description}</td>
                               <td style={{ display: 'flex', justifyContent: 'space-around' }}>
-                                  <button
-                                      style={{ width: 'auto', fontWeight: '600' }}
-                                      className="balance-button w3-btn w3-hover-white App "
-                                      onClick={() => {
-                                          setRefresh(!refresh);
-                                          setOpen(true);
-                                          setId(item._id);
-                                          setName(item.senderName);
-                                          setSolPub(item.solPubkey)
-                                      }}
-                                  >
-                                      Accept
-                                  </button>
-                                  <button
-                                      style={{
-                                          width: 'auto',
-                                          background: 'red',
-                                          color: 'white',
-                                          display: 'flex',
-                                          justifyContent: 'space-around',
-                                          fontWeight: '600',
-                                      }}
-                                      className="balance-button w3-btn w3-hover-white App "
-                                      onClick={() => {
-                                          DenyRequest(item._id);
-                                      }}
-                                  >
-                                      Deny
-                                  </button>
+                                  {/* <button
+                                    style={{ width: 'auto', fontWeight: '600' }}
+                                    className="balance-button w3-btn w3-hover-white App "
+                                    onClick={() => {
+                                        setRefresh(!refresh);
+                                        setOpen(true);
+                                        setId(item._id);
+                                        setName(item.senderName);
+                                        setSolPub(item.solPubkey)
+                                    }}
+                                >
+                                    Accept
+                                </button> */}
+                                  <Dropdown>
+                                      <Dropdown.Toggle
+                                          style={{
+                                              backgroundColor: 'lightskyblue',
+                                              color: 'black',
+                                              fontFamily: 'Roboto Mono,monospace',
+                                              fontWeight: 'bold',
+                                          }}
+                                          variant="success"
+                                          id="dropdown-basic"
+                                      >
+                                          {item.state}
+                                      </Dropdown.Toggle>
+                                      {item.state === 'Requested' && (
+                                          <Dropdown.Menu
+                                              style={{
+                                                  backgroundColor: 'lightskyblue',
+                                                  color: 'black',
+                                                  fontFamily: 'Roboto Mono,monospace',
+                                                  fontWeight: 'bold',
+                                              }}
+                                          >
+                                              <Dropdown.Item
+                                                  style={{
+                                                      backgroundColor: 'lightskyblue',
+                                                      color: 'black',
+                                                      fontFamily: 'Roboto Mono,monospace',
+                                                      fontWeight: 'bold',
+                                                  }}
+                                                  className="dropdown"
+                                                  onClick={() => {
+                                                      cancelRequest(item._id);
+                                                  }}
+                                              >
+                                                  Cancel
+                                              </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                      )}
+                                  </Dropdown>
                               </td>
                           </tr>
                           // ))
                       ))}
             </tbody>
         );
-    }
+    }, [cancelRequest, dataSource, refresh, tableFilterRes, value.length]);
 
     return (
         <>
@@ -248,7 +289,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                 }}
                             >
                                 <h1>
-                                    <b>Incoming Requests</b>
+                                    <b>Outgoing Requests</b>
                                 </h1>
                                 <input
                                     type="text"
@@ -291,12 +332,20 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                             <td style={{ display: 'flex', justifyContent: 'space-around' }}>Action</td>
                                         </tr>
                                     </thead>
-                                    <AllUsersDataRes></AllUsersDataRes>
+                                    {RenderOutgoingRequests}
                                 </Table>
                             ) : (
                                 <></>
                             )}
-                            {open && <ResponseModal open={open} setOpen={setOpen} id={id} name={name} pubkey={solPub}></ResponseModal>}
+                            {open && (
+                                <OutgoingRequestModal
+                                    open={open}
+                                    setOpen={setOpen}
+                                    id={id}
+                                    name={name}
+                                    pubkey={solPub}
+                                ></OutgoingRequestModal>
+                            )}
                         </>
                     </>
                 ) : (
@@ -317,4 +366,4 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
     );
 }
 
-export default DecidePage;
+export default OutgoinRequests;

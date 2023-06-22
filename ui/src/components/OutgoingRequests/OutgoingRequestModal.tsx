@@ -44,7 +44,7 @@ interface Props {
 //     address: string;
 // }
 
-function ResponseModal({ open, setOpen, id, name , pubkey}: Props) {
+function OutgoingRequestModal({ open, setOpen, id, name, pubkey }: Props) {
     const wallet = useWallet();
     interface reqprops {
         data: Record<string, any> | undefined;
@@ -55,30 +55,35 @@ function ResponseModal({ open, setOpen, id, name , pubkey}: Props) {
     const [reqData, setReqData] = useState<reqprops>();
 
     function DisplayKeyValuePairs({ data }: reqprops) {
-        console.log(data)
+        console.log(data);
         if (!data) {
             return null; // or any other handling for undefined data
         }
 
         const entries = Object.entries(data);
-        setReqData(data.solPubkey)
+        setReqData(data.solPubkey);
 
         return (
-            <div style={{display: 'flex', justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+            <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 {entries.map(([key, value]) => {
                     const isTrue = Boolean(value);
-
+                    console.log(key, value);
                     if (
                         isTrue &&
-                        key != '_id' &&
-                        key != 'createdAt' &&
-                        key != 'updatedAt' &&
-                        key != 'rsaPubkey' &&
-                        key != 'requestedSolPubkey' &&
-                        key != 'solPubkey' &&
-                        key != 'senderName'
+                        key !== '_id' &&
+                        key !== 'createdAt' &&
+                        key !== 'updatedAt' &&
+                        key !== 'rsaPubkey512' &&
+                        key !== 'rsaPubkey1028' &&
+                        key !== 'requestedSolPubkey' &&
+                        key !== 'solPubkey' &&
+                        key !== 'senderName'
                     ) {
-                        return <h3 key={key} style={{color: "white"}}>{key}</h3>;
+                        return (
+                            <h3 key={key} style={{ color: 'white' }}>
+                                {key}
+                            </h3>
+                        );
                     } else {
                         return null;
                     }
@@ -93,15 +98,12 @@ function ResponseModal({ open, setOpen, id, name , pubkey}: Props) {
                 const response = await axios.post('http://localhost:9000/requests/get', { id: id });
                 // console.log(response.data)
                 setData(response.data.data);
-                
             } catch (err) {
                 console.error(err);
             }
         };
         fetchData();
     }, [id, data, reqPubkey]);
-
- 
 
     const hanldeConfirm = async () => {
         console.log('confirm');
@@ -154,26 +156,29 @@ function ResponseModal({ open, setOpen, id, name , pubkey}: Props) {
                         <CancelIcon style={{ color: 'lightskyblue', fontSize: '50px' }}></CancelIcon>
                     </button>
                 </Box>
-                <Box style={{display: 'flex' , justifyContent: "space-between", flexDirection: "row"}}>
-                    <h2 style={{ color: 'white', marginLeft: "3vw" }}><span style={{color: "lightskyblue"}}>Requester Name:</span> {name}</h2>
-                    <h2 style={{ color: 'white', marginRight: "3vw" }}><span style={{color: "lightskyblue"}}>Pubkey:</span> {reduceString(pubkey,10)}</h2> 
+                <Box style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row' }}>
+                    <h2 style={{ color: 'white', marginLeft: '3vw', fontWeight: 'bold' }}>
+                        <span style={{ color: 'lightskyblue', fontWeight: 'bold' }}>Requester Name:</span> {name}
+                    </h2>
+                    <h2 style={{ color: 'white', marginRight: '3vw', fontWeight: 'bold' }}>
+                        <span style={{ color: 'lightskyblue', fontWeight: 'bold' }}>Pubkey:</span>{' '}
+                        {reduceString(pubkey, 10)}
+                    </h2>
                 </Box>
                 <Box style={{ textAlign: 'center' }}>
-                    <h1 style={{ color: 'white', fontWeight: "bolder" }}>Requested Data</h1>
+                    <h1 style={{ color: 'white', fontWeight: 'bolder' }}>Requested Data</h1>
                 </Box>
                 <Box>
                     <DisplayKeyValuePairs data={data} />
                 </Box>
-                <Box style={{display: 'flex', justifyContent: 'space-around'}}>
+                <Box style={{ display: 'flex', justifyContent: 'space-around' }}>
                     <button className="balance-button w3-btn w3-hover-white" onClick={hanldeConfirm}>
-                    Confirm
-                </button>
-                 </Box>
-               
+                        Confirm
+                    </button>
+                </Box>
             </Box>
-           
         </Modal>
     );
 }
 
-export default ResponseModal;
+export default OutgoingRequestModal;

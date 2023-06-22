@@ -85,7 +85,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                         passportUploadLink: digitalProofsAcc.passportUpload,
                         picUploadLink: digitalProofsAcc.pictureUpload,
                     };
-                    console.log('arweaveData sf', arweaveData);
+
                     setProofsCreated(true);
                     setDigitalProofsPda(digitalProofsPda.toBase58());
                     setArweaveData(arweaveData);
@@ -145,13 +145,11 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
             };
             try {
                 if (proofsState === DataState.Encrypted) {
-                    console.log('inside');
                     const response2 = await axios.post('http://localhost:9000/cryptography/decryptData', {
                         encData: arweaveData,
                         ticker: 'arweaveData',
                     });
                     const decryptedArweaveData = response2.data.decryptedData as ArweaveData;
-                    console.log('decryptedArweaveData', decryptedArweaveData);
                     setProofsState(DataState.Decrypted);
                     setArweaveData(decryptedArweaveData);
                 } else if (proofsState === DataState.Decrypted) {
@@ -167,7 +165,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         toast.loading('Refreshing data', { duration: 2000 });
         setRefresh(!refresh);
     };
-    console.log('arweaveData', arweaveData);
     const handleFile1Change = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const selectedFile = event.target.files[0];
@@ -204,11 +201,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         }
     };
     const uploadFile = async () => {
-        console.log('firing');
-        console.log('pic', pic);
-        console.log('aadhar', aadhar);
-        console.log('passport', passport);
-        console.log('pan', pan);
         try {
             if (bundlr) {
                 if (pic && aadhar && passport && pan) {
@@ -244,9 +236,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                         }
                     }
 
-                    //The array of files
-                    console.log(fileArray);
-
                     toast.success(`${uploadCount} files uploaded to Arweave Successfully`);
 
                     if (uploadCount === 4 && walletProvider?.publicKey) {
@@ -279,7 +268,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 plainData: links,
                                 ticker: 'arweaveData',
                             });
-                            console.log(res.data);
+
                             const encArweaveData = res.data.encryptedData as ArweaveData;
                             const proofsAccArgs: digitalIdentity.CreateProofsInstructionArgs = {
                                 createProofsParam: {
@@ -353,14 +342,6 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
     //     // setPassport(null);
     //     // setAadhar(null);
     // };
-
-    console.log('pic:', pic);
-
-    console.log('pan:', pan);
-
-    console.log('aadhar:', aadhar);
-
-    console.log('pass:', passport);
 
     const RenderUploadedLinksTable = useMemo(() => {
         if (open === true && arweaveData) {

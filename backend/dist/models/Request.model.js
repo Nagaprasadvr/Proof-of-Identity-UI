@@ -8,9 +8,12 @@ const RequestSchema = new mongoose_1.default.Schema({
     solPubkey: {
         type: String,
         required: true,
-        unique: true,
     },
-    rsaPubkey: {
+    rsaPubkey512: {
+        type: String,
+        required: true,
+    },
+    rsaPubkey1028: {
         type: String,
         required: true,
     },
@@ -31,6 +34,10 @@ const RequestSchema = new mongoose_1.default.Schema({
         required: true,
     },
     dob: {
+        type: Boolean,
+        required: true,
+    },
+    contactNum: {
         type: Boolean,
         required: true,
     },
@@ -69,7 +76,7 @@ const RequestSchema = new mongoose_1.default.Schema({
     state: {
         type: String,
         required: true,
-    }
+    },
 }, {
     timestamps: true,
 });

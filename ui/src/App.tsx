@@ -17,11 +17,11 @@ import { Box } from '@mui/material';
 import { Toaster, toast } from 'react-hot-toast';
 import './App.css';
 import Navigation from './components/Navbar/Navigation';
-import Allusers from './components/AllUsers/Allusers';
+import Allusers from './components/SearchIdentity/SearchIdentity';
 import axios from 'axios';
-import DecidePage from './components/ReqRespage/DecidePage';
+import DecidePage from './components/IncomingRequests/IncomingRequests';
 import * as sdk from './digitalIdentity/js/src/generated';
-import MyRequests from './components/RequestComponent/MyRequests';
+import MyRequests from './components/OutgoingRequests/OutgoingRequests';
 require('bootstrap/dist/css/bootstrap.min.css');
 
 export interface RSAKeypair {

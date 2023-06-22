@@ -20,9 +20,10 @@ app.use((0, cors_1.default)());
 const URI = process.env.MONGODB_URL;
 mongoose_1.default.connect(URI, {
     useCreateIndex: true,
-    useFindAndModify: false,
+    useFindAndModify: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    autoIndex: true,
 }, (err) => {
     if (err)
         throw err;

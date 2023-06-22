@@ -1,23 +1,26 @@
-import React, { useEffect } from 'react';
+import './pagestyle.css';
+import React, { useEffect, useMemo } from 'react';
 import { Box } from '@mui/material';
-import { Dropdown, Table } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import { useWallet } from '@solana/wallet-adapter-react';
+import data from './MOCK_DATA.json';
 import { Button } from '@material-ui/core';
 import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { reduceString } from '../ViewIdentity/helper';
-import RequestModal from './ResponseModal';
-import ResponseModal from './ResponseModal';
+import IncomingRequestModal from './IncomingRequestModal';
 
-interface Data {
+export interface Data {
     _id: string;
     solPubkey: string;
-    rsaPubkey: string;
+    rsaPubkey512: string;
+    rsaPubkey1028: string;
     requestedSolPubkey: string;
     senderName: string;
     name: boolean;
     dob: boolean;
+    contactNum: boolean;
     aadharNum: boolean;
     panNum: boolean;
     passportNum: boolean;
@@ -30,7 +33,7 @@ interface Data {
     state: string;
 }
 
-function MyRequests({ serverConnected }: { serverConnected: boolean }) {
+function DecidePage({ serverConnected }: { serverConnected: boolean }) {
     const wallet = useWallet();
     const [value, setValue] = useState('');
     const [valueRes, setValueRes] = useState('');
@@ -44,19 +47,22 @@ function MyRequests({ serverConnected }: { serverConnected: boolean }) {
     const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [solPub, setSolPub] = useState('');
-
+    const [rsaPubkey512, setRSAPubkey512] = useState('');
+    const [rsaPubkey1028, setRSAPubkey1028] = useState('');
+    const [requestedData, setRequestedData] = useState<Data | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get('http://localhost:9000/requests/getAll');
-                console.log(response)
+                console.log(response);
                 const userData: Data[] = [];
                 // eslint-disable-next-line array-callback-return
                 response.data.map((data: Data) => {
                     const _id = data._id;
                     const solPubkey = data.solPubkey;
-                    const rsaPubkey = data.rsaPubkey;
+                    const rsaPubkey512 = data.rsaPubkey512;
+                    const rsaPubkey1028 = data.rsaPubkey1028;
                     const requestedSolPubkey = data.requestedSolPubkey;
                     const senderName = data.senderName;
                     const name = data.name;
@@ -70,16 +76,19 @@ function MyRequests({ serverConnected }: { serverConnected: boolean }) {
                     const picUploadLink = data.picUploadLink;
                     const description = data.description;
                     const address = data.address;
+                    const contactNum = data.contactNum;
                     const state = data.state;
-                    if (data.solPubkey === wallet.publicKey?.toString()) {
+                    if (data.requestedSolPubkey === wallet.publicKey?.toString()) {
                         userData.push({
                             _id,
                             solPubkey,
-                            rsaPubkey,
+                            rsaPubkey512,
+                            rsaPubkey1028,
                             requestedSolPubkey,
                             senderName,
                             name,
                             dob,
+                            contactNum,
                             aadharNum,
                             panNum,
                             passportNum,
@@ -125,18 +134,15 @@ function MyRequests({ serverConnected }: { serverConnected: boolean }) {
         toast.loading('Refreshing...', { duration: 3000 });
     };
 
-    function AllUsersDataRes() {
-        const DenyRequest = (id: string) => {
+    const RenderIncomingRequests = useMemo(() => {
+        const DenyRequest = async (id: string) => {
             try {
                 const url = 'http://localhost:9000/requests/deny';
-                axios
-                    .post(url, { id: id })
-                    .then((res) => {
-                        console.log('request denied');
-                        setRefresh(!refresh);
-                        toast.success('Request has been denied');
-                    })
-                    .catch((error) => console.log(error));
+                await axios.post(url, { id: id });
+
+                console.log('request denied');
+                setRefresh(!refresh);
+                toast.success('Request has been denied');
             } catch (e) {
                 console.log(e);
             }
@@ -146,88 +152,102 @@ function MyRequests({ serverConnected }: { serverConnected: boolean }) {
             <tbody>
                 {value.length > 0
                     ? tableFilterRes.map((item, index) => (
-                        <tr style={{ width: '100vw' }} key={index}>
-                            <td>{item.senderName}</td>
-                            <td>{reduceString(item.solPubkey, 10)}</td>
-                            <td>{item.description}</td>
-                            <td>
-                                {/* <button
-                                    style={{
-                                        width: 'auto',
-                                        display: 'flex',
-                                        justifyContent: 'space-around',
-                                        fontWeight: '600',
-                                    }}
-                                    className="balance-button w3-btn w3-hover-white App "
-                                    onClick={() => {
-                                        setRefresh(!refresh);
-                                        setOpen(true);
-                                        setId(item._id);
-                                        setName(item.senderName);
-                                        setSolPub(item.solPubkey);
-                                    }}
-                                >
-                                    Accept
-                                </button> */}
-                                <Dropdown>
-                                    <Dropdown.Toggle style={{ backgroundColor: "lightskyblue", color: 'black' }}  variant="success" id="dropdown-basic">
-                                        {item.state}
-                                    </Dropdown.Toggle>
+                          <tr style={{ width: '100vw' }} key={index}>
+                              <td>{item.senderName}</td>
+                              <td>{reduceString(item.solPubkey, 10)}</td>
+                              <td>{item.description}</td>
+                              <td>
+                                  <button
+                                      style={{
+                                          width: 'auto',
+                                          display: 'flex',
+                                          justifyContent: 'space-around',
+                                          fontWeight: '600',
+                                      }}
+                                      className="balance-button w3-btn w3-hover-white App "
+                                      onClick={() => {
+                                          setRefresh(!refresh);
+                                          setOpen(true);
+                                          setId(item._id);
+                                          setName(item.senderName);
+                                          setSolPub(item.solPubkey);
+                                          setRSAPubkey512(item.rsaPubkey512);
+                                          setRSAPubkey1028(item.rsaPubkey1028);
+                                          setRequestedData(item);
+                                      }}
+                                  >
+                                      Accept
+                                  </button>
 
-                                    <Dropdown.Menu>
-                                        {/* <Dropdown.Item href="#/action-2"></Dropdown.Item> */}
-                                        <Dropdown.Item onClick={() => {
-                                            DenyRequest(item._id);
-                                        }}>Cancel</Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
-
-                            
-                            </td>
-                        </tr>
-                    ))
+                                  <button
+                                      style={{
+                                          width: 'auto',
+                                          background: 'red',
+                                          color: 'white',
+                                          display: 'flex',
+                                          justifyContent: 'space-around',
+                                          fontWeight: '600',
+                                      }}
+                                      className="balance-button w3-btn w3-hover-white App "
+                                      onClick={async () => {
+                                          await DenyRequest(item._id);
+                                      }}
+                                  >
+                                      Deny
+                                  </button>
+                              </td>
+                          </tr>
+                      ))
                     : dataSource.map((item, index) => (
-                        // (item.requestedSolPubkey == wallet.publicKey?.toString() && (
-                        <tr style={{ width: '100vw' }} key={index}>
-                            <td>{item.senderName}</td>
-                            <td>{reduceString(item.solPubkey, 18)}</td>
-                            <td>{item.description}</td>
-                            <td style={{ display: 'flex', justifyContent: 'space-around' }}>
-                            
-                                {/* <button
-                                    style={{ width: 'auto', fontWeight: '600' }}
-                                    className="balance-button w3-btn w3-hover-white App "
-                                    onClick={() => {
-                                        setRefresh(!refresh);
-                                        setOpen(true);
-                                        setId(item._id);
-                                        setName(item.senderName);
-                                        setSolPub(item.solPubkey)
-                                    }}
-                                >
-                                    Accept
-                                </button> */}
-                                <Dropdown  >
-                                    <Dropdown.Toggle style={{ backgroundColor: "lightskyblue", color: 'black' }} variant="success" id="dropdown-basic">
-                                        {item.state}
-                                    </Dropdown.Toggle>
-
-                                    <Dropdown.Menu>
-                                        {/* <Dropdown.Item href="#/action-2"></Dropdown.Item> */}
-                                        <Dropdown.Item onClick={() => {
-                                            DenyRequest(item._id);
-                                        }}>Cancel</Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                                
-                                
-                            </td>
-                        </tr>
-                        // ))
-                    ))}
+                          // (item.requestedSolPubkey == wallet.publicKey?.toString() && (
+                          <tr style={{ width: '100vw' }} key={index}>
+                              <td>{item.senderName}</td>
+                              <td>{reduceString(item.solPubkey, 18)}</td>
+                              <td>{item.description}</td>
+                              <td style={{ display: 'flex', justifyContent: 'space-around' }}>
+                                  {item.state === 'Requested' ? (
+                                      <>
+                                          <button
+                                              style={{ width: 'auto', fontWeight: '600' }}
+                                              className="balance-button w3-btn w3-hover-white App "
+                                              onClick={() => {
+                                                  setRefresh(!refresh);
+                                                  setOpen(true);
+                                                  setId(item._id);
+                                                  setName(item.senderName);
+                                                  setSolPub(item.solPubkey);
+                                                  setRequestedData(item);
+                                              }}
+                                          >
+                                              Accept
+                                          </button>
+                                          <button
+                                              style={{
+                                                  width: 'auto',
+                                                  background: 'red',
+                                                  color: 'white',
+                                                  display: 'flex',
+                                                  justifyContent: 'space-around',
+                                                  fontWeight: '600',
+                                              }}
+                                              className="balance-button w3-btn w3-hover-white App "
+                                              onClick={async () => {
+                                                  await DenyRequest(item._id);
+                                              }}
+                                          >
+                                              Deny
+                                          </button>
+                                      </>
+                                  ) : (
+                                      <p>{item.state}</p>
+                                  )}
+                              </td>
+                          </tr>
+                          // ))
+                      ))}
             </tbody>
         );
-    }
+    }, [dataSource, refresh, tableFilterRes, value.length]);
 
     return (
         <>
@@ -246,7 +266,7 @@ function MyRequests({ serverConnected }: { serverConnected: boolean }) {
                                 }}
                             >
                                 <h1>
-                                    <b>Outgoing Requests</b>
+                                    <b>Incoming Requests</b>
                                 </h1>
                                 <input
                                     type="text"
@@ -289,12 +309,23 @@ function MyRequests({ serverConnected }: { serverConnected: boolean }) {
                                             <td style={{ display: 'flex', justifyContent: 'space-around' }}>Action</td>
                                         </tr>
                                     </thead>
-                                    <AllUsersDataRes></AllUsersDataRes>
+                                    {RenderIncomingRequests}
                                 </Table>
                             ) : (
                                 <></>
                             )}
-                            {open && <ResponseModal open={open} setOpen={setOpen} id={id} name={name} pubkey={solPub}></ResponseModal>}
+                            {open && (
+                                <IncomingRequestModal
+                                    open={open}
+                                    setOpen={setOpen}
+                                    id={id}
+                                    name={name}
+                                    solpubkey={solPub}
+                                    rsaPubkey512={rsaPubkey512}
+                                    rsaPubkey1028={rsaPubkey1028}
+                                    requestedData={requestedData as Data}
+                                ></IncomingRequestModal>
+                            )}
                         </>
                     </>
                 ) : (
@@ -315,4 +346,4 @@ function MyRequests({ serverConnected }: { serverConnected: boolean }) {
     );
 }
 
-export default MyRequests;
+export default DecidePage;

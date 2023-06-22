@@ -9,7 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Modal } from '@material-ui/core';
 import { Button, Table } from 'react-bootstrap';
-import './reqmodalstyle.css';
+import './searchIdentity.css';
 import axios from 'axios';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { toast } from 'react-hot-toast';
@@ -24,12 +24,13 @@ export interface RSAKeyPair {
     pubKey: string;
     privateKey: string;
 }
-function RequestModal({ open, setOpen, requestedPubkey }: Props) {
+function SendRequestModal({ open, setOpen, requestedPubkey }: Props) {
     const wallet = useWallet();
     const [formData, setFormData] = useState({
         senderName: '',
         name: false,
         dob: false,
+        contactNum: false,
         aadharUploadLink: false,
         aadharNumber: false,
         panUploadLink: false,
@@ -62,12 +63,15 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
             const response = await axios.get('http://localhost:9000/cryptography/getRSAKeypair');
             if (response.data.status === true) {
                 const keypair_512: RSAKeyPair = response.data.keypair_512;
+                const keypair_1028: RSAKeyPair = response.data.keypair_1028;
+                const pubkey_1028 = keypair_1028.pubKey;
                 const pubkey_512 = keypair_512.pubKey;
                 await axios.post('http://localhost:9000/requests/send', {
                     senderName: formData.senderName,
                     userPubkey: wallet.publicKey?.toBase58(),
                     requestedSolPubkey: requestedPubkey,
-                    rsaPubkey: pubkey_512,
+                    rsaPubkey512: pubkey_512,
+                    rsaPubkey1028: pubkey_1028,
                     requestData: formData,
                 });
                 toast.success('Request sent successfully');
@@ -171,6 +175,20 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
                                         <td>
                                             <input
                                                 type="checkbox"
+                                                name="contactNum"
+                                                checked={formData.contactNum}
+                                                onChange={handleChange}
+                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                            ></input>
+                                        </td>
+                                        <td>
+                                            <label>Contact Number</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input
+                                                type="checkbox"
                                                 name="panNumber"
                                                 checked={formData.panNumber}
                                                 onChange={handleChange}
@@ -220,7 +238,7 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
                                             ></input>
                                         </td>
                                         <td>
-                                            <label>Pan</label>
+                                            <label>Pan Link</label>
                                         </td>
                                     </tr>
                                     <tr>
@@ -234,7 +252,7 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
                                             ></input>
                                         </td>
                                         <td>
-                                            <label>Passport</label>
+                                            <label>Passport Link</label>
                                         </td>
                                     </tr>
                                     <tr>
@@ -248,7 +266,7 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
                                             ></input>
                                         </td>
                                         <td>
-                                            <label>Aadhar</label>
+                                            <label>Aadhar Link</label>
                                         </td>
                                     </tr>
 
@@ -263,7 +281,7 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
                                             ></input>
                                         </td>
                                         <td>
-                                            <label>pic</label>
+                                            <label>pic Link</label>
                                         </td>
                                     </tr>
                                     <tr>
@@ -295,4 +313,4 @@ function RequestModal({ open, setOpen, requestedPubkey }: Props) {
     );
 }
 
-export default RequestModal;
+export default SendRequestModal;

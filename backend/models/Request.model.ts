@@ -5,9 +5,12 @@ const RequestSchema = new mongoose.Schema(
     solPubkey: {
       type: String,
       required: true,
-      unique: true,
     },
-    rsaPubkey: {
+    rsaPubkey512: {
+      type: String,
+      required: true,
+    },
+    rsaPubkey1028: {
       type: String,
       required: true,
     },
@@ -28,6 +31,10 @@ const RequestSchema = new mongoose.Schema(
       required: true,
     },
     dob: {
+      type: Boolean,
+      required: true,
+    },
+    contactNum: {
       type: Boolean,
       required: true,
     },
@@ -66,7 +73,7 @@ const RequestSchema = new mongoose.Schema(
     state: {
       type: String,
       required: true,
-    }
+    },
   },
   {
     timestamps: true,

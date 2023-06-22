@@ -26,9 +26,10 @@ mongoose.connect(
   URI,
   {
     useCreateIndex: true,
-    useFindAndModify: false,
+    useFindAndModify: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    autoIndex: true,
   },
   (err) => {
     if (err) throw err;

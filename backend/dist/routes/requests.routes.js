@@ -23,14 +23,18 @@ router.route("/send").post((req, res) => {
     const description = req.body.requestData.description;
     const address = req.body.requestData.address;
     const senderPubkey = req.body.requestedSolPubkey;
-    const rsaPubkey = req.body.rsaPubkey;
+    const rsaPubkey512 = req.body.rsaPubkey512;
+    const rsaPubkey1028 = req.body.rsaPubkey1028;
+    const contactNum = req.body.requestData.contactNum;
     const newRequest = new Request_model_1.default({
         solPubkey: userPubkey,
-        rsaPubkey: rsaPubkey,
+        rsaPubkey512: rsaPubkey512,
+        rsaPubkey1028: rsaPubkey1028,
         requestedSolPubkey: senderPubkey,
         senderName: senderName,
         name: name,
         dob: dob,
+        contactNum: contactNum,
         aadharNum: aadharNumber,
         panNum: panNumber,
         passportNum: passportNumber,
@@ -40,14 +44,17 @@ router.route("/send").post((req, res) => {
         picUploadLink: picUploadLink,
         description: description,
         address: address,
-        state: 'Requested'
+        state: "Requested",
     });
+    console.log("new req", newRequest);
     newRequest
         .save()
-        .then(() => {
+        .then((result) => {
+        console.log("Request sent");
         res.json("the requests has been sent");
     })
         .catch((err) => res.json("Error:" + err));
+    console.log("saved");
 });
 router.route("/getAll").get((req, res) => {
     Request_model_1.default.find()
@@ -64,16 +71,16 @@ router.route("/get").post((req, res) => {
 });
 router.route("/approve").post((req, res) => {
     const requestId = req.body.requestId;
-    const name = req.body.requestData.name;
-    const dob = req.body.requestData.dob;
-    const aadharNumber = req.body.requestData.aadharNumber;
-    const panNumber = req.body.requestData.panNumber;
-    const passportNumber = req.body.requestData.passportNumber;
-    const panUploadLink = req.body.requestData.panUploadLink;
-    const passportUploadLink = req.body.requestData.passportUploadLink;
-    const aadharUploadLink = req.body.requestData.aadharUploadLink;
-    const picUploadLink = req.body.requestData.picUploadLink;
-    const address = req.body.requestData.address;
+    const name = req.body.encUserData.name;
+    const dob = req.body.encUserData.dob;
+    const aadharNumber = req.body.encUserData.aadharNumber;
+    const panNumber = req.body.encUserData.panNumber;
+    const passportNumber = req.body.encUserData.passportNumber;
+    const panUploadLink = req.body.encArweaveData.panUploadLink;
+    const passportUploadLink = req.body.encArweaveData.passportUploadLink;
+    const aadharUploadLink = req.body.encArweaveData.aadharUploadLink;
+    const picUploadLink = req.body.encArweaveData.picUploadLink;
+    const address = req.body.encUserData.address;
     const newResponse = new Response_model_1.default({
         requestId: requestId,
         name: name,
@@ -90,7 +97,7 @@ router.route("/approve").post((req, res) => {
     newResponse
         .save()
         .then(() => {
-        res.json("the requests has been sent");
+        res.json({ message: "the response has been sent", status: true });
     })
         .catch((err) => res.json("Error:" + err));
     Request_model_1.default.updateOne({
@@ -116,6 +123,24 @@ router.route("/deny").post((req, res) => {
     }, {
         $set: {
             state: "Denied",
+        },
+    }, null, (err, res) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        else {
+            console.log("update success");
+        }
+    });
+});
+router.route("/cancel").post((req, res) => {
+    const id = req.body.id;
+    Request_model_1.default.updateOne({
+        _id: new mongodb_1.ObjectId(id),
+    }, {
+        $set: {
+            state: "Cancelled",
         },
     }, null, (err, res) => {
         if (err) {
