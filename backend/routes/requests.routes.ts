@@ -80,14 +80,15 @@ router.route("/approve").post((req: Request, res: Response) => {
   const passportUploadLink: string = req.body.encArweaveData.passportUploadLink;
   const aadharUploadLink: string = req.body.encArweaveData.aadharUploadLink;
   const picUploadLink: string = req.body.encArweaveData.picUploadLink;
-  const address: string = req.body.encUserData.address;
+  const address: string = req.body.encUserData.residenceAddress;
+  console.log("address", address);
   const contactNum: string = req.body.encUserData.contactNumber;
   console.log("requestId", req.body);
   const newResponse = new ResponseModel({
     requestId: requestId,
     name: name,
     dob: dob,
-    address: address,
+    residenceAddress: address,
     aadharNum: aadharNumber,
     contactNum: contactNum,
     panNum: panNumber,
@@ -173,8 +174,8 @@ router.route("/cancel").post((req: Request, res: Response) => {
 
 router.route("/getResponseById").post((req: Request, res: Response) => {
   const id = req.body.id;
-  console.log(id)
-  ResponseModel.find({requestId: id})
+  console.log(id);
+  ResponseModel.find({ requestId: id })
     .then((response: any) => res.json(response))
     .catch((err: any) => console.log(err));
 });

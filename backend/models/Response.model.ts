@@ -14,6 +14,10 @@ const ResponseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    residenceAddress: {
+      type: String,
+      required: true,
+    },
     panNum: {
       type: String,
       required: true,
