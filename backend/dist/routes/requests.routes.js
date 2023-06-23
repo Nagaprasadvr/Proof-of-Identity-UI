@@ -78,14 +78,15 @@ router.route("/approve").post((req, res) => {
     const passportUploadLink = req.body.encArweaveData.passportUploadLink;
     const aadharUploadLink = req.body.encArweaveData.aadharUploadLink;
     const picUploadLink = req.body.encArweaveData.picUploadLink;
-    const address = req.body.encUserData.address;
+    const address = req.body.encUserData.residenceAddress;
+    console.log("address", address);
     const contactNum = req.body.encUserData.contactNumber;
     console.log("requestId", req.body);
     const newResponse = new Response_model_1.default({
         requestId: requestId,
         name: name,
         dob: dob,
-        address: address,
+        residenceAddress: address,
         aadharNum: aadharNumber,
         contactNum: contactNum,
         panNum: panNumber,

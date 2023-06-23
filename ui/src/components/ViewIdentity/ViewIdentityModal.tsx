@@ -27,7 +27,7 @@ interface fileObj {
     file: File;
 }
 
-enum DataState {
+export enum DataState {
     Encrypted,
     Decrypted,
     NA,
