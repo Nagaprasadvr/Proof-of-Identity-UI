@@ -15,6 +15,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { Typography } from '@mui/material';
 import axios from 'axios';
 export interface UserData {
+    [key: string]: string;
     name: string;
     contactNumber: string;
     dob: string;

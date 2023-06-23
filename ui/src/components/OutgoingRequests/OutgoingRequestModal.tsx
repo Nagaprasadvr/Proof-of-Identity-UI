@@ -49,8 +49,8 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
         const fetch = async () => {
             try {
                 const response = await axios.post('http://localhost:9000/requests/getResponseById', { id: id });
-                console.log("loggg: " + response.data[0]);
-                console.log("response: ", response)
+                console.log('loggg: ' + response.data[0]);
+                console.log('response: ', response);
                 const responseData: Data = {
                     aadharNum: response.data[0].aadharNum,
                     aadharUploadLink: response.data[0].aadharUploadLink,
@@ -65,7 +65,7 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
                     requestId: response.data[0].requestId,
                     residentAddress: response.data[0].residenceAddress,
                 };
-                console.log("response: ", responseData)
+                console.log('response: ', responseData);
 
                 setData(responseData);
             } catch (err) {
@@ -78,7 +78,7 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
 
     const handleDecryptEncryptData = async () => {
         toast.loading(dataState === DataState.Encrypted ? 'Decrypting..' : 'Encrypting...', { duration: 800 });
-        console.log('data', data?.residentAddress);
+
         const userData: UserData = {
             aadharNumber: (data as Data).aadharNum,
             contactNumber: (data as Data).contactNum,
@@ -95,6 +95,7 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
             picUploadLink: (data as Data).picUploadLink,
         };
         if (dataState === DataState.Encrypted) {
+            console.log('enc');
             try {
                 console.log('user data', userData);
                 console.log('arweave data', arweaveData);
@@ -102,6 +103,7 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
                     encData: userData as UserData,
                     ticker: 'solData',
                 });
+                console.log('res:', response1.data);
 
                 // const response2 = await axios.post('http://localhost:9000/cryptography/decryptData', {
                 //     encData: arweaveData as ArweaveData,
@@ -202,13 +204,21 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
                 </Box>
                 <table>
                     <tbody>
-                        {data &&
-                            Object.keys(data as Data).map((key) => (
-                                <tr key={key}>
-                                    <td>{key}</td>
-                                    <td>{data[key]}</td>
-                                </tr>
-                            ))}
+                        {DataState.Encrypted
+                            ? data &&
+                              Object.keys(data as Data).map((key) => (
+                                  <tr key={key}>
+                                      <td>{key}</td>
+                                      <td>{data[key]}</td>
+                                  </tr>
+                              ))
+                            : digitalIdentityData &&
+                              Object.keys(digitalIdentityData as UserData).map((key) => (
+                                  <tr key={key}>
+                                      <td>{key}</td>
+                                      <td>{digitalIdentityData[key]}</td>
+                                  </tr>
+                              ))}
                     </tbody>
                 </table>
             </Box>

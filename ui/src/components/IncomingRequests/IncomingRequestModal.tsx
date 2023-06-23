@@ -57,14 +57,13 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
     const [data, setData] = useState<reqprops>({ data: {} });
     const [reqPubkey, setReqPubkey] = useState('');
     const [reqData, setReqData] = useState<reqprops>();
-    const [handleOpen, setHandleOpen] = useState(false)
+    const [handleOpen, setHandleOpen] = useState(false);
 
     // console.log('rsaPubkey512 mod', rsaPubkey512);
 
-
     const handleCloseModal = () => {
-        setHandleOpen(true)
-    }
+        setHandleOpen(true);
+    };
 
     function DisplayKeyValuePairs({ data }: reqprops) {
         console.log(data);
@@ -115,7 +114,7 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
                 const response = await axios.post('http://localhost:9000/requests/get', { id: id });
                 // console.log(response.data)
                 setData(response.data.data);
-                console.log(data)
+                console.log(data);
             } catch (err) {
                 console.error(err);
             }
@@ -137,7 +136,7 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
             try {
                 const acc = await sdk.DigitalIdentity.fromAccountAddress(rpcConn, digitalPdaAcc);
                 const response = await axios.post('http://localhost:9000/cryptography/decryptData', {
-                    encData: acc as UserData,
+                    encData: acc,
                     ticker: 'solData',
                 });
 
@@ -233,7 +232,7 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
                 }
             }
         }
-        setOpen(false)
+        setOpen(false);
     };
     const handleClose = () => {
         setOpen(false);

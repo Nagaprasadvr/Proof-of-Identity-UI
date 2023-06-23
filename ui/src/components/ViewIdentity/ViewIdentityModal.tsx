@@ -121,7 +121,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         if (dataState === DataState.Encrypted) {
             try {
                 const response1 = await axios.post('http://localhost:9000/cryptography/decryptData', {
-                    encData: data as UserData,
+                    encData: data,
                     ticker: 'solData',
                 });
 
