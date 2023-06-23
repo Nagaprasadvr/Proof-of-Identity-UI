@@ -169,7 +169,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         toast.loading('Refreshing data', { duration: 2000 });
         setRefresh(!refresh);
     };
-    
+
     const handleFile1Change = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const selectedFile = event.target.files[0];
@@ -458,7 +458,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
         } else {
             return (
                 <>
-                    <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <h1>Loading ...</h1>
                     </Box>
                 </>
@@ -505,7 +505,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                             )}
                             {!data.aadharAttached && (
                                 <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>Passport Uploaded</td>
+                                    <td style={{ color: 'black' }}>Aadhar Uploaded</td>
                                     <td style={{ color: 'black', paddingLeft: '2vw' }}>
                                         {!data.aadharAttached && (
                                             <input type="file" onChange={handleFile4Change} required />
@@ -516,7 +516,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
 
                             {!data.passportAttached && (
                                 <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>Pan Uploaded</td>
+                                    <td style={{ color: 'black' }}>Passport Uploaded</td>
                                     <td style={{ color: 'black', paddingLeft: '2vw' }}>
                                         {!data.passportAttached && (
                                             <input type="file" onChange={handleFile2Change} required />
@@ -526,7 +526,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                             )}
                             {!data.picAttached && (
                                 <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>Aadhar Uploaded</td>
+                                    <td style={{ color: 'black' }}>Pic Uploaded</td>
                                     <td style={{ color: 'black', paddingLeft: '2vw' }}>
                                         {!data.picAttached && (
                                             <input type="file" onChange={handleFile1Change} required />
