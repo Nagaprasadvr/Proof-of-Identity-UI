@@ -83,16 +83,15 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
                         key !== 'solPubkey' &&
                         key !== 'senderName' &&
                         key !== 'state'
-                        
                     ) {
-                        return (key === 'description' ? (<h3 key={key} style={{ color: 'white' }}>
-                            { key }:{value}
-                        </h3>) : (
-                                <h3 key={key} style={{ color: 'white' }}>
-                                    {key}
-                                </h3>
-                        )
-                          
+                        return key === 'description' ? (
+                            <h3 key={key} style={{ color: 'white' }}>
+                                {key}:{value}
+                            </h3>
+                        ) : (
+                            <h3 key={key} style={{ color: 'white' }}>
+                                {key}
+                            </h3>
                         );
                     } else {
                         return null;
@@ -135,6 +134,7 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
 
                 const decryptedData = response.data.decryptedData as UserData;
 
+                console.log('requestedData:', decryptedData);
                 const updatedDecryptedData: UserData = {
                     name: requestedData.name ? decryptedData.name : 'noaccess',
                     dob: requestedData.dob ? decryptedData.dob : 'noaccess',
