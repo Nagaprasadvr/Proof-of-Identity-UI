@@ -149,6 +149,19 @@ router.route("/deny").post((req: Request, res: Response) => {
   );
 });
 
+router.route("/delete").post(async (req: Request, res: Response) => {
+   try {
+    const { id } = req.body;
+    // Perform deletion logic here using the provided ID
+    await RequestModel.deleteOne({_id : id });
+    console.log(`Deleting request with ID: ${id}`);
+    
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
 router.route("/cancel").post((req: Request, res: Response) => {
   const id = req.body.id;
   RequestModel.updateOne(

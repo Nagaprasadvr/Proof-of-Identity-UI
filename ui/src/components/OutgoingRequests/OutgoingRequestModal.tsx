@@ -49,7 +49,8 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
         const fetch = async () => {
             try {
                 const response = await axios.post('http://localhost:9000/requests/getResponseById', { id: id });
-                console.log(response.data);
+                console.log("loggg: " + response.data[0]);
+                console.log("response: ", response)
                 const responseData: Data = {
                     aadharNum: response.data[0].aadharNum,
                     aadharUploadLink: response.data[0].aadharUploadLink,
@@ -62,8 +63,10 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
                     passportUploadLink: response.data[0].passportUploadLink,
                     picUploadLink: response.data[0].picUploadLink,
                     requestId: response.data[0].requestId,
-                    residentAddress: response.data[0].residentAddress,
+                    residentAddress: response.data[0].residenceAddress,
                 };
+                console.log("response: ", responseData)
+
                 setData(responseData);
             } catch (err) {
                 console.error(err);
@@ -82,7 +85,7 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
             dob: (data as Data).dob,
             name: (data as Data).name,
             panNumber: (data as Data).panNum,
-            residenceAddress: (data as Data).residenceAddress,
+            residenceAddress: (data as Data).residentAddress,
             passportId: (data as Data).passportNum,
         };
         const arweaveData: ArweaveData = {

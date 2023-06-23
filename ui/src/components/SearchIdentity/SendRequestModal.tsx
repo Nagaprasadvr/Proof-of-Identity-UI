@@ -31,7 +31,6 @@ function SendRequestModal({ open, setOpen, requestedPubkey }: Props) {
         name: false,
         dob: false,
         contactNum: false,
-        residenceAddress: false,
         aadharUploadLink: false,
         aadharNumber: false,
         panUploadLink: false,
@@ -190,8 +189,8 @@ function SendRequestModal({ open, setOpen, requestedPubkey }: Props) {
                                         <td>
                                             <input
                                                 type="checkbox"
-                                                name="residenceAddress"
-                                                checked={formData.dob}
+                                                name="address"
+                                                checked={formData.address}
                                                 onChange={handleChange}
                                                 style={{ marginLeft: '2vw', marginRight: '2vw' }}
                                             ></input>

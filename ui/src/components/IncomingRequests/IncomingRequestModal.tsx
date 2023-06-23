@@ -57,7 +57,15 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
     const [data, setData] = useState<reqprops>({ data: {} });
     const [reqPubkey, setReqPubkey] = useState('');
     const [reqData, setReqData] = useState<reqprops>();
-    console.log('rsaPubkey512 mod', rsaPubkey512);
+    const [handleOpen, setHandleOpen] = useState(false)
+
+    // console.log('rsaPubkey512 mod', rsaPubkey512);
+
+
+    const handleCloseModal = () => {
+        setHandleOpen(true)
+    }
+
     function DisplayKeyValuePairs({ data }: reqprops) {
         console.log(data);
         if (!data) {
@@ -107,6 +115,7 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
                 const response = await axios.post('http://localhost:9000/requests/get', { id: id });
                 // console.log(response.data)
                 setData(response.data.data);
+                console.log(data)
             } catch (err) {
                 console.error(err);
             }
@@ -224,6 +233,7 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
                 }
             }
         }
+        setOpen(false)
     };
     const handleClose = () => {
         setOpen(false);
