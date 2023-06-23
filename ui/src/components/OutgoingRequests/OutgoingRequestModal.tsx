@@ -72,55 +72,7 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
         fetch();
     },[refresh])
 
-    // const handleDecryptEncryptData = async () => {
-    //     toast.loading(dataState === DataState.Encrypted ? 'Decrypting..' : 'Encrypting...', { duration: 800 });
-    //     if (dataState === DataState.Encrypted) {
-    //         try {
-    //             const response1 = await axios.post('http://localhost:9000/cryptography/decryptData', {
-    //                 encData: data as UserData,
-    //                 ticker: 'solData',
-    //             });
-
-    //             setDataState(DataState.Decrypted);
-
-    //             setDigitalIdentityData(response1.data.decryptedData);
-    //         } catch (e) {
-    //             toast.error('failed to Decrypt data');
-    //         }
-    //     } else if (dataState === DataState.Decrypted) {
-    //         setDigitalIdentityData(data);
-    //         setDataState(DataState.Encrypted);
-    //     }
-    // };
-
-    // const handleDecryptEncryptProofs = async () => {
-    //     toast.loading(proofsState === DataState.Encrypted ? 'Decrypting..' : 'Encrypting...', { duration: 800 });
-    //     if (digitalProofs) {
-    //         const arweaveData: ArweaveData = {
-    //             panUploadLink: digitalProofs.panUpload,
-    //             aadharUploadLink: digitalProofs.aadharUpload,
-    //             passportUploadLink: digitalProofs.passportUpload,
-    //             picUploadLink: digitalProofs.pictureUpload,
-    //         };
-    //         try {
-    //             if (proofsState === DataState.Encrypted) {
-    //                 const response2 = await axios.post('http://localhost:9000/cryptography/decryptData', {
-    //                     encData: arweaveData,
-    //                     ticker: 'arweaveData',
-    //                 });
-    //                 const decryptedArweaveData = response2.data.decryptedData as ArweaveData;
-    //                 setProofsState(DataState.Decrypted);
-    //                 setArweaveData(decryptedArweaveData);
-    //             } else if (proofsState === DataState.Decrypted) {
-    //                 setProofsState(DataState.Encrypted);
-    //                 setArweaveData(arweaveData);
-    //             }
-    //         } catch (e) {
-    //             toast.error('failed to Decrypt data');
-    //         }
-    //     }
-    // };
-
+    
     const handleRefresh = () => {
         toast.loading('Refreshing data', { duration: 2000 });
         setRefresh(!refresh);
