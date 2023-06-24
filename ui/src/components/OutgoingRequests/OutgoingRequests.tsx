@@ -14,6 +14,7 @@ interface Data {
     rsaPubkey: string;
     requestedSolPubkey: string;
     senderName: string;
+    receiverName: string;
     name: boolean;
     dob: boolean;
     contactNum: boolean;
@@ -58,6 +59,7 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                     const rsaPubkey = data.rsaPubkey;
                     const requestedSolPubkey = data.requestedSolPubkey;
                     const senderName = data.senderName;
+                    const receiverName = data.receiverName;
                     const name = data.name;
                     const dob = data.dob;
                     const aadharNum = data.aadharNum;
@@ -78,6 +80,7 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                             rsaPubkey,
                             requestedSolPubkey,
                             senderName,
+                            receiverName,
                             name,
                             dob,
                             aadharNum,
@@ -125,30 +128,40 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
 
         toast.loading('Refreshing...', { duration: 3000 });
     };
-    const cancelRequest = useCallback(
-        async (id: string) => {
-            try {
-                console.log('click');
-                const url = 'http://localhost:9000/requests/cancel';
-                await axios.post(url, { id: id });
+    const cancelRequest = (id: string) => {
+        try {
+            console.log('click');
+            const url = 'http://localhost:9000/requests/cancel';
+            axios.post(url, { id: id });
 
-                console.log('request denied');
-                setRefresh(!refresh);
-                toast.success('Request has been cancelled');
-            } catch (e) {
-                console.log(e);
-            }
-        },
-        [refresh]
-    );
+            console.log('request denied');
+            setRefresh(!refresh);
+            toast.success('Request has been cancelled');
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const deleteRequest = (id: string) => {
+        try {
+            console.log('click');
+            const url = 'http://localhost:9000/requests/delete';
+            axios.post(url, { id: id });
+            console.log('request deleted');
+            setRefresh(!refresh);
+            toast.success('Request has been deleted');
+        } catch (e) {
+            console.error(e);
+        }
+    };
     const RenderOutgoingRequests = useMemo(() => {
         return (
             <tbody>
                 {value.length > 0
                     ? tableFilterRes.map((item, index) => (
                           <tr style={{ width: '100vw' }} key={index}>
-                              <td>{item.senderName}</td>
-                              <td>{reduceString(item.solPubkey, 10)}</td>
+                              <td>{item.receiverName}</td>
+                              <td>{reduceString(item.requestedSolPubkey, 10)}</td>
                               <td>{item.description}</td>
                               <td>
                                   {/* <button
@@ -174,9 +187,8 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                           style={{ backgroundColor: 'lightskyblue', color: 'black' }}
                                           variant="success"
                                           id="dropdown-basic"
-                                    >
-                                         
-                                        <span onClick={()=>viewApprove(item.state, item._id)}>{item.state}</span>
+                                      >
+                                          <span onClick={() => viewApprove(item.state, item._id)}>{item.state}</span>
                                       </Dropdown.Toggle>
                                       {item.state === 'Requested' && (
                                           <Dropdown.Menu
@@ -210,8 +222,8 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                     : dataSource.map((item, index) => (
                           // (item.requestedSolPubkey == wallet.publicKey?.toString() && (
                           <tr style={{ width: '100vw' }} key={index}>
-                              <td>{item.senderName}</td>
-                              <td>{reduceString(item.solPubkey, 18)}</td>
+                              <td>{item.receiverName}</td>
+                              <td>{reduceString(item.requestedSolPubkey, 18)}</td>
                               <td>{item.description}</td>
                               <td style={{ display: 'flex', justifyContent: 'space-around' }}>
                                   {/* <button
@@ -238,7 +250,7 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                           variant="success"
                                           id="dropdown-basic"
                                       >
-                                        <span onClick={()=>viewApprove(item.state, item._id)}>{item.state}</span>
+                                          <span onClick={() => viewApprove(item.state, item._id)}>{item.state}</span>
                                       </Dropdown.Toggle>
                                       {item.state === 'Requested' && (
                                           <Dropdown.Menu
@@ -265,6 +277,31 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                               </Dropdown.Item>
                                           </Dropdown.Menu>
                                       )}
+                                      {item.state === 'Cancelled' && (
+                                          <Dropdown.Menu
+                                              style={{
+                                                  backgroundColor: 'lightskyblue',
+                                                  color: 'black',
+                                                  fontFamily: 'Roboto Mono,monospace',
+                                                  fontWeight: 'bold',
+                                              }}
+                                          >
+                                              <Dropdown.Item
+                                                  style={{
+                                                      backgroundColor: 'lightskyblue',
+                                                      color: 'black',
+                                                      fontFamily: 'Roboto Mono,monospace',
+                                                      fontWeight: 'bold',
+                                                  }}
+                                                  className="dropdown"
+                                                  onClick={() => {
+                                                      deleteRequest(item._id);
+                                                  }}
+                                              >
+                                                  Delete
+                                              </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                      )}
                                   </Dropdown>
                               </td>
                           </tr>
@@ -272,15 +309,16 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                       ))}
             </tbody>
         );
-    }, [cancelRequest, dataSource, refresh, tableFilterRes, value.length]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cancelRequest, dataSource, tableFilterRes, value.length]);
 
-    const viewApprove = (state: string, id:string) => {
+    const viewApprove = (state: string, id: string) => {
         if (state === 'Approved') {
-            setOpenModal(true)
-            setId(id)
-            console.log(openModal)
+            setOpenModal(true);
+            setId(id);
+            console.log(openModal);
         }
-    }
+    };
 
     return (
         <>
@@ -336,7 +374,7 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                 >
                                     <thead>
                                         <tr style={{ width: '100%' }}>
-                                            <td>Name</td>
+                                            <td>Sent TO</td>
                                             <td>Pub key</td>
                                             <td>Description</td>
                                             <td style={{ display: 'flex', justifyContent: 'space-around' }}>Action</td>
@@ -352,7 +390,6 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                     open={openModal}
                                     setOpen={setOpenModal}
                                     id={id}
-                                     
                                 ></OutgoingRequestModal>
                             )}
                         </>

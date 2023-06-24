@@ -18,13 +18,14 @@ interface Props {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     requestedPubkey: string;
+    receiverName: string;
 }
 
 export interface RSAKeyPair {
     pubKey: string;
     privateKey: string;
 }
-function SendRequestModal({ open, setOpen, requestedPubkey }: Props) {
+function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Props) {
     const wallet = useWallet();
     const [formData, setFormData] = useState({
         senderName: '',
@@ -68,6 +69,7 @@ function SendRequestModal({ open, setOpen, requestedPubkey }: Props) {
                 const pubkey_512 = keypair_512.pubKey;
                 await axios.post('http://localhost:9000/requests/send', {
                     senderName: formData.senderName,
+                    receiverName: receiverName,
                     userPubkey: wallet.publicKey?.toBase58(),
                     requestedSolPubkey: requestedPubkey,
                     rsaPubkey512: pubkey_512,

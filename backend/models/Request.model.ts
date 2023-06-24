@@ -18,6 +18,10 @@ const RequestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    receiverName: {
+      type: String,
+      required: true,
+    },
     requestedSolPubkey: {
       type: String,
       required: true,

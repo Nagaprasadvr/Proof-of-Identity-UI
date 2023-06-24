@@ -35,12 +35,14 @@ router.route("/send").post((req, res) => {
     const rsaPubkey512 = req.body.rsaPubkey512;
     const rsaPubkey1028 = req.body.rsaPubkey1028;
     const contactNum = req.body.requestData.contactNum;
+    const receiverName = req.body.receiverName;
     const newRequest = new Request_model_1.default({
         solPubkey: userPubkey,
         rsaPubkey512: rsaPubkey512,
         rsaPubkey1028: rsaPubkey1028,
         requestedSolPubkey: senderPubkey,
         senderName: senderName,
+        receiverName: receiverName,
         name: name,
         dob: dob,
         contactNum: contactNum,

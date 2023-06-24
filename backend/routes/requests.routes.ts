@@ -23,6 +23,7 @@ router.route("/send").post((req: Request, res: Response) => {
   const rsaPubkey512: string = req.body.rsaPubkey512;
   const rsaPubkey1028: string = req.body.rsaPubkey1028;
   const contactNum: boolean = req.body.requestData.contactNum;
+  const receiverName: string = req.body.receiverName;
 
   const newRequest = new RequestModel({
     solPubkey: userPubkey,
@@ -30,6 +31,7 @@ router.route("/send").post((req: Request, res: Response) => {
     rsaPubkey1028: rsaPubkey1028,
     requestedSolPubkey: senderPubkey,
     senderName: senderName,
+    receiverName: receiverName,
     name: name,
     dob: dob,
     contactNum: contactNum,
@@ -150,12 +152,11 @@ router.route("/deny").post((req: Request, res: Response) => {
 });
 
 router.route("/delete").post(async (req: Request, res: Response) => {
-   try {
+  try {
     const { id } = req.body;
     // Perform deletion logic here using the provided ID
-    await RequestModel.deleteOne({_id : id });
+    await RequestModel.deleteOne({ _id: id });
     console.log(`Deleting request with ID: ${id}`);
-    
   } catch (error) {
     console.error(error);
     res.sendStatus(500);

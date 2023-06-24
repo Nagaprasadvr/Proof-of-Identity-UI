@@ -134,32 +134,32 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
         toast.loading('Refreshing...', { duration: 3000 });
     };
 
+    const DenyRequest = (id: string) => {
+        try {
+            const url = 'http://localhost:9000/requests/deny';
+            axios.post(url, { id: id });
+
+            console.log('request denied');
+            setRefresh(!refresh);
+            toast.success('Request has been denied');
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const DeleteRequest = (id: string) => {
+        try {
+            const url = 'http://localhost:9000/requests/delete';
+            axios.post(url, { id: id });
+            console.log('The Request is Deleted');
+            setRefresh(!refresh);
+            toast.success('Cancelled Request is Deleted');
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     const RenderIncomingRequests = useMemo(() => {
-        const DenyRequest = async (id: string) => {
-            try {
-                const url = 'http://localhost:9000/requests/deny';
-                await axios.post(url, { id: id });
-
-                console.log('request denied');
-                setRefresh(!refresh);
-                toast.success('Request has been denied');
-            } catch (e) {
-                console.log(e);
-            }
-        };
-
-        const DeleteRequest = async (id: string) => {
-            try {
-                const url = 'http://localhost:9000/requests/delete';
-                await axios.post(url, { id: id });
-                console.log('The Request is Deleted');
-                setRefresh(!refresh);
-                toast.success('Cancelled Request is Deleted');
-            } catch (e) {
-                console.error(e);
-            }
-        };
-
         return (
             <tbody>
                 {value.length > 0
@@ -250,8 +250,8 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                                   fontWeight: '600',
                                               }}
                                               className="balance-button w3-btn w3-hover-white App "
-                                              onClick={async () => {
-                                                  await DenyRequest(item._id);
+                                              onClick={() => {
+                                                  DenyRequest(item._id);
                                               }}
                                           >
                                               Deny
@@ -329,7 +329,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                 >
                                     <thead>
                                         <tr style={{ width: '100%' }}>
-                                            <td>Name</td>
+                                            <td>From</td>
                                             <td>Pub key</td>
                                             <td>Description</td>
                                             <td style={{ display: 'flex', justifyContent: 'space-around' }}>Action</td>

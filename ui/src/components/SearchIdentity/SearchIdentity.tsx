@@ -35,6 +35,7 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
     const [tableFilter, setTableFilter] = useState<Data[]>([]);
     const [open, setOpen] = useState(false);
     const [pubkey, setPubkey] = useState('');
+    const [receiverName, setReceiverName] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -57,9 +58,10 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
         fetchData();
     }, []);
 
-    const modalOpener = (props: string) => {
+    const modalOpener = (pubkey: string, name: string) => {
         setOpen(true);
-        setPubkey(props);
+        setPubkey(pubkey);
+        setReceiverName(name);
     };
 
     const filterData = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +113,7 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
         if (wallet?.publicKey?.toBase58() === item.pubkey) {
             toast.error('You cannot request to share your own Identity!');
         } else {
-            modalOpener(item.pubkey);
+            modalOpener(item.pubkey, item.name);
         }
     };
     function AllUsersData() {
@@ -217,7 +219,12 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
                         </>
                     ) : (
                         <Box>
-                            <RequestModal open={open} setOpen={setOpen} requestedPubkey={pubkey} />
+                            <RequestModal
+                                open={open}
+                                setOpen={setOpen}
+                                requestedPubkey={pubkey}
+                                receiverName={receiverName}
+                            />
                         </Box>
                     )
                 ) : (
