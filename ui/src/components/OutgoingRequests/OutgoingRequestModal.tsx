@@ -91,6 +91,7 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
             residenceAddress: (data as Data).residentAddress,
             passportId: (data as Data).passportNum,
         };
+        console.log("user Data:", userData)
         const arweaveData: ArweaveData = {
             panUploadLink: (data as Data).panUploadLink,
             aadharUploadLink: (data as Data).aadharUploadLink,
@@ -114,7 +115,7 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
                 });
                 console.log('res:', response2.data);
                 setDataState(DataState.Decrypted);
-
+                console.log("dec:",response1.data)
                 setDigitalIdentityData(response1.data.decryptedData);
                 setDigitalProofs(response2.data.decryptedData);
                 if (response1.data.decryptedData && response2.data.decryptedData) {
