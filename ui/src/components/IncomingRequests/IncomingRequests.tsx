@@ -150,15 +150,15 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
 
         const DeleteRequest = async (id: string) => {
             try {
-                const url = "http://localhost:9000/requests/delete";
+                const url = 'http://localhost:9000/requests/delete';
                 await axios.post(url, { id: id });
-                console.log("The Request is Deleted");
+                console.log('The Request is Deleted');
                 setRefresh(!refresh);
                 toast.success('Cancelled Request is Deleted');
             } catch (e) {
                 console.error(e);
             }
-        }
+        };
 
         return (
             <tbody>
@@ -257,8 +257,15 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                               Deny
                                           </button>
                                       </>
+                                  ) : item.state === 'Denied' ? (
+                                      <button
+                                          style={{ backgroundColor: 'lightskyblue' }}
+                                          onClick={() => DeleteRequest(item._id)}
+                                      >
+                                          {item.state}
+                                      </button>
                                   ) : (
-                                        (item.state === 'Denied' ? (<button style={{backgroundColor: 'lightskyblue'}} onClick={()=> DeleteRequest(item._id)}>{item.state}</button>) : <p>{item.state}</p>)
+                                      <p>{item.state}</p>
                                   )}
                               </td>
                           </tr>
@@ -343,6 +350,8 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                     rsaPubkey512={rsaPubkey512}
                                     rsaPubkey1028={rsaPubkey1028}
                                     requestedData={requestedData as Data}
+                                    setRefresh={setRefresh}
+                                    refresh={refresh}
                                 ></IncomingRequestModal>
                             )}
                         </>

@@ -37,12 +37,15 @@ interface Data {
     residentAddress: string;
 }
 
+type CompleteData = ArweaveData & UserData;
+
 function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
     const [refresh, setRefresh] = useState(false);
     const [data, setData] = useState<Data | null>(null);
     const [dataState, setDataState] = useState<DataState>(DataState.Encrypted);
     const [digitalIdentityData, setDigitalIdentityData] = useState<UserData | null>(null);
     const [digitalProofs, setDigitalProofs] = useState<ArweaveData | null>(null);
+    const [completeData, setCompleteData] = useState<CompleteData | null>(null);
     console.log(id);
 
     useEffect(() => {
@@ -76,7 +79,7 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
         fetch();
     }, [id, refresh]);
 
-    const handleDecryptEncryptData = async () => {
+    const handleDecryptEncryptData = useCallback(async () => {
         toast.loading(dataState === DataState.Encrypted ? 'Decrypting..' : 'Encrypting...', { duration: 800 });
 
         const userData: UserData = {
@@ -105,15 +108,18 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
                 });
                 console.log('res:', response1.data);
 
-                // const response2 = await axios.post('http://localhost:9000/cryptography/decryptData', {
-                //     encData: arweaveData as ArweaveData,
-                //     ticker: 'arweaveData',
-                // });
-
+                const response2 = await axios.post('http://localhost:9000/cryptography/decryptData', {
+                    encData: arweaveData as ArweaveData,
+                    ticker: 'arweaveData',
+                });
+                console.log('res:', response2.data);
                 setDataState(DataState.Decrypted);
 
                 setDigitalIdentityData(response1.data.decryptedData);
-                // setDigitalProofs(response2.data.decryptedData);
+                setDigitalProofs(response2.data.decryptedData);
+                if (response1.data.decryptedData && response2.data.decryptedData) {
+                    setCompleteData({ ...response1.data.decryptedData, ...response2.data.decryptedData });
+                }
             } catch (e) {
                 toast.error('failed to Decrypt data');
             }
@@ -122,7 +128,7 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
             setDigitalProofs(arweaveData);
             setDataState(DataState.Encrypted);
         }
-    };
+    }, [data, dataState]);
 
     // const handleDecryptEncryptProofs = async () => {
     //     toast.loading(proofsState === DataState.Encrypted ? 'Decrypting..' : 'Encrypting...', { duration: 800 });
@@ -157,73 +163,113 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
         setRefresh(!refresh);
     };
 
-    return (
-        <Modal
-            open={open}
-            onClose={() => setOpen(false)}
-            style={{ width: '100vw', height: '100vh', background: 'black' }}
-            sx={{ overflow: 'auto' }}
-        >
-            <Box>
-                <Box style={{ backgroundColor: 'black' }}>
-                    <button
-                        style={{ backgroundColor: 'transparent', borderColor: 'transparent', color: 'lightskyblue' }}
-                        onClick={() => {
-                            setOpen(false);
+    const renderModal = useMemo(() => {
+        console.log('DataState', dataState === DataState.Encrypted ? 'Encrypted' : 'Decrypted');
+        console.log('data', data);
+        return (
+            <Modal
+                open={open}
+                onClose={() => setOpen(false)}
+                style={{ width: '100vw', height: '100vh', background: 'black' }}
+                sx={{ overflow: 'auto' }}
+            >
+                <Box>
+                    <Box style={{ backgroundColor: 'black' }}>
+                        <button
+                            style={{
+                                backgroundColor: 'transparent',
+                                borderColor: 'transparent',
+                                color: 'lightskyblue',
+                            }}
+                            onClick={() => {
+                                setOpen(false);
+                            }}
+                        >
+                            <CancelIcon style={{ color: 'lightskyblue', fontSize: '50px' }}></CancelIcon>
+                        </button>
+                    </Box>
+                    <Box
+                        style={{
+                            width: 'auto',
+                            marginBottom: '2vh',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
                         }}
+                        sx={{ gap: '30px' }}
                     >
-                        <CancelIcon style={{ color: 'lightskyblue', fontSize: '50px' }}></CancelIcon>
-                    </button>
+                        <button
+                            className="centered-button balance-button w3-btn w3-hover-white App"
+                            style={{ width: 'auto' }}
+                            type="submit"
+                            onClick={handleRefresh}
+                        >
+                            Refresh
+                        </button>
+                        <button
+                            className="centered-button balance-button w3-btn w3-hover-white App"
+                            style={{ width: 'auto' }}
+                            type="submit"
+                            onClick={handleDecryptEncryptData}
+                        >
+                            {dataState === DataState.Encrypted ? 'Decrypt Data' : 'Encrypt Data'}
+                        </button>
+                    </Box>
+
+                    <Table
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            marginTop: '10vh',
+                        }}
+                        hover
+                    >
+                        <tbody>
+                            {dataState === DataState.Encrypted
+                                ? data &&
+                                  Object.keys(data as Data).map((key) => (
+                                      <tr key={key} style={{ color: 'black', background: '#afaae9' }}>
+                                          <td style={{ color: 'black', width: '30vw', fontWeight: 'bold' }}>{key}</td>
+                                          <td
+                                              style={{
+                                                  color: 'black',
+                                                  paddingLeft: '2vw',
+                                                  width: '30vw',
+                                                  fontWeight: 'bold',
+                                              }}
+                                          >
+                                              {reduceString(data[key], 10)}
+                                          </td>
+                                      </tr>
+                                  ))
+                                : completeData &&
+                                  Object.keys(completeData as CompleteData).map((key) => (
+                                      <tr key={key} style={{ color: 'black', background: '#afaae9' }}>
+                                          <td style={{ color: 'black', width: '30vw', fontWeight: 'bold' }}>{key}</td>
+                                          <td
+                                              style={{
+                                                  color: 'black',
+                                                  paddingLeft: '2vw',
+                                                  width: '30vw',
+                                                  fontWeight: 'bold',
+                                              }}
+                                          >
+                                              {key.includes('Link') && completeData[key] !== 'noaccess'
+                                                  ? `https://arweave.net/${completeData[key]}`
+                                                  : completeData[key]}
+                                          </td>
+                                      </tr>
+                                  ))}
+                        </tbody>
+                    </Table>
                 </Box>
-                <Box
-                    style={{
-                        width: 'auto',
-                        marginBottom: '2vh',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                    }}
-                    sx={{ gap: '30px' }}
-                >
-                    <button
-                        className="centered-button balance-button w3-btn w3-hover-white App"
-                        style={{ width: 'auto' }}
-                        type="submit"
-                        onClick={handleRefresh}
-                    >
-                        Refresh
-                    </button>
-                    <button
-                        className="centered-button balance-button w3-btn w3-hover-white App"
-                        style={{ width: 'auto' }}
-                        type="submit"
-                        onClick={handleDecryptEncryptData}
-                    >
-                        {dataState === DataState.Encrypted ? 'Decrypt Data' : 'Encrypt Data'}
-                    </button>
-                </Box>
-                <table>
-                    <tbody>
-                        {DataState.Encrypted
-                            ? data &&
-                              Object.keys(data as Data).map((key) => (
-                                  <tr key={key}>
-                                      <td>{key}</td>
-                                      <td>{data[key]}</td>
-                                  </tr>
-                              ))
-                            : digitalIdentityData &&
-                              Object.keys(digitalIdentityData as UserData).map((key) => (
-                                  <tr key={key}>
-                                      <td>{key}</td>
-                                      <td>{digitalIdentityData[key]}</td>
-                                  </tr>
-                              ))}
-                    </tbody>
-                </table>
-            </Box>
-        </Modal>
-    );
+            </Modal>
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data, dataState, digitalIdentityData, open, refresh, handleDecryptEncryptData, setOpen]);
+    return <>{renderModal}</>;
 }
 
 export default OutgoingRequestModal;

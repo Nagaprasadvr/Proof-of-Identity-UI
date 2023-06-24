@@ -197,24 +197,22 @@ router.route("/encryptDataWithPubkey").post((req: Request, res: Response) => {
     return res.json({ encryptedData: encryptedUserData });
   } else if (ticker === "arweaveData") {
     const plainData = req.body.plainData as ArweaveData;
-    const keypairpath = `${homeDir}/RSA/keypair_1028.json`;
-    const keypair = fs.readFileSync(keypairpath);
-    const keypairObj: KeyPair = JSON.parse(keypair.toString());
+    const pubKey = req.body.pubkey as string;
     const encryptedpicLink = encryptData(
       (plainData as ArweaveData).picUploadLink,
-      keypairObj.pubKey
+      pubKey
     );
     const encryptedaadharLink = encryptData(
       (plainData as ArweaveData).aadharUploadLink,
-      keypairObj.pubKey
+      pubKey
     );
     const encryptedpanLink = encryptData(
       (plainData as ArweaveData).panUploadLink,
-      keypairObj.pubKey
+      pubKey
     );
     const encryptedpassportLink = encryptData(
       (plainData as ArweaveData).passportUploadLink,
-      keypairObj.pubKey
+      pubKey
     );
 
     const encryptedArweaveData: ArweaveData = {

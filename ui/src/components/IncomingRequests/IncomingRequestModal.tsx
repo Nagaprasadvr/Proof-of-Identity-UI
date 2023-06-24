@@ -28,6 +28,8 @@ interface Props {
     rsaPubkey512: string;
     rsaPubkey1028: string;
     requestedData: Data;
+    setRefresh: Dispatch<SetStateAction<boolean>>;
+    refresh: boolean;
 }
 
 // interface RequestedData {
@@ -48,7 +50,18 @@ interface Props {
 //     address: string;
 // }
 
-function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaPubkey512, requestedData }: Props) {
+function ResponseModal({
+    open,
+    setOpen,
+    id,
+    name,
+    solpubkey,
+    rsaPubkey1028,
+    rsaPubkey512,
+    requestedData,
+    setRefresh,
+    refresh,
+}: Props) {
     const wallet = useWallet();
     interface reqprops {
         data: Record<string, any> | undefined;
@@ -114,7 +127,6 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
                 const response = await axios.post('http://localhost:9000/requests/get', { id: id });
                 // console.log(response.data)
                 setData(response.data.data);
-                console.log(data);
             } catch (err) {
                 console.error(err);
             }
@@ -221,6 +233,7 @@ function ResponseModal({ open, setOpen, id, name, solpubkey, rsaPubkey1028, rsaP
                     if (res.data.status) {
                         toast.dismiss(toastId);
                         toast.success('Request approved');
+                        setRefresh(!refresh);
                     } else {
                         toast.dismiss(toastId);
                         toast.error('Error in approving request');
