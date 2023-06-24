@@ -45,6 +45,7 @@ export const InputForm = () => {
 
     const handleClose = () => setOpen(false);
     const [isExists, setIsExist] = useState<boolean>(false);
+
     const rpcCon = useMemo(() => {
         return new solana.Connection(solana.clusterApiUrl('devnet'));
     }, []);
@@ -87,6 +88,96 @@ export const InputForm = () => {
 
         return userData;
     };
+
+
+    const validateForm = (data: any) => {
+        const errors: any = {};
+        console.log("formData: ", data.answers)
+
+        // Validate phone number
+        const phonePattern = /^\d{10}$/;
+        if (!phonePattern.test(data.answers.phnum.value)) {
+            console.log('Please enter a valid 10-digit phone number');
+            errors.phnum = 'Invalid Phone number'
+            // You can display an error message or handle the validation error as required
+        }
+
+        // Validate Aadhar/SSN number
+        // Assuming Aadhar/SSN number is a 12-digit number
+        const aadharPattern = /^\d{12}$/;
+        if (!aadharPattern.test(data.answers.id_number.value)) {
+            console.log('Please enter a valid 12-digit Aadhar/SSN number');
+            errors.aadhar = 'invalid Aadhar number'
+            // You can display an error message or handle the validation error as required
+        }
+
+
+        // Validate PAN number
+        const panPattern = /^[A-Z]{5}\d{4}[A-Z]{1}$/;
+        if (!panPattern.test(data.answers.pan.value)) {
+            console.log('Please enter a valid PAN number');
+            errors.pan = 'Invalid Pan number'
+            // You can display an error message or handle the validation error as required
+        }
+
+        const passportPattern = /^[A-Za-z0-9]{6,10}$/;
+        if (!passportPattern.test(data.answers.passport_id.value)) {
+            console.log('Please enter a valid passport number');
+            errors.passport = 'Invalid Passport'
+            // You can display an error message or handle the validation error as required
+        }
+
+        if (!data.answers.address.value) {
+            console.log('Please enter your address');
+            errors.address = 'you missed your address'
+            // You can display an error message or handle the validation error as required
+        }
+
+        var enteredDate = new Date(data.answers.DOB.value);
+        console.log(enteredDate)
+        var currentDate = new Date();
+
+        if (enteredDate >= currentDate) {
+            errors.dob = 'invalid DOB'
+            console.log('Your from future')
+        }
+
+        // Extract year, month, and day from the entered date
+        var enteredYear = enteredDate.getFullYear();
+        var enteredMonth = enteredDate.getMonth() + 1; // Months are zero-based
+        var enteredDay = enteredDate.getDate();
+
+        if (
+            isNaN(enteredYear) ||
+            isNaN(enteredMonth) ||
+            isNaN(enteredDay) ||
+            enteredYear < 1900 || // Assuming a minimum DOB year of 1900
+            enteredYear > currentDate.getFullYear() || // Assuming a maximum DOB year as the current year
+            enteredMonth < 1 || enteredMonth > 12 || // Month should be between 1 and 12
+            enteredDay < 1 || enteredDay > 31 // Day should be between 1 and 31
+        ) {
+            errors.dob = 'invalid DOB'
+
+        }
+        
+
+        
+        return errors;
+    };
+
+    // const onSubmit = async (data: any, { completeForm, setIsSubmitting }: any) => {
+    //     // Validate the form data
+    //     const errors = validateForm(data);
+
+    //     if (Object.keys(errors).length > 0) {
+    //         // Display the validation errors
+    //         console.log('Validation errors:', errors);
+    //         return;
+    //     }
+
+    //     // Proceed with form submission if validation passes
+    //     // ...
+    // };
 
     const createIdentity = async (toastId: string, data: UserData) => {
         toast.dismiss(toastId);
@@ -265,30 +356,49 @@ export const InputForm = () => {
                                 }}
                                 onSubmit={async (data, { completeForm, setIsSubmitting }) => {
                                     // setIsSubmitting(false);
-                                    completeForm();
-                                    setOpen(false);
-                                    const userData = setUserData(data);
-                                    await axios.post('http://localhost:9000/digitalIdentities/add', {
-                                        userPubkey: solWallet?.publicKey?.toBase58(),
-                                        name: userData.name,
-                                    });
-                                    const response = await axios.post(
-                                        'http://localhost:9000/cryptography/encryptData',
-                                        { plainData: userData, ticker: 'solData' }
-                                    );
-
-                                    const encUserData = response.data.encryptedData as UserData;
-
-                                    const id = toast.loading('loading');
-                                    if (encUserData) {
-                                        setTimeout(async () => {
-                                            await createIdentity(id, encUserData);
-                                        }, 3000);
+                                    const error = validateForm(data);
+                                    console.log("errors", error)
+                                     
+                                    const objLength = Object.keys(error).length;
+                                    if (objLength > 0) {
+                                        Object.entries(error).map(([key, value]) => {
+                                                 toast.error((value as string).toString())
+                                        });   
+                                        handleClose()
                                     } else {
-                                        toast.dismiss(id);
-                                        toast.error('Failed to create Identity');
+                                        
+                                        completeForm();
+                                        setOpen(false);
+
+                                        const userData = setUserData(data);
+                                        await axios.post('http://localhost:9000/digitalIdentities/add', {
+                                            userPubkey: solWallet?.publicKey?.toBase58(),
+                                            name: userData.name,
+                                        });
+                                        const response = await axios.post(
+                                            'http://localhost:9000/cryptography/encryptData',
+                                            { plainData: userData, ticker: 'solData' }
+                                        );
+
+                                        const encUserData = response.data.encryptedData as UserData;
+
+                                        const id = toast.loading('loading');
+                                        if (encUserData) {
+                                            setTimeout(async () => {
+                                                await createIdentity(id, encUserData);
+                                            }, 3000);
+                                        } else {
+                                            toast.dismiss(id);
+                                            toast.error('Failed to create Identity');
+                                        }
+
                                     }
-                                }}
+                                   
+                                }
+                                    }
+                                   
+
+                                        
                                 applyLogic={true}
                                 isPreview={false}
                             />
