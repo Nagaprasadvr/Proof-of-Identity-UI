@@ -39,7 +39,7 @@ export interface ArweaveData {
     passportUploadLink: string;
     picUploadLink: string;
 }
-
+const bgcolor = 'lightskyblue';
 const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda }: ViewIdentityModalProps) => {
     const [fileArray, setFileArray] = useState<File[]>([]);
     const [pic, setPic] = useState<File | null>(null);
@@ -384,15 +384,35 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                             hover={true}
                         >
                             <tbody>
-                                <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>digitalProofsPdaAddress</td>
-                                    <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                                <tr style={{ color: 'black', background: '#728FCE' }}>
+                                    <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                        digitalProofsPdaAddress
+                                    </td>
+                                    <td
+                                        style={{
+                                            color: 'black',
+                                            paddingLeft: '2vw',
+                                            width: '20vw',
+                                            background: `${bgcolor}`,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {reduceString(digitalProofsPda as string, 5)}
                                     </td>
                                 </tr>
-                                <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>arweave-panUploadLink</td>
-                                    <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                                <tr style={{ color: 'black', background: `${bgcolor}` }}>
+                                    <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                        arweave-panLink
+                                    </td>
+                                    <td
+                                        style={{
+                                            color: 'black',
+                                            paddingLeft: '2vw',
+                                            width: '20vw',
+                                            background: `${bgcolor}`,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {proofsState === DataState.Encrypted ? (
                                             reduceString(arweaveData?.panUploadLink as string, 5)
                                         ) : (
@@ -405,9 +425,19 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                         )}
                                     </td>
                                 </tr>
-                                <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>arweave-aadharLink</td>
-                                    <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                                <tr style={{ color: 'black', background: `${bgcolor}` }}>
+                                    <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                        arweave-aadharLink
+                                    </td>
+                                    <td
+                                        style={{
+                                            color: 'black',
+                                            paddingLeft: '2vw',
+                                            width: '20vw',
+                                            background: `${bgcolor}`,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {proofsState === DataState.Encrypted ? (
                                             reduceString(arweaveData?.aadharUploadLink as string, 5)
                                         ) : (
@@ -420,9 +450,19 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                         )}
                                     </td>
                                 </tr>
-                                <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>arweave-passportUploadLink</td>
-                                    <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                                <tr style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                    <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                        arweave-passportUploadLink
+                                    </td>
+                                    <td
+                                        style={{
+                                            color: 'black',
+                                            paddingLeft: '2vw',
+                                            width: '20vw',
+                                            background: `${bgcolor}`,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {proofsState === DataState.Encrypted ? (
                                             reduceString(arweaveData?.passportUploadLink as string, 5)
                                         ) : (
@@ -435,9 +475,19 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                         )}
                                     </td>
                                 </tr>
-                                <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>arweave-picUploadLink</td>
-                                    <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                                <tr style={{ color: 'black', background: `${bgcolor}` }}>
+                                    <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                        arweave-picUploadLink
+                                    </td>
+                                    <td
+                                        style={{
+                                            color: 'black',
+                                            paddingLeft: '2vw',
+                                            width: '20vw',
+                                            background: `${bgcolor}`,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {proofsState === DataState.Encrypted ? (
                                             reduceString(arweaveData?.picUploadLink as string, 5)
                                         ) : (
@@ -494,9 +544,18 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                     >
                         <tbody>
                             {!data.panAttached && (
-                                <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>PAN uploaded</td>
-                                    <td style={{ color: 'black', paddingLeft: '2vw' }}>
+                                <tr style={{ color: 'black', background: '#728FCE' }}>
+                                    <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                        PAN uploaded
+                                    </td>
+                                    <td
+                                        style={{
+                                            color: 'black',
+                                            paddingLeft: '2vw',
+                                            background: `${bgcolor}`,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {!data.panAttached && (
                                             <input type="file" onChange={handleFile3Change} required />
                                         )}
@@ -504,9 +563,18 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 </tr>
                             )}
                             {!data.aadharAttached && (
-                                <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>Aadhar Uploaded</td>
-                                    <td style={{ color: 'black', paddingLeft: '2vw' }}>
+                                <tr style={{ color: 'black', background: '#728FCE' }}>
+                                    <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                        Aadhar Uploaded
+                                    </td>
+                                    <td
+                                        style={{
+                                            color: 'black',
+                                            paddingLeft: '2vw',
+                                            background: `${bgcolor}`,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {!data.aadharAttached && (
                                             <input type="file" onChange={handleFile4Change} required />
                                         )}
@@ -515,9 +583,18 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                             )}
 
                             {!data.passportAttached && (
-                                <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>Passport Uploaded</td>
-                                    <td style={{ color: 'black', paddingLeft: '2vw' }}>
+                                <tr style={{ color: 'black', background: '#728FCE' }}>
+                                    <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                        Passport Uploaded
+                                    </td>
+                                    <td
+                                        style={{
+                                            color: 'black',
+                                            paddingLeft: '2vw',
+                                            background: `${bgcolor}`,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {!data.passportAttached && (
                                             <input type="file" onChange={handleFile2Change} required />
                                         )}
@@ -525,9 +602,18 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 </tr>
                             )}
                             {!data.picAttached && (
-                                <tr style={{ color: 'black', background: '#63e692' }}>
-                                    <td style={{ color: 'black' }}>Pic Uploaded</td>
-                                    <td style={{ color: 'black', paddingLeft: '2vw' }}>
+                                <tr style={{ color: 'black', background: '#728FCE' }}>
+                                    <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                        Pic Uploaded
+                                    </td>
+                                    <td
+                                        style={{
+                                            color: 'black',
+                                            paddingLeft: '2vw',
+                                            background: `${bgcolor}`,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {!data.picAttached && (
                                             <input type="file" onChange={handleFile1Change} required />
                                         )}
@@ -629,54 +715,116 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                     hover={true}
                 >
                     <tbody>
-                        <tr style={{ color: 'black', background: '#afaae9' }}>
-                            <td style={{ color: 'black' }}>Name</td>
-                            <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                        <tr style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                            <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>Name</td>
+                            <td
+                                style={{
+                                    color: 'black',
+                                    paddingLeft: '2vw',
+                                    width: '20vw',
+                                    background: `${bgcolor}`,
+                                    fontWeight: 'bold',
+                                }}
+                            >
                                 {dataState === DataState.Encrypted
                                     ? reduceString(digIdentityData.name, 5)
                                     : digIdentityData.name}
                             </td>
                         </tr>
 
-                        <tr style={{ color: 'black', background: '#afaae9' }}>
-                            <td style={{ color: 'black' }}>Pubkey</td>
-                            <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                        <tr style={{ color: 'black', background: '#728FCE' }}>
+                            <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>Pubkey</td>
+                            <td
+                                style={{
+                                    color: 'black',
+                                    paddingLeft: '2vw',
+                                    fontWeight: 'bold',
+                                    width: '20vw',
+                                    background: `${bgcolor}`,
+                                }}
+                            >
                                 {reduceString(pubkey, 5)}
                             </td>
                         </tr>
-                        <tr style={{ color: 'black', background: '#afaae9' }}>
-                            <td style={{ color: 'black' }}>DIgitalIdentityAddress</td>
-                            <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                        <tr style={{ color: 'black', background: '#728FCE' }}>
+                            <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                DIgitalIdentityAddress
+                            </td>
+                            <td
+                                style={{
+                                    color: 'black',
+                                    paddingLeft: '2vw',
+                                    fontWeight: 'bold',
+                                    width: '20vw',
+                                    background: `${bgcolor}`,
+                                }}
+                            >
                                 {reduceString(digitalIdentityPda, 5)}
                             </td>
                         </tr>
-                        <tr style={{ color: 'black', background: '#afaae9' }}>
-                            <td style={{ color: 'black' }}>DOB</td>
-                            <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                        <tr style={{ color: 'black', background: '#728FCE' }}>
+                            <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>DOB</td>
+                            <td
+                                style={{
+                                    color: 'black',
+                                    paddingLeft: '2vw',
+                                    fontWeight: 'bold',
+                                    width: '20vw',
+                                    background: `${bgcolor}`,
+                                }}
+                            >
                                 {dataState === DataState.Encrypted
                                     ? reduceString(digIdentityData.dob, 5)
                                     : digIdentityData.dob}
                             </td>
                         </tr>
-                        <tr style={{ color: 'black', background: '#afaae9' }}>
-                            <td style={{ color: 'black' }}>AadharNumber</td>
-                            <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                        <tr style={{ color: 'black', background: '#728FCE' }}>
+                            <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                AadharNumber
+                            </td>
+                            <td
+                                style={{
+                                    color: 'black',
+                                    paddingLeft: '2vw',
+                                    fontWeight: 'bold',
+                                    width: '20vw',
+                                    background: `${bgcolor}`,
+                                }}
+                            >
                                 {dataState === DataState.Encrypted
                                     ? reduceString(digIdentityData.aadharNumber, 5)
                                     : digIdentityData.aadharNumber}
                             </td>
                         </tr>
-                        <tr style={{ color: 'black', background: '#afaae9' }}>
-                            <td style={{ color: 'black' }}>PanNumber</td>
-                            <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                        <tr style={{ color: 'black', background: '#728FCE' }}>
+                            <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>PanNumber</td>
+                            <td
+                                style={{
+                                    color: 'black',
+                                    paddingLeft: '2vw',
+                                    width: '20vw',
+                                    fontWeight: 'bold',
+                                    background: `${bgcolor}`,
+                                }}
+                            >
                                 {dataState === DataState.Encrypted
                                     ? reduceString(digIdentityData.panNumber.toString(), 5)
                                     : digIdentityData.panNumber}
                             </td>
                         </tr>
-                        <tr style={{ color: 'black', background: '#afaae9' }}>
-                            <td style={{ color: 'black' }}>PassportNumber</td>
-                            <td style={{ color: 'black', paddingLeft: '2vw', width: '20vw' }}>
+                        <tr style={{ color: 'black', background: '#728FCE' }}>
+                            <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
+                                PassportNumber
+                            </td>
+                            <td
+                                style={{
+                                    color: 'black',
+                                    paddingLeft: '2vw',
+                                    width: '20vw',
+                                    fontWeight: 'bold',
+                                    background: `${bgcolor}`,
+                                }}
+                            >
                                 {dataState === DataState.Encrypted
                                     ? reduceString(digIdentityData.passportId.toString(), 5)
                                     : digIdentityData.passportId}

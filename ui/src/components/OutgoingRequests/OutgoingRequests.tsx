@@ -155,15 +155,18 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
         }
     };
     const RenderOutgoingRequests = useMemo(() => {
+        const bgColor = 'lightskyblue';
         return (
             <tbody>
                 {value.length > 0
                     ? tableFilterRes.map((item, index) => (
                           <tr style={{ width: '100vw' }} key={index}>
-                              <td>{item.receiverName}</td>
-                              <td>{reduceString(item.requestedSolPubkey, 10)}</td>
-                              <td>{item.description}</td>
-                              <td>
+                              <td style={{ color: 'black', background: `${bgColor}` }}>{item.receiverName}</td>
+                              <td style={{ color: 'black', background: `${bgColor}` }}>
+                                  {reduceString(item.requestedSolPubkey, 10)}
+                              </td>
+                              <td style={{ color: 'black', background: `${bgColor}` }}>{item.description}</td>
+                              <td style={{ color: 'black', background: 'lightskyblue' }}>
                                   {/* <button
                                     style={{
                                         width: 'auto',
@@ -184,63 +187,6 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                 </button> */}
                                   <Dropdown>
                                       <Dropdown.Toggle
-                                          style={{ backgroundColor: 'lightskyblue', color: 'black' }}
-                                          variant="success"
-                                          id="dropdown-basic"
-                                      >
-                                          <span onClick={() => viewApprove(item.state, item._id)}>{item.state}</span>
-                                      </Dropdown.Toggle>
-                                      {item.state === 'Requested' && (
-                                          <Dropdown.Menu
-                                              style={{
-                                                  backgroundColor: 'lightskyblue',
-                                                  color: 'black',
-                                                  fontFamily: 'Roboto Mono,monospace',
-                                                  fontWeight: 'bold',
-                                              }}
-                                          >
-                                              <Dropdown.Item
-                                                  style={{
-                                                      backgroundColor: 'lightskyblue',
-                                                      color: 'black',
-                                                      fontFamily: 'Roboto Mono,monospace',
-                                                      fontWeight: 'bold',
-                                                  }}
-                                                  className="dropdown"
-                                                  onClick={() => {
-                                                      cancelRequest(item._id);
-                                                  }}
-                                              >
-                                                  Cancel
-                                              </Dropdown.Item>
-                                          </Dropdown.Menu>
-                                      )}
-                                  </Dropdown>
-                              </td>
-                          </tr>
-                      ))
-                    : dataSource.map((item, index) => (
-                          // (item.requestedSolPubkey == wallet.publicKey?.toString() && (
-                          <tr style={{ width: '100vw' }} key={index}>
-                              <td>{item.receiverName}</td>
-                              <td>{reduceString(item.requestedSolPubkey, 18)}</td>
-                              <td>{item.description}</td>
-                              <td style={{ display: 'flex', justifyContent: 'space-around' }}>
-                                  {/* <button
-                                    style={{ width: 'auto', fontWeight: '600' }}
-                                    className="balance-button w3-btn w3-hover-white App "
-                                    onClick={() => {
-                                        setRefresh(!refresh);
-                                        setOpen(true);
-                                        setId(item._id);
-                                        setName(item.senderName);
-                                        setSolPub(item.solPubkey)
-                                    }}
-                                >
-                                    Accept
-                                </button> */}
-                                  <Dropdown>
-                                      <Dropdown.Toggle
                                           style={{
                                               backgroundColor: 'lightskyblue',
                                               color: 'black',
@@ -250,7 +196,7 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                           variant="success"
                                           id="dropdown-basic"
                                       >
-                                          <span onClick={() => viewApprove(item.state, item._id)}>{item.state}</span>
+                                          {item.state}
                                       </Dropdown.Toggle>
                                       {item.state === 'Requested' && (
                                           <Dropdown.Menu
@@ -302,8 +248,154 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                               </Dropdown.Item>
                                           </Dropdown.Menu>
                                       )}
+                                      {item.state === 'Approved' && (
+                                          <Dropdown.Menu
+                                              style={{
+                                                  backgroundColor: 'lightskyblue',
+                                                  color: 'black',
+                                                  fontFamily: 'Roboto Mono,monospace',
+                                                  fontWeight: 'bold',
+                                              }}
+                                          >
+                                              <Dropdown.Item
+                                                  style={{
+                                                      backgroundColor: 'lightskyblue',
+                                                      color: 'black',
+                                                      fontFamily: 'Roboto Mono,monospace',
+                                                      fontWeight: 'bold',
+                                                  }}
+                                                  className="dropdown"
+                                                  onClick={() => {
+                                                      viewApprove(item.state, item._id);
+                                                  }}
+                                              >
+                                                  View
+                                              </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                      )}
                                   </Dropdown>
                               </td>
+                          </tr>
+                      ))
+                    : dataSource.map((item, index) => (
+                          // (item.requestedSolPubkey == wallet.publicKey?.toString() && (
+                          <tr style={{ width: '100vw' }} key={index}>
+                              <td style={{ color: 'black', background: `${bgColor}` }}>{item.receiverName}</td>
+                              <td style={{ color: 'black', background: `${bgColor}` }}>
+                                  {reduceString(item.requestedSolPubkey, 10)}
+                              </td>
+                              <td style={{ color: 'black', background: `${bgColor}` }}>{item.description}</td>
+                              {/* <td
+                                  style={{
+                                      color: 'black',
+                                      background: `${bgColor}`,
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                  }}
+                              > */}
+                              {/* <button
+                                    style={{ width: 'auto', fontWeight: '600' }}
+                                    className="balance-button w3-btn w3-hover-white App "
+                                    onClick={() => {
+                                        setRefresh(!refresh);
+                                        setOpen(true);
+                                        setId(item._id);
+                                        setName(item.senderName);
+                                        setSolPub(item.solPubkey)
+                                    }}
+                                >
+                                    Accept
+                                </button> */}
+                              <Dropdown>
+                                  <Dropdown.Toggle
+                                      style={{
+                                          backgroundColor: 'lightskyblue',
+                                          color: 'black',
+                                          fontFamily: 'Roboto Mono,monospace',
+                                          fontWeight: 'bold',
+                                      }}
+                                      variant="success"
+                                      id="dropdown-basic"
+                                  >
+                                      {item.state}
+                                  </Dropdown.Toggle>
+                                  {item.state === 'Requested' && (
+                                      <Dropdown.Menu
+                                          style={{
+                                              backgroundColor: 'lightskyblue',
+                                              color: 'black',
+                                              fontFamily: 'Roboto Mono,monospace',
+                                              fontWeight: 'bold',
+                                          }}
+                                      >
+                                          <Dropdown.Item
+                                              style={{
+                                                  backgroundColor: 'lightskyblue',
+                                                  color: 'black',
+                                                  fontFamily: 'Roboto Mono,monospace',
+                                                  fontWeight: 'bold',
+                                              }}
+                                              className="dropdown"
+                                              onClick={() => {
+                                                  cancelRequest(item._id);
+                                              }}
+                                          >
+                                              Cancel
+                                          </Dropdown.Item>
+                                      </Dropdown.Menu>
+                                  )}
+                                  {item.state === 'Cancelled' && (
+                                      <Dropdown.Menu
+                                          style={{
+                                              backgroundColor: 'lightskyblue',
+                                              color: 'black',
+                                              fontFamily: 'Roboto Mono,monospace',
+                                              fontWeight: 'bold',
+                                          }}
+                                      >
+                                          <Dropdown.Item
+                                              style={{
+                                                  backgroundColor: 'lightskyblue',
+                                                  color: 'black',
+                                                  fontFamily: 'Roboto Mono,monospace',
+                                                  fontWeight: 'bold',
+                                              }}
+                                              className="dropdown"
+                                              onClick={() => {
+                                                  deleteRequest(item._id);
+                                              }}
+                                          >
+                                              Delete
+                                          </Dropdown.Item>
+                                      </Dropdown.Menu>
+                                  )}
+                                  {item.state === 'Approved' && (
+                                      <Dropdown.Menu
+                                          style={{
+                                              backgroundColor: 'lightskyblue',
+                                              color: 'black',
+                                              fontFamily: 'Roboto Mono,monospace',
+                                              fontWeight: 'bold',
+                                          }}
+                                      >
+                                          <Dropdown.Item
+                                              style={{
+                                                  backgroundColor: 'lightskyblue',
+                                                  color: 'black',
+                                                  fontFamily: 'Roboto Mono,monospace',
+                                                  fontWeight: 'bold',
+                                              }}
+                                              className="dropdown"
+                                              onClick={() => {
+                                                  viewApprove(item.state, item._id);
+                                              }}
+                                          >
+                                              View
+                                          </Dropdown.Item>
+                                      </Dropdown.Menu>
+                                  )}
+                              </Dropdown>
+                              {/* </td> */}
                           </tr>
                           // ))
                       ))}
@@ -319,14 +411,14 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
             console.log(openModal);
         }
     };
-
+    const bgColor = 'lightskyblue';
     return (
         <>
             {serverConnected ? (
                 wallet?.connected ? (
                     <>
                         <>
-                            <div
+                            <Box
                                 className="w3-animate-opacity App"
                                 style={{
                                     marginTop: '10vh',
@@ -336,7 +428,7 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                     justifyContent: 'space-around',
                                 }}
                             >
-                                <h1>
+                                <h1 style={{ fontSize: '30px' }}>
                                     <b>Outgoing Requests</b>
                                 </h1>
                                 <input
@@ -350,8 +442,12 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                         borderRadius: '4px',
                                         marginBottom: '16px',
                                         width: '25vw',
+                                        marginTop: '15px',
+                                        fontSize: '20px',
+                                        fontWeight: 'bold',
                                     }}
                                 />
+
                                 <button
                                     style={{ width: 'auto' }}
                                     className="balance-button w3-btn w3-hover-white App "
@@ -359,7 +455,7 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                 >
                                     Refresh
                                 </button>
-                            </div>
+                            </Box>
                             {dataSource.length > 0 ? (
                                 <Table
                                     style={{
@@ -374,10 +470,19 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                 >
                                     <thead>
                                         <tr style={{ width: '100%' }}>
-                                            <td>Sent TO</td>
-                                            <td>Pub key</td>
-                                            <td>Description</td>
-                                            <td style={{ display: 'flex', justifyContent: 'space-around' }}>Action</td>
+                                            <td style={{ color: 'black', background: `${bgColor}` }}>Sent TO</td>
+                                            <td style={{ color: 'black', background: `${bgColor}` }}>Pub key</td>
+                                            <td style={{ color: 'black', background: `${bgColor}` }}>Description</td>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-around',
+                                                    color: 'black',
+                                                    background: `${bgColor}`,
+                                                }}
+                                            >
+                                                Action
+                                            </td>
                                         </tr>
                                     </thead>
                                     {RenderOutgoingRequests}

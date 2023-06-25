@@ -1,7 +1,7 @@
 import './pagestyle.css';
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Box } from '@mui/material';
-import { Table } from 'react-bootstrap';
+import { Dropdown, Table } from 'react-bootstrap';
 import { useWallet } from '@solana/wallet-adapter-react';
 import data from './MOCK_DATA.json';
 import { Button } from '@material-ui/core';
@@ -134,18 +134,21 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
         toast.loading('Refreshing...', { duration: 3000 });
     };
 
-    const DenyRequest = (id: string) => {
-        try {
-            const url = 'http://localhost:9000/requests/deny';
-            axios.post(url, { id: id });
+    const DenyRequest = useCallback(
+        async (id: string) => {
+            try {
+                const url = 'http://localhost:9000/requests/deny';
+                axios.post(url, { id: id });
 
-            console.log('request denied');
-            setRefresh(!refresh);
-            toast.success('Request has been denied');
-        } catch (e) {
-            console.log(e);
-        }
-    };
+                console.log('request denied');
+                setRefresh(!refresh);
+                toast.success('Request has been denied');
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        [refresh]
+    );
 
     const DeleteRequest = (id: string) => {
         try {
@@ -172,7 +175,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                       <td>{reduceString(item.solPubkey, 10)}</td>
                                       <td>{item.description}</td>
                                       <td>
-                                          <button
+                                          {/* <button
                                               style={{
                                                   width: 'auto',
                                                   display: 'flex',
@@ -204,12 +207,72 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                                   fontWeight: '600',
                                               }}
                                               className="balance-button w3-btn w3-hover-white App "
-                                              onClick={async () => {
-                                                  await DenyRequest(item._id);
+                                              onClick={() => {
+                                                  DenyRequest(item._id);
                                               }}
                                           >
                                               Deny
-                                          </button>
+                                          </button> */}
+                                          {item.state === 'Requested' ? (
+                                              <>
+                                                  <Dropdown>
+                                                      <Dropdown.Toggle>
+                                                          {item.state === 'Requested' && (
+                                                              <Dropdown.Menu
+                                                                  style={{
+                                                                      backgroundColor: 'lightskyblue',
+                                                                      color: 'black',
+                                                                      fontFamily: 'Roboto Mono,monospace',
+                                                                      fontWeight: 'bold',
+                                                                  }}
+                                                              >
+                                                                  <Dropdown.Item
+                                                                      style={{
+                                                                          backgroundColor: 'lightskyblue',
+                                                                          color: 'black',
+                                                                          fontFamily: 'Roboto Mono,monospace',
+                                                                          fontWeight: 'bold',
+                                                                      }}
+                                                                      className="dropdown"
+                                                                      onClick={() => {
+                                                                          setRefresh(!refresh);
+                                                                          setOpen(true);
+                                                                          setId(item._id);
+                                                                          setName(item.senderName);
+                                                                          setSolPub(item.solPubkey);
+                                                                          setRSAPubkey512(item.rsaPubkey512);
+                                                                          setRSAPubkey1028(item.rsaPubkey1028);
+                                                                          setRequestedData(item);
+                                                                      }}
+                                                                  >
+                                                                      Approve
+                                                                  </Dropdown.Item>
+                                                                  <Dropdown.Item
+                                                                      style={{
+                                                                          backgroundColor: 'lightskyblue',
+                                                                          color: 'black',
+                                                                          fontFamily: 'Roboto Mono,monospace',
+                                                                          fontWeight: 'bold',
+                                                                      }}
+                                                                      className="dropdown"
+                                                                      onClick={() => {
+                                                                          DenyRequest(item._id);
+                                                                      }}
+                                                                  >
+                                                                      Deny
+                                                                  </Dropdown.Item>
+                                                              </Dropdown.Menu>
+                                                          )}
+                                                      </Dropdown.Toggle>
+                                                  </Dropdown>
+                                              </>
+                                          ) : (
+                                              <>
+                                                  {(item.state === 'Denied' || item.state === 'Approved') && (
+                                                      <p>{item.state}</p>
+                                                  )}
+                                              </>
+                                          )}
                                       </td>
                                   </tr>
                               )
@@ -222,7 +285,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                               <td>{reduceString(item.solPubkey, 18)}</td>
                               <td>{item.description}</td>
                               <td style={{ display: 'flex', justifyContent: 'space-around' }}>
-                                  {item.state === 'Requested' ? (
+                                  {/* {item.state === 'Requested' ? (
                                       <>
                                           <button
                                               style={{ width: 'auto', fontWeight: '600' }}
@@ -266,6 +329,66 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                       </button>
                                   ) : (
                                       <p>{item.state}</p>
+                                  )} */}
+                                  {item.state === 'Requested' ? (
+                                      <>
+                                          <Dropdown>
+                                              <Dropdown.Toggle>
+                                                  {item.state === 'Requested' && (
+                                                      <Dropdown.Menu
+                                                          style={{
+                                                              backgroundColor: 'lightskyblue',
+                                                              color: 'black',
+                                                              fontFamily: 'Roboto Mono,monospace',
+                                                              fontWeight: 'bold',
+                                                          }}
+                                                      >
+                                                          <Dropdown.Item
+                                                              style={{
+                                                                  backgroundColor: 'lightskyblue',
+                                                                  color: 'black',
+                                                                  fontFamily: 'Roboto Mono,monospace',
+                                                                  fontWeight: 'bold',
+                                                              }}
+                                                              className="dropdown"
+                                                              onClick={() => {
+                                                                  setRefresh(!refresh);
+                                                                  setOpen(true);
+                                                                  setId(item._id);
+                                                                  setName(item.senderName);
+                                                                  setSolPub(item.solPubkey);
+                                                                  setRSAPubkey512(item.rsaPubkey512);
+                                                                  setRSAPubkey1028(item.rsaPubkey1028);
+                                                                  setRequestedData(item);
+                                                              }}
+                                                          >
+                                                              Approve
+                                                          </Dropdown.Item>
+                                                          <Dropdown.Item
+                                                              style={{
+                                                                  backgroundColor: 'lightskyblue',
+                                                                  color: 'black',
+                                                                  fontFamily: 'Roboto Mono,monospace',
+                                                                  fontWeight: 'bold',
+                                                              }}
+                                                              className="dropdown"
+                                                              onClick={() => {
+                                                                  DenyRequest(item._id);
+                                                              }}
+                                                          >
+                                                              Deny
+                                                          </Dropdown.Item>
+                                                      </Dropdown.Menu>
+                                                  )}
+                                              </Dropdown.Toggle>
+                                          </Dropdown>
+                                      </>
+                                  ) : (
+                                      <>
+                                          {(item.state === 'Denied' || item.state === 'Approved') && (
+                                              <p>{item.state}</p>
+                                          )}
+                                      </>
                                   )}
                               </td>
                           </tr>
@@ -273,7 +396,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                       ))}
             </tbody>
         );
-    }, [dataSource, refresh, tableFilterRes, value.length]);
+    }, [DenyRequest, dataSource, refresh, tableFilterRes, value.length]);
 
     return (
         <>
@@ -281,7 +404,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                 wallet?.connected ? (
                     <>
                         <>
-                            <div
+                            <Box
                                 className="w3-animate-opacity App"
                                 style={{
                                     marginTop: '10vh',
@@ -291,7 +414,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                     justifyContent: 'space-around',
                                 }}
                             >
-                                <h1>
+                                <h1 style={{ fontSize: '30px' }}>
                                     <b>Incoming Requests</b>
                                 </h1>
                                 <input
@@ -305,8 +428,12 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                         borderRadius: '4px',
                                         marginBottom: '16px',
                                         width: '25vw',
+                                        marginTop: '15px',
+                                        fontSize: '20px',
+                                        fontWeight: 'bold',
                                     }}
                                 />
+
                                 <button
                                     style={{ width: 'auto' }}
                                     className="balance-button w3-btn w3-hover-white App "
@@ -314,7 +441,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                 >
                                     Refresh
                                 </button>
-                            </div>
+                            </Box>
                             {dataSource.length > 0 ? (
                                 <Table
                                     style={{

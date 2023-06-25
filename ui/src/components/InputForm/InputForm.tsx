@@ -89,16 +89,15 @@ export const InputForm = () => {
         return userData;
     };
 
-
     const validateForm = (data: any) => {
-        const errors: any = {};
-        console.log("formData: ", data.answers)
+        const errors: string[] = [];
+        console.log('formData: ', data.answers);
 
         // Validate phone number
         const phonePattern = /^\d{10}$/;
         if (!phonePattern.test(data.answers.phnum.value)) {
             console.log('Please enter a valid 10-digit phone number');
-            errors.phnum = 'Invalid Phone number'
+            errors.push('Invalid Phone number');
             // You can display an error message or handle the validation error as required
         }
 
@@ -107,40 +106,34 @@ export const InputForm = () => {
         const aadharPattern = /^\d{12}$/;
         if (!aadharPattern.test(data.answers.id_number.value)) {
             console.log('Please enter a valid 12-digit Aadhar/SSN number');
-            errors.aadhar = 'invalid Aadhar number'
+            errors.push('Invalid Aadhar number');
             // You can display an error message or handle the validation error as required
         }
-
 
         // Validate PAN number
         const panPattern = /^[A-Z]{5}\d{4}[A-Z]{1}$/;
         if (!panPattern.test(data.answers.pan.value)) {
             console.log('Please enter a valid PAN number');
-            errors.pan = 'Invalid Pan number'
+            errors.push('Invalid Pan number');
             // You can display an error message or handle the validation error as required
         }
 
         const passportPattern = /^[A-Za-z0-9]{6,10}$/;
         if (!passportPattern.test(data.answers.passport_id.value)) {
             console.log('Please enter a valid passport number');
-            errors.passport = 'Invalid Passport'
+            errors.push('Invalid Passport');
             // You can display an error message or handle the validation error as required
         }
 
         if (!data.answers.address.value) {
             console.log('Please enter your address');
-            errors.address = 'you missed your address'
+            errors.push('you missed your address');
             // You can display an error message or handle the validation error as required
         }
 
         var enteredDate = new Date(data.answers.DOB.value);
-        console.log(enteredDate)
+        console.log(enteredDate);
         var currentDate = new Date();
-
-        if (enteredDate >= currentDate) {
-            errors.dob = 'invalid DOB'
-            console.log('Your from future')
-        }
 
         // Extract year, month, and day from the entered date
         var enteredYear = enteredDate.getFullYear();
@@ -153,15 +146,15 @@ export const InputForm = () => {
             isNaN(enteredDay) ||
             enteredYear < 1900 || // Assuming a minimum DOB year of 1900
             enteredYear > currentDate.getFullYear() || // Assuming a maximum DOB year as the current year
-            enteredMonth < 1 || enteredMonth > 12 || // Month should be between 1 and 12
-            enteredDay < 1 || enteredDay > 31 // Day should be between 1 and 31
+            enteredMonth < 1 ||
+            enteredMonth > 12 || // Month should be between 1 and 12
+            enteredDay < 1 ||
+            enteredDay > 31 || // Day should be between 1 and 31
+            enteredDate >= currentDate
         ) {
-            errors.dob = 'invalid DOB'
-
+            errors.push('Invalid Date of Birth');
         }
-        
 
-        
         return errors;
     };
 
@@ -348,25 +341,49 @@ export const InputForm = () => {
                                         answersColor: 'lightskyblue',
                                         buttonsFontColor: 'white',
                                         buttonsBorderRadius: 25,
-                                        errorsFontColor: 'lightsky',
-                                        errorsBgColor: 'white',
+                                        errorsFontColor: 'lightskyblue',
+
+                                        errorsBgColor: 'black',
                                         progressBarFillColor: 'lightskyblue',
                                         progressBarBgColor: 'lightskyblue',
                                     },
                                 }}
-                                onSubmit={async (data, { completeForm, setIsSubmitting }) => {
+                                // beforeGoingNext={async ({ answers, setIsFieldValid, setFieldValidationErr }) => {
+                                //     if (answers) {
+                                //         console.log(answers);
+                                //         switch (answers) {
+                                //             case 'name':
+                                //                 if (answers['name'].length <= 15) {
+                                //                     console.log('inside');
+                                //                     setIsFieldValid(answers['name'], false);
+                                //                     setFieldValidationErr(
+                                //                         answers['name'],
+                                //                         'Length of name should be less than 15 chars'
+                                //                     );
+                                //                 }
+                                //                 break;
+                                //         }
+                                //     }
+                                // }}
+                                onSubmit={async (data, { completeForm, setIsSubmitting, setSubmissionErr }) => {
                                     // setIsSubmitting(false);
-                                    const error = validateForm(data);
-                                    console.log("errors", error)
-                                     
-                                    const objLength = Object.keys(error).length;
-                                    if (objLength > 0) {
-                                        Object.entries(error).map(([key, value]) => {
-                                                 toast.error((value as string).toString())
-                                        });   
-                                        handleClose()
+                                    const errors = validateForm(data);
+                                    console.log('errors', errors);
+
+                                    if (errors.length > 0) {
+                                        errors.map((error) => {
+                                            return toast.error((error as string).toString());
+                                        });
+                                        // handleClose();
+                                        // completeForm();
+                                        let errorStr = '';
+                                        errors.forEach((error) => {
+                                            // eslint-disable-next-line no-useless-concat
+                                            errorStr = errorStr + error + '\t' + '|' + '\t';
+                                        });
+                                        console.log(errorStr);
+                                        setSubmissionErr(errorStr);
                                     } else {
-                                        
                                         completeForm();
                                         setOpen(false);
 
@@ -391,14 +408,8 @@ export const InputForm = () => {
                                             toast.dismiss(id);
                                             toast.error('Failed to create Identity');
                                         }
-
                                     }
-                                   
-                                }
-                                    }
-                                   
-
-                                        
+                                }}
                                 applyLogic={true}
                                 isPreview={false}
                             />
