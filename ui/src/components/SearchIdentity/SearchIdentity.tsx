@@ -124,10 +124,25 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
                         {searchedRows.map((item, index) => {
                             return (
                                 <tr style={{ width: '100vw' }} key={index}>
-                                    <td style={{ textAlign: 'center' }}>{index + 1}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.pubkey}</td>
-                                    <td style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <td
+                                        style={{
+                                            textAlign: 'center',
+                                            color: 'black',
+                                            background: 'lightskyblue',
+                                        }}
+                                    >
+                                        {index + 1}
+                                    </td>
+                                    <td style={{ color: 'black', background: 'lightskyblue' }}>{item.name}</td>
+                                    <td style={{ color: 'black', background: 'lightskyblue' }}>{item.pubkey}</td>
+                                    <td
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            background: 'lightskyblue',
+                                            color: 'black',
+                                        }}
+                                    >
                                         {' '}
                                         <button
                                             style={{ width: 'auto' }}
@@ -206,10 +221,26 @@ const Allusers = ({ connected, rsaKeypairs }: AllUsersProps) => {
                                     >
                                         <thead style={{ color: 'lightskyblue' }}>
                                             <tr style={{ width: '100%' }}>
-                                                <td style={{ textAlign: 'center', color: 'lightskyblue' }}>ID</td>
-                                                <td style={{ color: 'lightskyblue' }}>Name</td>
-                                                <td style={{ color: 'lightskyblue' }}>Pub key</td>
-                                                <td style={{ color: 'lightskyblue', textAlign: 'center' }}>Action</td>
+                                                <td
+                                                    style={{
+                                                        textAlign: 'center',
+                                                        color: 'black',
+                                                        background: 'lightskyblue',
+                                                    }}
+                                                >
+                                                    ID
+                                                </td>
+                                                <td style={{ color: 'black', background: 'lightskyblue' }}>Name</td>
+                                                <td style={{ color: 'black', background: 'lightskyblue' }}>Pub key</td>
+                                                <td
+                                                    style={{
+                                                        color: 'black',
+                                                        background: 'lightskyblue',
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    Action
+                                                </td>
                                             </tr>
                                         </thead>
                                         <AllUsersData></AllUsersData>
