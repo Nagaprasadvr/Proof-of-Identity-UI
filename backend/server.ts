@@ -1,17 +1,12 @@
 import express, { Express, Request, Response, response } from "express";
 import mongoose from "mongoose";
-import os from "os";
 import cors from "cors";
 import digitalIdentities from "./routes/digitalIdentities.routes";
 import cryptography from "./routes/cryptography.routes";
 import dotenv from "dotenv";
-import fs from "fs";
-import {
-  decryptData,
-  encryptData,
-  generateAsymmetricKeyPair,
-} from "./controller/RSA";
 import request from "./routes/requests.routes";
+
+import emailVerification from "./routes/emailVerification.routes";
 
 dotenv.config();
 const app: Express = express();
@@ -46,6 +41,8 @@ app.use("/digitalIdentities", digitalIdentities);
 app.use("/cryptography", cryptography);
 
 app.use("/requests", request);
+
+app.use("/emailVerification", emailVerification);
 
 // Start the server
 app.listen(port, () => {
