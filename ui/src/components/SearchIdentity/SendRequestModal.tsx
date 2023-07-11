@@ -132,27 +132,27 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                             <Table style={{ marginTop: '5vh' }}>
                                 <tbody>
                                     <tr>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                name="senderName"
-                                                value={formData.senderName}
-                                                onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
-                                            ></input>
-                                        </td>
+                                      
                                         <td>
                                             <label>Your Name</label>
                                         </td>
+                                        
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            border: "none"}}>
                                             <input
                                                 type="checkbox"
+                                                className = "container"
                                                 name="name"
                                                 checked={formData.name}
                                                 onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                                style={{
+                                                    marginLeft: '2vw', marginRight: '2vw',
+                                                   
+                                                }}
                                             ></input>
                                         </td>
                                         <td>
@@ -160,9 +160,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            border: "none"}}>
                                             <input
                                                 type="checkbox"
+                                                className = "container"
                                                 name="dob"
                                                 checked={formData.dob}
                                                 onChange={handleChange}
@@ -174,9 +178,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            border: "none"}}>
                                             <input
                                                 type="checkbox"
+                                                className = "container"
                                                 name="contactNum"
                                                 checked={formData.contactNum}
                                                 onChange={handleChange}
@@ -188,9 +196,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            border: "none"}}>
                                             <input
                                                 type="checkbox"
+                                                className = "container"
                                                 name="address"
                                                 checked={formData.address}
                                                 onChange={handleChange}
@@ -202,9 +214,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            border: "none"}}>
                                             <input
                                                 type="checkbox"
+                                                className = "container"
                                                 name="panNumber"
                                                 checked={formData.panNumber}
                                                 onChange={handleChange}
@@ -216,9 +232,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            border: "none"}}>
                                             <input
                                                 type="checkbox"
+                                                className = "container"
                                                 name="passportNumber"
                                                 checked={formData.passportNumber}
                                                 onChange={handleChange}
@@ -230,9 +250,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            border: "none"}}>
                                             <input
                                                 type="checkbox"
+                                                className = "container"
                                                 name="aadharNumber"
                                                 checked={formData.aadharNumber}
                                                 onChange={handleChange}
@@ -244,9 +268,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            border: "none"}}>
                                             <input
                                                 type="checkbox"
+                                                className = "container"
                                                 name="panUploadLink"
                                                 checked={formData.panUploadLink}
                                                 onChange={handleChange}
@@ -258,9 +286,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            border: "none"}}>
                                             <input
                                                 type="checkbox"
+                                                className = "container"
                                                 name="passportUploadLink"
                                                 checked={formData.passportUploadLink}
                                                 onChange={handleChange}
@@ -272,9 +304,14 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            border: "none"
+                                        }}>
                                             <input
                                                 type="checkbox"
+                                                className = "container"
                                                 name="aadharUploadLink"
                                                 checked={formData.aadharUploadLink}
                                                 onChange={handleChange}
@@ -287,9 +324,14 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                     </tr>
 
                                     <tr>
-                                        <td>
+                                        <td style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            border: "none"
+                                        }}>
                                             <input
                                                 type="checkbox"
+                                                className = "container"
                                                 name="picUploadLink"
                                                 checked={formData.picUploadLink}
                                                 onChange={handleChange}
@@ -301,12 +343,12 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Description</td>
+                                        <td style={{ display: "flex", justifyContent: "center", flexDirection: "row" , width: "100%", border: "none", marginTop: "3vh"}}>Description</td>
                                         <td>
                                             <textarea
                                                 name="description"
                                                 value={formData.description}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw', color: 'black' }}
+                                                style={{color: 'black', width: "100%", height: "100%" }}
                                                 onChange={handleChange}
                                             ></textarea>
                                         </td>

@@ -21,6 +21,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^5.5.0",
     "mongoose": "^5.10.1",
+    "otp-verify": "^1.0.5",
     "run": "^1.4.0"
   },
   "devDependencies": {
