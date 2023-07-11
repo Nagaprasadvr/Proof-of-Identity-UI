@@ -156,7 +156,6 @@ router.route("/decryptData").post((req, res) => {
         fs_1.default.existsSync(`${homeDir}/RSA/keypair_1028.json`))) {
         return res.json({ message: "Keypair doesn't exist" });
     }
-    console.log("req body", req.body);
     const ticker = req.body.ticker;
     if (ticker === "solData") {
         const encData = req.body.encData;
@@ -164,20 +163,12 @@ router.route("/decryptData").post((req, res) => {
         const keypair = fs_1.default.readFileSync(keypairpath);
         const keypairObj = JSON.parse(keypair.toString());
         const decryptedName = (0, RSA_1.decryptData)(encData.name, keypairObj.privateKey);
-        console.log("decrypted name", decryptedName);
         const decryptedContactNumber = (0, RSA_1.decryptData)(encData.contactNumber, keypairObj.privateKey);
-        console.log("decrypted contact number", decryptedContactNumber);
         const decryptedDob = (0, RSA_1.decryptData)(encData.dob, keypairObj.privateKey);
-        console.log("decrypted dob", decryptedDob);
-        console.log("residence address", encData.residenceAddress);
         const decryptedAddress = (0, RSA_1.decryptData)(encData.residenceAddress, keypairObj.privateKey);
-        console.log("decrypted address", decryptedAddress);
         const decryptedPanNo = (0, RSA_1.decryptData)(encData.panNumber, keypairObj.privateKey);
-        console.log("decrypted pan no", decryptedPanNo);
         const decryptedPassportID = (0, RSA_1.decryptData)(encData.passportId, keypairObj.privateKey);
-        console.log("decrypted passport id", decryptedPassportID);
         const decryptedAadharNumber = (0, RSA_1.decryptData)(encData.aadharNumber, keypairObj.privateKey);
-        console.log("decrypted aadhar number", decryptedAadharNumber);
         const decryptedUserData = {
             name: decryptedName,
             residenceAddress: decryptedAddress,

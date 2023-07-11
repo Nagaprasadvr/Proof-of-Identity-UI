@@ -90,9 +90,7 @@ router.route("/approve").post((req, res) => {
     const aadharUploadLink = req.body.encArweaveData.aadharUploadLink;
     const picUploadLink = req.body.encArweaveData.picUploadLink;
     const address = req.body.encUserData.residenceAddress;
-    console.log("address", address);
     const contactNum = req.body.encUserData.contactNumber;
-    console.log("requestId", req.body);
     const newResponse = new Response_model_1.default({
         requestId: requestId,
         name: name,
@@ -179,7 +177,6 @@ router.route("/cancel").post((req, res) => {
 });
 router.route("/getResponseById").post((req, res) => {
     const id = req.body.id;
-    console.log(id);
     Response_model_1.default.find({ requestId: id })
         .then((response) => res.json(response))
         .catch((err) => console.log(err));
