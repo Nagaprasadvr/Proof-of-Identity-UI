@@ -1,14 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Box from '@material-ui/core/Box';
-import FormLabel from '@mui/material/FormLabel';
-import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormHelperText from '@mui/material/FormHelperText';
-import Checkbox from '@mui/material/Checkbox';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Modal } from '@material-ui/core';
-import { Button, Table } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import './searchIdentity.css';
 import axios from 'axios';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -45,12 +39,10 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
 
     const [email, setEmail] = useState(false);
     const [emailVerify, setEmailVerify] = useState('');
-    const [otp, setOtp] = useState(false);
-    const [oneTp, setOneTp] = useState('');
-
-    useEffect(() => {
-        
-    },[email])
+    const [otpSent, setOtpSent] = useState(false);
+    const [otpVerified, setOtpVerified] = useState(false);
+    const [inputOTP, setInputOTP] = useState<string>('');
+    useEffect(() => {}, [email]);
 
     const handleChange = (event: any) => {
         if (event.target.type === 'checkbox') {
@@ -99,40 +91,59 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
         setOpen(false);
     };
 
-    const handleEmailVerification = async(event: any) => {
-        event.preventDefault();
+    const handleEmailVerification = async () => {
+        const id = toast.loading('Sending OTP...');
         try {
-            const response = await axios.post("http://localhost:9000/emailVerification/sendOTP", {
-                email: emailVerify
-            })
-            console.log(response)
-        } catch(err) {
+            const response = await axios.post('http://localhost:9000/emailVerification/sendOTP', {
+                email: emailVerify,
+            });
+            console.log(response);
+            if (response.data.status === true) {
+                setOtpSent(true);
+                toast.dismiss(id);
+                toast.success('OTP sent successfully');
+            } else {
+                toast.dismiss(id);
+                toast.error('Failed to send OTP');
+            }
+        } catch (err) {
+            toast.dismiss(id);
             console.log(err);
+            toast.error('Failed to send OTP');
         }
-    }
+    };
 
-    function handleEmail(event: React.ChangeEvent<HTMLInputElement>){
+    function handleEmail(event: React.ChangeEvent<HTMLInputElement>) {
         event.preventDefault();
-        setEmail(true)
+        setEmail(true);
         setEmailVerify(event.target.value);
         const mailId = event.target.value;
-        console.log(mailId)
-        console.log(email)
-
+        console.log(mailId);
+        console.log(email);
     }
 
-    const verifyOtp = async (event: any) => {
-        event.preventDefault();
-        setOneTp(event.target.value);
+    const handleOTPInputChange = (event: any) => {
+        setInputOTP(event.target.value);
+    };
+
+    const verifyOtp = async () => {
+        const id = toast.loading('Verifying OTP...');
         try {
-            const response = await axios.post("http://localhost:9000/emailVerification/verifyOTP", {
-                email: emailVerify, otp: oneTp
-            })
-            console.log(response)
+            const response = await axios.post('http://localhost:9000/emailVerification/verifyOTP', {
+                email: emailVerify,
+                otp: inputOTP,
+            });
+            console.log(response);
+            if (response.data.status === true) {
+                setOtpVerified(true);
+                toast.dismiss(id);
+                toast.success('OTP verified successfully');
+            }
         } catch (err) {
             console.log(err);
+            toast.error('Failed to verify OTP');
         }
-    }
+    };
 
     return (
         <Modal
@@ -159,25 +170,76 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                         justifyContent: 'center',
                     }}
                 >
+                    {!otpVerified && (
+                        <Box className="EmailBox">
+                            <Box
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '40px',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <label>Email Verification</label>
 
-                    {/* //Email Verification */}
-                    <Box className='EmailBox'>
-                        <form onSubmit={handleEmailVerification}>
-                            <label>Email</label><input type='email' name="email" value={emailVerify} onChange={handleEmail}></input>
-                            {!otp ? (<button onSubmit={handleEmailVerification} style={{color: 'black'}}>Generate OTP</button>) : (
-                                <Box>
-                                    <input type='text' value={oneTp}></input><button onSubmit={verifyOtp}>Submit</button>
-                                </Box>
-                            )}
-                        </form>
-                    </Box>
+                                <input
+                                    style={{ width: '500px', borderRadius: '10px', height: '60px' }}
+                                    type="email"
+                                    name="email"
+                                    value={emailVerify}
+                                    onChange={handleEmail}
+                                    placeholder="Enter your email id"
+                                ></input>
+
+                                {!otpSent ? (
+                                    <button
+                                        className="balance-button w3-btn w3-hover-white App"
+                                        style={{ width: 'auto', fontWeight: 'bold' }}
+                                        onClick={() => {
+                                            handleEmailVerification();
+                                        }}
+                                    >
+                                        Generate OTP
+                                    </button>
+                                ) : (
+                                    <Box
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '10px',
+                                            justifyContent: 'center',
+                                            alignContent: 'center',
+                                        }}
+                                    >
+                                        <input
+                                            placeholder="Enter OTP to verify"
+                                            type="text"
+                                            onChange={handleOTPInputChange}
+                                            value={inputOTP}
+                                        ></input>
+                                        <button
+                                            className="balance-button w3-btn w3-hover-white App"
+                                            style={{ width: 'auto', fontWeight: 'bold' }}
+                                            onClick={() => {
+                                                verifyOtp();
+                                            }}
+                                        >
+                                            Verify OTP
+                                        </button>
+                                        <p>OTP will expire in 5 mins...</p>
+                                    </Box>
+                                )}
+                            </Box>
+                        </Box>
+                    )}
 
                     {/* //Request Form */}
-                    {
-                        otp ? (<form
+                    {otpVerified ? (
+                        <form
                             onSubmit={handleSubmit}
                             style={{
-                                color: 'white',
+                                color: 'lightskyblue',
                                 fontWeight: 'bolder',
                                 fontSize: '25px',
                                 alignContent: 'center',
@@ -191,18 +253,27 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                 <Table style={{ marginTop: '5vh' }}>
                                     <tbody>
                                         <tr>
-
                                             <td>
                                                 <label>Your Name</label>
                                             </td>
 
+                                            <td>
+                                                <textarea
+                                                    name="senderName"
+                                                    value={formData.senderName}
+                                                    style={{ color: 'black', width: '100%', height: '100%' }}
+                                                    onChange={handleChange}
+                                                ></textarea>
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                border: "none"
-                                            }}>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    border: 'none',
+                                                }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     className="container"
@@ -210,8 +281,8 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     checked={formData.name}
                                                     onChange={handleChange}
                                                     style={{
-                                                        marginLeft: '2vw', marginRight: '2vw',
-
+                                                        marginLeft: '2vw',
+                                                        marginRight: '2vw',
                                                     }}
                                                 ></input>
                                             </td>
@@ -220,11 +291,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                border: "none"
-                                            }}>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    border: 'none',
+                                                }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     className="container"
@@ -239,11 +312,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                border: "none"
-                                            }}>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    border: 'none',
+                                                }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     className="container"
@@ -258,11 +333,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                border: "none"
-                                            }}>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    border: 'none',
+                                                }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     className="container"
@@ -277,11 +354,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                border: "none"
-                                            }}>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    border: 'none',
+                                                }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     className="container"
@@ -296,11 +375,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                border: "none"
-                                            }}>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    border: 'none',
+                                                }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     className="container"
@@ -315,11 +396,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                border: "none"
-                                            }}>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    border: 'none',
+                                                }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     className="container"
@@ -334,11 +417,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                border: "none"
-                                            }}>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    border: 'none',
+                                                }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     className="container"
@@ -353,11 +438,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                border: "none"
-                                            }}>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    border: 'none',
+                                                }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     className="container"
@@ -372,11 +459,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                border: "none"
-                                            }}>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    border: 'none',
+                                                }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     className="container"
@@ -392,11 +481,13 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                         </tr>
 
                                         <tr>
-                                            <td style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                border: "none"
-                                            }}>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    border: 'none',
+                                                }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     className="container"
@@ -411,12 +502,23 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style={{ display: "flex", justifyContent: "center", flexDirection: "row", width: "100%", border: "none", marginTop: "3vh" }}>Description</td>
+                                            <td
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'row',
+                                                    width: '100%',
+                                                    border: 'none',
+                                                    marginTop: '3vh',
+                                                }}
+                                            >
+                                                Description
+                                            </td>
                                             <td>
                                                 <textarea
                                                     name="description"
                                                     value={formData.description}
-                                                    style={{ color: 'black', width: "100%", height: "100%" }}
+                                                    style={{ color: 'black', width: '100%', height: '100%' }}
                                                     onChange={handleChange}
                                                 ></textarea>
                                             </td>
@@ -431,9 +533,10 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                             >
                                 Submit Request
                             </button>
-                        </form>):(<></>)
-                    }
-                  
+                        </form>
+                    ) : (
+                        <></>
+                    )}
                 </Box>
             </Box>
             {/* Your modal content goes here */}

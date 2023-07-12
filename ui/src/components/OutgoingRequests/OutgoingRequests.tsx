@@ -132,10 +132,12 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
         try {
             console.log('click');
             const url = 'http://localhost:9000/requests/cancel';
-            axios.post(url, { id: id });
+            axios.post(url, { id: id }).then(() => {
+                setRefresh(!refresh);
+            });
 
             console.log('request denied');
-            setRefresh(!refresh);
+
             toast.success('Request has been cancelled');
         } catch (e) {
             console.log(e);
@@ -146,9 +148,11 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
         try {
             console.log('click');
             const url = 'http://localhost:9000/requests/delete';
-            axios.post(url, { id: id });
+            axios.post(url, { id: id }).then(() => {
+                setRefresh(!refresh);
+            });
             console.log('request deleted');
-            setRefresh(!refresh);
+
             toast.success('Request has been deleted');
         } catch (e) {
             console.error(e);
@@ -306,95 +310,105 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                 >
                                     Accept
                                 </button> */}
-                              <Dropdown>
-                                  <Dropdown.Toggle
-                                      style={{
-                                          backgroundColor: 'lightskyblue',
-                                          color: 'black',
-                                          fontFamily: 'Roboto Mono,monospace',
-                                          fontWeight: 'bold',
-                                      }}
-                                      variant="success"
-                                      id="dropdown-basic"
-                                  >
-                                      {item.state}
-                                  </Dropdown.Toggle>
-                                  {item.state === 'Requested' && (
-                                      <Dropdown.Menu
+                              <td
+                                  style={{
+                                      color: 'black',
+                                      background: `${bgColor}`,
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                  }}
+                              >
+                                  <Dropdown>
+                                      <Dropdown.Toggle
                                           style={{
-                                              backgroundColor: 'lightskyblue',
+                                              backgroundColor: 'white',
                                               color: 'black',
                                               fontFamily: 'Roboto Mono,monospace',
                                               fontWeight: 'bold',
                                           }}
+                                          variant="success"
+                                          id="dropdown-basic"
                                       >
-                                          <Dropdown.Item
+                                          {item.state}
+                                      </Dropdown.Toggle>
+                                      {item.state === 'Requested' && (
+                                          <Dropdown.Menu
                                               style={{
                                                   backgroundColor: 'lightskyblue',
                                                   color: 'black',
                                                   fontFamily: 'Roboto Mono,monospace',
                                                   fontWeight: 'bold',
                                               }}
-                                              className="dropdown"
-                                              onClick={() => {
-                                                  cancelRequest(item._id);
-                                              }}
                                           >
-                                              Cancel
-                                          </Dropdown.Item>
-                                      </Dropdown.Menu>
-                                  )}
-                                  {item.state === 'Cancelled' && (
-                                      <Dropdown.Menu
-                                          style={{
-                                              backgroundColor: 'lightskyblue',
-                                              color: 'black',
-                                              fontFamily: 'Roboto Mono,monospace',
-                                              fontWeight: 'bold',
-                                          }}
-                                      >
-                                          <Dropdown.Item
+                                              <Dropdown.Item
+                                                  style={{
+                                                      backgroundColor: 'lightskyblue',
+                                                      color: 'black',
+                                                      fontFamily: 'Roboto Mono,monospace',
+                                                      fontWeight: 'bold',
+                                                  }}
+                                                  className="dropdown"
+                                                  onClick={() => {
+                                                      cancelRequest(item._id);
+                                                  }}
+                                              >
+                                                  Cancel
+                                              </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                      )}
+                                      {item.state === 'Cancelled' && (
+                                          <Dropdown.Menu
                                               style={{
                                                   backgroundColor: 'lightskyblue',
                                                   color: 'black',
                                                   fontFamily: 'Roboto Mono,monospace',
                                                   fontWeight: 'bold',
                                               }}
-                                              className="dropdown"
-                                              onClick={() => {
-                                                  deleteRequest(item._id);
-                                              }}
                                           >
-                                              Delete
-                                          </Dropdown.Item>
-                                      </Dropdown.Menu>
-                                  )}
-                                  {item.state === 'Approved' && (
-                                      <Dropdown.Menu
-                                          style={{
-                                              backgroundColor: 'lightskyblue',
-                                              color: 'black',
-                                              fontFamily: 'Roboto Mono,monospace',
-                                              fontWeight: 'bold',
-                                          }}
-                                      >
-                                          <Dropdown.Item
+                                              <Dropdown.Item
+                                                  style={{
+                                                      backgroundColor: 'lightskyblue',
+                                                      color: 'black',
+                                                      fontFamily: 'Roboto Mono,monospace',
+                                                      fontWeight: 'bold',
+                                                  }}
+                                                  className="dropdown"
+                                                  onClick={() => {
+                                                      deleteRequest(item._id);
+                                                  }}
+                                              >
+                                                  Delete
+                                              </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                      )}
+                                      {item.state === 'Approved' && (
+                                          <Dropdown.Menu
                                               style={{
                                                   backgroundColor: 'lightskyblue',
                                                   color: 'black',
                                                   fontFamily: 'Roboto Mono,monospace',
                                                   fontWeight: 'bold',
                                               }}
-                                              className="dropdown"
-                                              onClick={() => {
-                                                  viewApprove(item.state, item._id);
-                                              }}
                                           >
-                                              View
-                                          </Dropdown.Item>
-                                      </Dropdown.Menu>
-                                  )}
-                              </Dropdown>
+                                              <Dropdown.Item
+                                                  style={{
+                                                      backgroundColor: 'lightskyblue',
+                                                      color: 'black',
+                                                      fontFamily: 'Roboto Mono,monospace',
+                                                      fontWeight: 'bold',
+                                                  }}
+                                                  className="dropdown"
+                                                  onClick={() => {
+                                                      viewApprove(item.state, item._id);
+                                                  }}
+                                              >
+                                                  View
+                                              </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                      )}
+                                  </Dropdown>
+                              </td>
+
                               {/* </td> */}
                           </tr>
                           // ))

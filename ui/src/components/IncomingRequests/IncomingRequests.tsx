@@ -330,10 +330,18 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                   ) : (
                                       <p>{item.state}</p>
                                   )} */}
+
                                   {item.state === 'Requested' ? (
                                       <>
                                           <Dropdown>
-                                              <Dropdown.Toggle>
+                                              <Dropdown.Toggle
+                                                  style={{
+                                                      backgroundColor: 'white',
+                                                      color: 'black',
+                                                      fontFamily: 'Roboto Mono,monospace',
+                                                      fontWeight: 'bold',
+                                                  }}
+                                              >
                                                   {item.state === 'Requested' && (
                                                       <Dropdown.Menu
                                                           style={{

@@ -15,8 +15,8 @@ const router = express();
 router.route("/sendOTP").post((req: Request, res: Response) => {
   const sendOTP = async ({
     email,
-    subject ='Authorization',
-    message = 'mail verification',
+    subject = "Authorization",
+    message = "mail verification",
     duration = 1,
   }: {
     email: string;
@@ -58,6 +58,7 @@ router.route("/sendOTP").post((req: Request, res: Response) => {
       const createdOTPRecord = await newOTP.save();
       return createdOTPRecord;
     } catch (e) {
+      console.log(e);
       throw e;
     }
   };
