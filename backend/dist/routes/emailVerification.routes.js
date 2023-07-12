@@ -18,7 +18,7 @@ const helpers_1 = require("../utils/helpers");
 const { AUTH_EMAIL } = process.env;
 const router = (0, express_1.default)();
 router.route("/sendOTP").post((req, res) => {
-    const sendOTP = ({ email, subject, message, duration = 1, }) => __awaiter(void 0, void 0, void 0, function* () {
+    const sendOTP = ({ email, subject = 'Authorization', message = 'mail verification', duration = 1, }) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             if (!(email && subject && message)) {
                 throw Error("Provide values for email, subject, message");

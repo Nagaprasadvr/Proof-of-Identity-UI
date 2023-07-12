@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Box from '@material-ui/core/Box';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
@@ -42,6 +42,15 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
         address: false,
         description: '',
     });
+
+    const [email, setEmail] = useState(false);
+    const [emailVerify, setEmailVerify] = useState('');
+    const [otp, setOtp] = useState(false);
+    const [oneTp, setOneTp] = useState('');
+
+    useEffect(() => {
+        
+    },[email])
 
     const handleChange = (event: any) => {
         if (event.target.type === 'checkbox') {
@@ -90,6 +99,41 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
         setOpen(false);
     };
 
+    const handleEmailVerification = async(event: any) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post("http://localhost:9000/emailVerification/sendOTP", {
+                email: emailVerify
+            })
+            console.log(response)
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
+    function handleEmail(event: React.ChangeEvent<HTMLInputElement>){
+        event.preventDefault();
+        setEmail(true)
+        setEmailVerify(event.target.value);
+        const mailId = event.target.value;
+        console.log(mailId)
+        console.log(email)
+
+    }
+
+    const verifyOtp = async (event: any) => {
+        event.preventDefault();
+        setOneTp(event.target.value);
+        try {
+            const response = await axios.post("http://localhost:9000/emailVerification/verifyOTP", {
+                email: emailVerify, otp: oneTp
+            })
+            console.log(response)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
         <Modal
             open={open}
@@ -115,255 +159,281 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                         justifyContent: 'center',
                     }}
                 >
-                    <form
-                        onSubmit={handleSubmit}
-                        style={{
-                            color: 'white',
-                            fontWeight: 'bolder',
-                            fontSize: '25px',
-                            alignContent: 'center',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Box>
-                            <Table style={{ marginTop: '5vh' }}>
-                                <tbody>
-                                    <tr>
-                                      
-                                        <td>
-                                            <label>Your Name</label>
-                                        </td>
-                                        
-                                    </tr>
-                                    <tr>
-                                        <td style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            border: "none"}}>
-                                            <input
-                                                type="checkbox"
-                                                className = "container"
-                                                name="name"
-                                                checked={formData.name}
-                                                onChange={handleChange}
-                                                style={{
-                                                    marginLeft: '2vw', marginRight: '2vw',
-                                                   
-                                                }}
-                                            ></input>
-                                        </td>
-                                        <td>
-                                            <label>Name</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            border: "none"}}>
-                                            <input
-                                                type="checkbox"
-                                                className = "container"
-                                                name="dob"
-                                                checked={formData.dob}
-                                                onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
-                                            ></input>
-                                        </td>
-                                        <td>
-                                            <label>DOB</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            border: "none"}}>
-                                            <input
-                                                type="checkbox"
-                                                className = "container"
-                                                name="contactNum"
-                                                checked={formData.contactNum}
-                                                onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
-                                            ></input>
-                                        </td>
-                                        <td>
-                                            <label>Contact Number</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            border: "none"}}>
-                                            <input
-                                                type="checkbox"
-                                                className = "container"
-                                                name="address"
-                                                checked={formData.address}
-                                                onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
-                                            ></input>
-                                        </td>
-                                        <td>
-                                            <label>Residence Address</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            border: "none"}}>
-                                            <input
-                                                type="checkbox"
-                                                className = "container"
-                                                name="panNumber"
-                                                checked={formData.panNumber}
-                                                onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
-                                            ></input>
-                                        </td>
-                                        <td>
-                                            <label>Pan Number</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            border: "none"}}>
-                                            <input
-                                                type="checkbox"
-                                                className = "container"
-                                                name="passportNumber"
-                                                checked={formData.passportNumber}
-                                                onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
-                                            ></input>
-                                        </td>
-                                        <td>
-                                            <label>Passport Number</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            border: "none"}}>
-                                            <input
-                                                type="checkbox"
-                                                className = "container"
-                                                name="aadharNumber"
-                                                checked={formData.aadharNumber}
-                                                onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
-                                            ></input>
-                                        </td>
-                                        <td>
-                                            <label>Aadhar Number</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            border: "none"}}>
-                                            <input
-                                                type="checkbox"
-                                                className = "container"
-                                                name="panUploadLink"
-                                                checked={formData.panUploadLink}
-                                                onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
-                                            ></input>
-                                        </td>
-                                        <td>
-                                            <label>Pan Link</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            border: "none"}}>
-                                            <input
-                                                type="checkbox"
-                                                className = "container"
-                                                name="passportUploadLink"
-                                                checked={formData.passportUploadLink}
-                                                onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
-                                            ></input>
-                                        </td>
-                                        <td>
-                                            <label>Passport Link</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            border: "none"
-                                        }}>
-                                            <input
-                                                type="checkbox"
-                                                className = "container"
-                                                name="aadharUploadLink"
-                                                checked={formData.aadharUploadLink}
-                                                onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
-                                            ></input>
-                                        </td>
-                                        <td>
-                                            <label>Aadhar Link</label>
-                                        </td>
-                                    </tr>
 
-                                    <tr>
-                                        <td style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            border: "none"
-                                        }}>
-                                            <input
-                                                type="checkbox"
-                                                className = "container"
-                                                name="picUploadLink"
-                                                checked={formData.picUploadLink}
-                                                onChange={handleChange}
-                                                style={{ marginLeft: '2vw', marginRight: '2vw' }}
-                                            ></input>
-                                        </td>
-                                        <td>
-                                            <label>pic Link</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ display: "flex", justifyContent: "center", flexDirection: "row" , width: "100%", border: "none", marginTop: "3vh"}}>Description</td>
-                                        <td>
-                                            <textarea
-                                                name="description"
-                                                value={formData.description}
-                                                style={{color: 'black', width: "100%", height: "100%" }}
-                                                onChange={handleChange}
-                                            ></textarea>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                        </Box>
-                        <button
-                            style={{ width: 'auto', marginTop: '10px' }}
-                            className="balance-button w3-btn w3-hover-white App "
-                            onClick={handleSubmit}
+                    {/* //Email Verification */}
+                    <Box className='EmailBox'>
+                        <form onSubmit={handleEmailVerification}>
+                            <label>Email</label><input type='email' name="email" value={emailVerify} onChange={handleEmail}></input>
+                            {!otp ? (<button onSubmit={handleEmailVerification} style={{color: 'black'}}>Generate OTP</button>) : (
+                                <Box>
+                                    <input type='text' value={oneTp}></input><button onSubmit={verifyOtp}>Submit</button>
+                                </Box>
+                            )}
+                        </form>
+                    </Box>
+
+                    {/* //Request Form */}
+                    {
+                        otp ? (<form
+                            onSubmit={handleSubmit}
+                            style={{
+                                color: 'white',
+                                fontWeight: 'bolder',
+                                fontSize: '25px',
+                                alignContent: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
                         >
-                            Submit Request
-                        </button>
-                    </form>
+                            <Box>
+                                <Table style={{ marginTop: '5vh' }}>
+                                    <tbody>
+                                        <tr>
+
+                                            <td>
+                                                <label>Your Name</label>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                border: "none"
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="container"
+                                                    name="name"
+                                                    checked={formData.name}
+                                                    onChange={handleChange}
+                                                    style={{
+                                                        marginLeft: '2vw', marginRight: '2vw',
+
+                                                    }}
+                                                ></input>
+                                            </td>
+                                            <td>
+                                                <label>Name</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                border: "none"
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="container"
+                                                    name="dob"
+                                                    checked={formData.dob}
+                                                    onChange={handleChange}
+                                                    style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                                ></input>
+                                            </td>
+                                            <td>
+                                                <label>DOB</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                border: "none"
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="container"
+                                                    name="contactNum"
+                                                    checked={formData.contactNum}
+                                                    onChange={handleChange}
+                                                    style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                                ></input>
+                                            </td>
+                                            <td>
+                                                <label>Contact Number</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                border: "none"
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="container"
+                                                    name="address"
+                                                    checked={formData.address}
+                                                    onChange={handleChange}
+                                                    style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                                ></input>
+                                            </td>
+                                            <td>
+                                                <label>Residence Address</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                border: "none"
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="container"
+                                                    name="panNumber"
+                                                    checked={formData.panNumber}
+                                                    onChange={handleChange}
+                                                    style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                                ></input>
+                                            </td>
+                                            <td>
+                                                <label>Pan Number</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                border: "none"
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="container"
+                                                    name="passportNumber"
+                                                    checked={formData.passportNumber}
+                                                    onChange={handleChange}
+                                                    style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                                ></input>
+                                            </td>
+                                            <td>
+                                                <label>Passport Number</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                border: "none"
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="container"
+                                                    name="aadharNumber"
+                                                    checked={formData.aadharNumber}
+                                                    onChange={handleChange}
+                                                    style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                                ></input>
+                                            </td>
+                                            <td>
+                                                <label>Aadhar Number</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                border: "none"
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="container"
+                                                    name="panUploadLink"
+                                                    checked={formData.panUploadLink}
+                                                    onChange={handleChange}
+                                                    style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                                ></input>
+                                            </td>
+                                            <td>
+                                                <label>Pan Link</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                border: "none"
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="container"
+                                                    name="passportUploadLink"
+                                                    checked={formData.passportUploadLink}
+                                                    onChange={handleChange}
+                                                    style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                                ></input>
+                                            </td>
+                                            <td>
+                                                <label>Passport Link</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                border: "none"
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="container"
+                                                    name="aadharUploadLink"
+                                                    checked={formData.aadharUploadLink}
+                                                    onChange={handleChange}
+                                                    style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                                ></input>
+                                            </td>
+                                            <td>
+                                                <label>Aadhar Link</label>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                border: "none"
+                                            }}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="container"
+                                                    name="picUploadLink"
+                                                    checked={formData.picUploadLink}
+                                                    onChange={handleChange}
+                                                    style={{ marginLeft: '2vw', marginRight: '2vw' }}
+                                                ></input>
+                                            </td>
+                                            <td>
+                                                <label>pic Link</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{ display: "flex", justifyContent: "center", flexDirection: "row", width: "100%", border: "none", marginTop: "3vh" }}>Description</td>
+                                            <td>
+                                                <textarea
+                                                    name="description"
+                                                    value={formData.description}
+                                                    style={{ color: 'black', width: "100%", height: "100%" }}
+                                                    onChange={handleChange}
+                                                ></textarea>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            </Box>
+                            <button
+                                style={{ width: 'auto', marginTop: '10px' }}
+                                className="balance-button w3-btn w3-hover-white App "
+                                onClick={handleSubmit}
+                            >
+                                Submit Request
+                            </button>
+                        </form>):(<></>)
+                    }
+                  
                 </Box>
             </Box>
             {/* Your modal content goes here */}

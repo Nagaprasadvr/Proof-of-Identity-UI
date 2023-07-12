@@ -15,8 +15,8 @@ const router = express();
 router.route("/sendOTP").post((req: Request, res: Response) => {
   const sendOTP = async ({
     email,
-    subject,
-    message,
+    subject ='Authorization',
+    message = 'mail verification',
     duration = 1,
   }: {
     email: string;
