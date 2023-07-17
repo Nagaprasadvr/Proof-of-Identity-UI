@@ -198,13 +198,23 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
                                 ? data &&
                                   Object.keys(data as Data).map((key) => (
                                       <tr key={key} style={{ color: 'black', background: '#afaae9' }}>
-                                          <td style={{ color: 'black', width: '30vw', fontWeight: 'bold' }}>{key}</td>
+                                          <td
+                                              style={{
+                                                  color: 'black',
+                                                  width: '30vw',
+                                                  fontWeight: 'bold',
+                                                  backgroundColor: 'lightskyblue',
+                                              }}
+                                          >
+                                              {key}
+                                          </td>
                                           <td
                                               style={{
                                                   color: 'black',
                                                   paddingLeft: '2vw',
                                                   width: '30vw',
                                                   fontWeight: 'bold',
+                                                  backgroundColor: 'lightskyblue',
                                               }}
                                           >
                                               {reduceString(data[key], 10)}
@@ -214,18 +224,37 @@ function OutgoingRequestModal({ open, setOpen, id }: OutgoingProps) {
                                 : completeData &&
                                   Object.keys(completeData as CompleteData).map((key) => (
                                       <tr key={key} style={{ color: 'black', background: '#afaae9' }}>
-                                          <td style={{ color: 'black', width: '30vw', fontWeight: 'bold' }}>{key}</td>
+                                          <td
+                                              style={{
+                                                  color: 'black',
+                                                  width: '30vw',
+                                                  fontWeight: 'bold',
+                                                  backgroundColor: 'lightskyblue',
+                                              }}
+                                          >
+                                              {key}
+                                          </td>
                                           <td
                                               style={{
                                                   color: 'black',
                                                   paddingLeft: '2vw',
                                                   width: '30vw',
                                                   fontWeight: 'bold',
+                                                  backgroundColor: 'lightskyblue',
                                               }}
                                           >
-                                              {key.includes('Link') && completeData[key] !== 'noaccess'
-                                                  ? `https://arweave.net/${completeData[key]}`
-                                                  : completeData[key]}
+                                              {key.includes('Link') && completeData[key] !== 'noaccess' ? (
+                                                  <a
+                                                      target="_blank"
+                                                      href={'https://arweave.net/' + completeData[key]}
+                                                      rel="noreferrer"
+                                                      style={{ color: 'black' }}
+                                                  >
+                                                      Link
+                                                  </a>
+                                              ) : (
+                                                  completeData[key]
+                                              )}
                                           </td>
                                       </tr>
                                   ))}

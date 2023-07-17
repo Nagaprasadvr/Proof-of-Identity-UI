@@ -244,7 +244,7 @@ function ResponseModal({
                         <span style={{ color: 'lightskyblue' }}>Requester Name:</span> {name}
                     </h2>
                     <h2 style={{ color: 'white', marginLeft: '3vw' }}>
-                        <span style={{ color: 'lightskyblue' }}>Description:</span> {data.}
+                        <span style={{ color: 'lightskyblue' }}>Description:</span> {(data as any).description}
                     </h2>
                     <h2 style={{ color: 'white', marginRight: '3vw' }}>
                         <span style={{ color: 'lightskyblue' }}>Pubkey:</span> {reduceString(solpubkey, 10)}

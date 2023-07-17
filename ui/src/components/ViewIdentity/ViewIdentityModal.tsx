@@ -402,7 +402,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 </tr>
                                 <tr style={{ color: 'black', background: `${bgcolor}` }}>
                                     <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
-                                        arweave-panLink
+                                        Arweave PAN Link
                                     </td>
                                     <td
                                         style={{
@@ -419,6 +419,8 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                             <a
                                                 href={arweaveLink + arweaveData?.panUploadLink}
                                                 style={{ color: 'black' }}
+                                                target="_blank"
+                                                rel="noreferrer"
                                             >
                                                 PAN Arweve link
                                             </a>
@@ -427,7 +429,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 </tr>
                                 <tr style={{ color: 'black', background: `${bgcolor}` }}>
                                     <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
-                                        arweave-aadharLink
+                                        Arweave AadharLink
                                     </td>
                                     <td
                                         style={{
@@ -444,6 +446,8 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                             <a
                                                 href={arweaveLink + arweaveData?.aadharUploadLink}
                                                 style={{ color: 'black' }}
+                                                target="_blank"
+                                                rel="noreferrer"
                                             >
                                                 Aadhaar Arweve link
                                             </a>
@@ -452,7 +456,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 </tr>
                                 <tr style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
                                     <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
-                                        arweave-passportUploadLink
+                                        Arweave Passport Link
                                     </td>
                                     <td
                                         style={{
@@ -469,6 +473,8 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                             <a
                                                 href={(arweaveLink + arweaveData?.passportUploadLink) as string}
                                                 style={{ color: 'black' }}
+                                                target="_blank"
+                                                rel="noreferrer"
                                             >
                                                 Passport Arweve link
                                             </a>
@@ -477,7 +483,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 </tr>
                                 <tr style={{ color: 'black', background: `${bgcolor}` }}>
                                     <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
-                                        arweave-picUploadLink
+                                        Arweave Image Link
                                     </td>
                                     <td
                                         style={{
@@ -494,6 +500,8 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                             <a
                                                 href={(arweaveLink + arweaveData?.picUploadLink) as string}
                                                 style={{ color: 'black' }}
+                                                target="_blank"
+                                                rel="noreferrer"
                                             >
                                                 Pic Arweve link
                                             </a>
