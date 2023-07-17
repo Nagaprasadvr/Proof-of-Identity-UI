@@ -3,8 +3,6 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Box } from '@mui/material';
 import { Dropdown, Table } from 'react-bootstrap';
 import { useWallet } from '@solana/wallet-adapter-react';
-import data from './MOCK_DATA.json';
-import { Button } from '@material-ui/core';
 import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
@@ -166,16 +164,13 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
         return (
             <tbody>
                 {value.length > 0
-                    ? tableFilterRes.map(
-                          (item, index) => (
-                              console.log('item', item),
-                              (
-                                  <tr style={{ width: '100vw' }} key={index}>
-                                      <td>{item.senderName}</td>
-                                      <td>{reduceString(item.solPubkey, 10)}</td>
-                                      <td>{item.description}</td>
-                                      <td>
-                                          {/* <button
+                    ? tableFilterRes.map((item, index) => (
+                          <tr style={{ width: '100vw' }} key={index}>
+                              <td style={{ backgroundColor: 'lightskyblue' }}>{item.senderName}</td>
+                              <td style={{ backgroundColor: 'lightskyblue' }}>{reduceString(item.solPubkey, 10)}</td>
+                              <td style={{ backgroundColor: 'lightskyblue' }}>{item.description}</td>
+                              <td style={{ backgroundColor: 'lightskyblue' }}>
+                                  {/* <button
                                               style={{
                                                   width: 'auto',
                                                   display: 'flex',
@@ -213,78 +208,83 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                           >
                                               Deny
                                           </button> */}
-                                          {item.state === 'Requested' ? (
-                                              <>
-                                                  <Dropdown>
-                                                      <Dropdown.Toggle>
-                                                          {item.state === 'Requested' && (
-                                                              <Dropdown.Menu
-                                                                  style={{
-                                                                      backgroundColor: 'lightskyblue',
-                                                                      color: 'black',
-                                                                      fontFamily: 'Roboto Mono,monospace',
-                                                                      fontWeight: 'bold',
-                                                                  }}
-                                                              >
-                                                                  <Dropdown.Item
-                                                                      style={{
-                                                                          backgroundColor: 'lightskyblue',
-                                                                          color: 'black',
-                                                                          fontFamily: 'Roboto Mono,monospace',
-                                                                          fontWeight: 'bold',
-                                                                      }}
-                                                                      className="dropdown"
-                                                                      onClick={() => {
-                                                                          setRefresh(!refresh);
-                                                                          setOpen(true);
-                                                                          setId(item._id);
-                                                                          setName(item.senderName);
-                                                                          setSolPub(item.solPubkey);
-                                                                          setRSAPubkey512(item.rsaPubkey512);
-                                                                          setRSAPubkey1028(item.rsaPubkey1028);
-                                                                          setRequestedData(item);
-                                                                      }}
-                                                                  >
-                                                                      Approve
-                                                                  </Dropdown.Item>
-                                                                  <Dropdown.Item
-                                                                      style={{
-                                                                          backgroundColor: 'lightskyblue',
-                                                                          color: 'black',
-                                                                          fontFamily: 'Roboto Mono,monospace',
-                                                                          fontWeight: 'bold',
-                                                                      }}
-                                                                      className="dropdown"
-                                                                      onClick={() => {
-                                                                          DenyRequest(item._id);
-                                                                      }}
-                                                                  >
-                                                                      Deny
-                                                                  </Dropdown.Item>
-                                                              </Dropdown.Menu>
-                                                          )}
-                                                      </Dropdown.Toggle>
-                                                  </Dropdown>
-                                              </>
-                                          ) : (
-                                              <>
-                                                  {(item.state === 'Denied' || item.state === 'Approved') && (
-                                                      <p>{item.state}</p>
+                                  {item.state === 'Requested' ? (
+                                      <>
+                                          <Dropdown>
+                                              <Dropdown.Toggle>
+                                                  Action
+                                                  {item.state === 'Requested' && (
+                                                      <Dropdown.Menu
+                                                          style={{
+                                                              backgroundColor: 'lightskyblue',
+                                                              color: 'black',
+                                                              fontFamily: 'Roboto Mono,monospace',
+                                                              fontWeight: 'bold',
+                                                          }}
+                                                      >
+                                                          <Dropdown.Item
+                                                              style={{
+                                                                  backgroundColor: 'lightskyblue',
+                                                                  color: 'black',
+                                                                  fontFamily: 'Roboto Mono,monospace',
+                                                                  fontWeight: 'bold',
+                                                              }}
+                                                              className="dropdown"
+                                                              onClick={() => {
+                                                                  setRefresh(!refresh);
+                                                                  setOpen(true);
+                                                                  setId(item._id);
+                                                                  setName(item.senderName);
+                                                                  setSolPub(item.solPubkey);
+                                                                  setRSAPubkey512(item.rsaPubkey512);
+                                                                  setRSAPubkey1028(item.rsaPubkey1028);
+                                                                  setRequestedData(item);
+                                                              }}
+                                                          >
+                                                              Approve
+                                                          </Dropdown.Item>
+                                                          <Dropdown.Item
+                                                              style={{
+                                                                  backgroundColor: 'lightskyblue',
+                                                                  color: 'black',
+                                                                  fontFamily: 'Roboto Mono,monospace',
+                                                                  fontWeight: 'bold',
+                                                              }}
+                                                              className="dropdown"
+                                                              onClick={() => {
+                                                                  DenyRequest(item._id);
+                                                              }}
+                                                          >
+                                                              Deny
+                                                          </Dropdown.Item>
+                                                      </Dropdown.Menu>
                                                   )}
-                                              </>
+                                              </Dropdown.Toggle>
+                                          </Dropdown>
+                                      </>
+                                  ) : (
+                                      <>
+                                          {(item.state === 'Denied' || item.state === 'Approved') && (
+                                              <p>{item.state}</p>
                                           )}
-                                      </td>
-                                  </tr>
-                              )
-                          )
-                      )
+                                      </>
+                                  )}
+                              </td>
+                          </tr>
+                      ))
                     : dataSource.map((item, index) => (
                           // (item.requestedSolPubkey == wallet.publicKey?.toString() && (
                           <tr style={{ width: '100vw' }} key={index}>
-                              <td>{item.senderName}</td>
-                              <td>{reduceString(item.solPubkey, 18)}</td>
-                              <td>{item.description}</td>
-                              <td style={{ display: 'flex', justifyContent: 'space-around' }}>
+                              <td style={{ backgroundColor: 'lightskyblue' }}>{item.senderName}</td>
+                              <td style={{ backgroundColor: 'lightskyblue' }}>{reduceString(item.solPubkey, 18)}</td>
+                              <td style={{ backgroundColor: 'lightskyblue' }}>{item.description}</td>
+                              <td
+                                  style={{
+                                      display: 'flex',
+                                      justifyContent: 'space-around',
+                                      backgroundColor: 'lightskyblue',
+                                  }}
+                              >
                                   {/* {item.state === 'Requested' ? (
                                       <>
                                           <button
@@ -342,6 +342,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                                       fontWeight: 'bold',
                                                   }}
                                               >
+                                                  Action
                                                   {item.state === 'Requested' && (
                                                       <Dropdown.Menu
                                                           style={{
@@ -394,7 +395,7 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                   ) : (
                                       <>
                                           {(item.state === 'Denied' || item.state === 'Approved') && (
-                                              <p>{item.state}</p>
+                                              <p style={{ color: 'white' }}>{item.state}</p>
                                           )}
                                       </>
                                   )}
@@ -464,10 +465,18 @@ function DecidePage({ serverConnected }: { serverConnected: boolean }) {
                                 >
                                     <thead>
                                         <tr style={{ width: '100%' }}>
-                                            <td>From</td>
-                                            <td>Pub key</td>
-                                            <td>Description</td>
-                                            <td style={{ display: 'flex', justifyContent: 'space-around' }}>Action</td>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>From</td>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>Pubkey</td>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>Description</td>
+                                            <td
+                                                style={{
+                                                    backgroundColor: 'lightskyblue',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-around',
+                                                }}
+                                            >
+                                                Action
+                                            </td>
                                         </tr>
                                     </thead>
                                     {RenderIncomingRequests}

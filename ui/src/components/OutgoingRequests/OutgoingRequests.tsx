@@ -73,6 +73,7 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                     const address = data.address;
                     const state = data.state;
                     const contactNum = data.contactNum;
+                    console.log('solPub', solPubkey);
                     if (data.solPubkey === wallet.publicKey?.toString()) {
                         userData.push({
                             _id,
@@ -97,6 +98,8 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                         });
                     }
                 });
+
+                console.log('userData:', userData);
 
                 setDataSource(userData);
             } catch (err) {
@@ -130,34 +133,29 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
     };
     const cancelRequest = (id: string) => {
         try {
-            console.log('click');
             const url = 'http://localhost:9000/requests/cancel';
-            axios.post(url, { id: id }).then(() => {
-                setRefresh(!refresh);
-            });
-
-            console.log('request denied');
-
+            axios.post(url, { id: id });
             toast.success('Request has been cancelled');
+            handleRefresh();
         } catch (e) {
-            console.log(e);
+            console.error(e);
+            toast.error('operation failed');
         }
     };
 
     const deleteRequest = (id: string) => {
         try {
-            console.log('click');
             const url = 'http://localhost:9000/requests/delete';
-            axios.post(url, { id: id }).then(() => {
-                setRefresh(!refresh);
-            });
-            console.log('request deleted');
+            axios.post(url, { id: id });
 
             toast.success('Request has been deleted');
+            handleRefresh();
         } catch (e) {
             console.error(e);
+            toast.error('operation failed');
         }
     };
+
     const RenderOutgoingRequests = useMemo(() => {
         const bgColor = 'lightskyblue';
         return (
@@ -484,8 +482,8 @@ function OutgoinRequests({ serverConnected }: { serverConnected: boolean }) {
                                 >
                                     <thead>
                                         <tr style={{ width: '100%' }}>
-                                            <td style={{ color: 'black', background: `${bgColor}` }}>Sent TO</td>
-                                            <td style={{ color: 'black', background: `${bgColor}` }}>Pub key</td>
+                                            <td style={{ color: 'black', background: `${bgColor}` }}>Sent To</td>
+                                            <td style={{ color: 'black', background: `${bgColor}` }}>Pubkey</td>
                                             <td style={{ color: 'black', background: `${bgColor}` }}>Description</td>
                                             <td
                                                 style={{

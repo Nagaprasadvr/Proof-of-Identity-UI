@@ -1,14 +1,8 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { Modal, Box } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
-import * as digitalIdentity from '../../digitalIdentity/js/src/generated';
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { WebBundlr } from '@bundlr-network/client';
-import { useWallet } from '@solana/wallet-adapter-react';
-import fileReaderStream from 'filereader-stream';
-import { PublicKey } from '@solana/web3.js';
 import { toast } from 'react-hot-toast';
-import * as solana from '@solana/web3.js';
 import { Table } from 'react-bootstrap';
 import { reduceString } from '../ViewIdentity/helper';
 import { UserData } from '../InputForm/InputForm';

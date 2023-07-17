@@ -39,6 +39,7 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
 
     const [email, setEmail] = useState(false);
     const [emailVerify, setEmailVerify] = useState('');
+    const [name, setName] = useState('');
     const [otpSent, setOtpSent] = useState(false);
     const [otpVerified, setOtpVerified] = useState(false);
     const [inputOTP, setInputOTP] = useState<string>('');
@@ -48,7 +49,7 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
         if (event.target.type === 'checkbox') {
             setFormData({
                 ...formData,
-                [event.target.name]: event.target.checked ? 'true' : 'false',
+                [event.target.name]: event.target.checked ? true : false,
             });
         } else {
             setFormData({
@@ -92,24 +93,33 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
     };
 
     const handleEmailVerification = async () => {
-        const id = toast.loading('Sending OTP...');
-        try {
-            const response = await axios.post('http://localhost:9000/emailVerification/sendOTP', {
-                email: emailVerify,
-            });
-            console.log(response);
-            if (response.data.status === true) {
-                setOtpSent(true);
+        if (emailVerify.includes(name)) {
+            const id = toast.loading('Sending OTP...');
+
+            try {
+                const response = await axios.post('http://localhost:9000/emailVerification/sendOTP', {
+                    email: emailVerify,
+                });
+                console.log(response);
+                if (response.data.status === true) {
+                    setOtpSent(true);
+                    toast.dismiss(id);
+                    toast.success('OTP sent successfully');
+                    setFormData({
+                        ...formData,
+                        senderName: name,
+                    });
+                } else {
+                    toast.dismiss(id);
+                    toast.error('Failed to send OTP');
+                }
+            } catch (err) {
                 toast.dismiss(id);
-                toast.success('OTP sent successfully');
-            } else {
-                toast.dismiss(id);
+                console.log(err);
                 toast.error('Failed to send OTP');
             }
-        } catch (err) {
-            toast.dismiss(id);
-            console.log(err);
-            toast.error('Failed to send OTP');
+        } else {
+            toast.error('Name and email Id is not matching cannot verify');
         }
     };
 
@@ -117,9 +127,11 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
         event.preventDefault();
         setEmail(true);
         setEmailVerify(event.target.value);
-        const mailId = event.target.value;
-        console.log(mailId);
-        console.log(email);
+    }
+
+    function handleName(event: React.ChangeEvent<HTMLInputElement>) {
+        event.preventDefault();
+        setName(event.target.value);
     }
 
     const handleOTPInputChange = (event: any) => {
@@ -128,6 +140,7 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
 
     const verifyOtp = async () => {
         const id = toast.loading('Verifying OTP...');
+
         try {
             const response = await axios.post('http://localhost:9000/emailVerification/verifyOTP', {
                 email: emailVerify,
@@ -138,6 +151,9 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                 setOtpVerified(true);
                 toast.dismiss(id);
                 toast.success('OTP verified successfully');
+            } else {
+                toast.dismiss(id);
+                toast.error('OTP verified failed. invalid OTP or OTP expired');
             }
         } catch (err) {
             console.log(err);
@@ -151,7 +167,7 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
             onClose={handleClose}
             style={{ width: '100vw', height: '100vh', background: 'black', overflow: 'scroll' }}
         >
-            <Box style={{ width: '100vw', height: '100vh' }}>
+            <Box style={{ width: '100vw', height: '100vh', paddingBottom: '150px' }}>
                 <Box style={{ backgroundColor: 'black' }}>
                     <button
                         style={{ backgroundColor: 'transparent', borderColor: 'transparent', color: 'lightskyblue' }}
@@ -182,6 +198,14 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                 }}
                             >
                                 <label>Email Verification</label>
+                                <input
+                                    style={{ width: '900px', borderRadius: '10px', height: '60px' }}
+                                    type="text"
+                                    name="name"
+                                    value={name}
+                                    onChange={handleName}
+                                    placeholder="Enter your name or Company name associated with the email "
+                                ></input>
 
                                 <input
                                     style={{ width: '500px', borderRadius: '10px', height: '60px' }}
@@ -250,28 +274,45 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                             }}
                         >
                             <Box>
+                                <h1
+                                    style={{
+                                        fontWeight: 'bold',
+                                        display: 'flex',
+                                        alignContent: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    Select the required Fields
+                                </h1>
                                 <Table style={{ marginTop: '5vh' }}>
                                     <tbody>
                                         <tr>
-                                            <td>
-                                                <label>Your Name</label>
+                                            <td style={{ backgroundColor: 'lightskyblue', width: '500px' }}>
+                                                <label>Request Sender Name</label>
                                             </td>
 
-                                            <td>
-                                                <textarea
-                                                    name="senderName"
-                                                    value={formData.senderName}
-                                                    style={{ color: 'black', width: '100%', height: '100%' }}
-                                                    onChange={handleChange}
-                                                ></textarea>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignContent: 'center',
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    {name}
+                                                </label>
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label>Name</label>
+                                            </td>
                                             <td
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     border: 'none',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 <input
@@ -286,16 +327,17 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     }}
                                                 ></input>
                                             </td>
-                                            <td>
-                                                <label>Name</label>
-                                            </td>
                                         </tr>
                                         <tr>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label>DOB</label>
+                                            </td>
                                             <td
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     border: 'none',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 <input
@@ -307,16 +349,17 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     style={{ marginLeft: '2vw', marginRight: '2vw' }}
                                                 ></input>
                                             </td>
-                                            <td>
-                                                <label>DOB</label>
-                                            </td>
                                         </tr>
                                         <tr>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label>Contact Number</label>
+                                            </td>
                                             <td
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     border: 'none',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 <input
@@ -328,16 +371,17 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     style={{ marginLeft: '2vw', marginRight: '2vw' }}
                                                 ></input>
                                             </td>
-                                            <td>
-                                                <label>Contact Number</label>
-                                            </td>
                                         </tr>
                                         <tr>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label>Residence Address</label>
+                                            </td>
                                             <td
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     border: 'none',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 <input
@@ -349,16 +393,17 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     style={{ marginLeft: '2vw', marginRight: '2vw' }}
                                                 ></input>
                                             </td>
-                                            <td>
-                                                <label>Residence Address</label>
-                                            </td>
                                         </tr>
                                         <tr>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label>Pan Number</label>
+                                            </td>
                                             <td
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     border: 'none',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 <input
@@ -370,16 +415,17 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     style={{ marginLeft: '2vw', marginRight: '2vw' }}
                                                 ></input>
                                             </td>
-                                            <td>
-                                                <label>Pan Number</label>
-                                            </td>
                                         </tr>
                                         <tr>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label>Passport Number</label>
+                                            </td>
                                             <td
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     border: 'none',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 <input
@@ -391,16 +437,17 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     style={{ marginLeft: '2vw', marginRight: '2vw' }}
                                                 ></input>
                                             </td>
-                                            <td>
-                                                <label>Passport Number</label>
-                                            </td>
                                         </tr>
                                         <tr>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label>Aadhar Number</label>
+                                            </td>
                                             <td
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     border: 'none',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 <input
@@ -412,16 +459,17 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     style={{ marginLeft: '2vw', marginRight: '2vw' }}
                                                 ></input>
                                             </td>
-                                            <td>
-                                                <label>Aadhar Number</label>
-                                            </td>
                                         </tr>
                                         <tr>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label>Pan Link</label>
+                                            </td>
                                             <td
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     border: 'none',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 <input
@@ -433,16 +481,17 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     style={{ marginLeft: '2vw', marginRight: '2vw' }}
                                                 ></input>
                                             </td>
-                                            <td>
-                                                <label>Pan Link</label>
-                                            </td>
                                         </tr>
                                         <tr>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label>Passport Link</label>
+                                            </td>
                                             <td
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     border: 'none',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 <input
@@ -454,16 +503,17 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     style={{ marginLeft: '2vw', marginRight: '2vw' }}
                                                 ></input>
                                             </td>
-                                            <td>
-                                                <label>Passport Link</label>
-                                            </td>
                                         </tr>
                                         <tr>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label>Aadhar Link</label>
+                                            </td>
                                             <td
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     border: 'none',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 <input
@@ -475,17 +525,18 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     style={{ marginLeft: '2vw', marginRight: '2vw' }}
                                                 ></input>
                                             </td>
-                                            <td>
-                                                <label>Aadhar Link</label>
-                                            </td>
                                         </tr>
 
                                         <tr>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
+                                                <label>pic Link</label>
+                                            </td>
                                             <td
                                                 style={{
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     border: 'none',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 <input
@@ -497,29 +548,33 @@ function SendRequestModal({ open, setOpen, requestedPubkey, receiverName }: Prop
                                                     style={{ marginLeft: '2vw', marginRight: '2vw' }}
                                                 ></input>
                                             </td>
-                                            <td>
-                                                <label>pic Link</label>
-                                            </td>
                                         </tr>
-                                        <tr>
+                                        <tr style={{ backgroundColor: 'lightskyblue' }}>
                                             <td
                                                 style={{
                                                     display: 'flex',
-                                                    justifyContent: 'center',
+
                                                     flexDirection: 'row',
                                                     width: '100%',
                                                     border: 'none',
-                                                    marginTop: '3vh',
+                                                    height: '100%',
+                                                    backgroundColor: 'lightskyblue',
                                                 }}
                                             >
                                                 Description
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: 'lightskyblue' }}>
                                                 <textarea
                                                     name="description"
                                                     value={formData.description}
-                                                    style={{ color: 'black', width: '100%', height: '100%' }}
+                                                    style={{
+                                                        color: 'black',
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        backgroundColor: 'lightskyblue',
+                                                    }}
                                                     onChange={handleChange}
+                                                    placeholder="enter any description for identity request"
                                                 ></textarea>
                                             </td>
                                         </tr>

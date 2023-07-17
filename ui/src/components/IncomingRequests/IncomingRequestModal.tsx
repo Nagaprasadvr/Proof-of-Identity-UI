@@ -1,14 +1,7 @@
 import React, { Dispatch, SetStateAction, useState, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
-import FormLabel from '@mui/material/FormLabel';
-import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormHelperText from '@mui/material/FormHelperText';
-import Checkbox from '@mui/material/Checkbox';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Modal } from '@material-ui/core';
-import { Button, Table } from 'react-bootstrap';
 import * as sdk from '../../digitalIdentity/js/src/generated';
 import axios from 'axios';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -31,24 +24,6 @@ interface Props {
     setRefresh: Dispatch<SetStateAction<boolean>>;
     refresh: boolean;
 }
-
-// interface RequestedData {
-//     solPubkey: string;
-//     rsaPubkey: string;
-//     requestedSolPubkey: string;
-//     senderName: string;
-//     name: boolean;
-//     dob: boolean;
-//     aadharNum: boolean;
-//     panNum: boolean;
-//     passportNum: boolean;
-//     panUploadLink: boolean;
-//     passportUploadLink: boolean;
-//     aadharUploadLink: boolean;
-//     picUploadLink: boolean;
-//     description: string;
-//     address: string;
-// }
 
 function ResponseModal({
     open,
@@ -102,13 +77,11 @@ function ResponseModal({
                         key !== 'requestedSolPubkey' &&
                         key !== 'solPubkey' &&
                         key !== 'senderName' &&
-                        key !== 'state'
+                        key !== 'state' &&
+                        key !== 'receiverName' &&
+                        key !== 'description'
                     ) {
-                        return key === 'description' ? (
-                            <h3 key={key} style={{ color: 'white' }}>
-                                {key}:{value}
-                            </h3>
-                        ) : (
+                        return (
                             <h3 key={key} style={{ color: 'white' }}>
                                 {key}
                             </h3>
@@ -269,6 +242,9 @@ function ResponseModal({
                 <Box style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row' }}>
                     <h2 style={{ color: 'white', marginLeft: '3vw' }}>
                         <span style={{ color: 'lightskyblue' }}>Requester Name:</span> {name}
+                    </h2>
+                    <h2 style={{ color: 'white', marginLeft: '3vw' }}>
+                        <span style={{ color: 'lightskyblue' }}>Description:</span> {data.}
                     </h2>
                     <h2 style={{ color: 'white', marginRight: '3vw' }}>
                         <span style={{ color: 'lightskyblue' }}>Pubkey:</span> {reduceString(solpubkey, 10)}
