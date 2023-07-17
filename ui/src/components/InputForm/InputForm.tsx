@@ -118,7 +118,7 @@ export const InputForm = () => {
             // You can display an error message or handle the validation error as required
         }
 
-        const passportPattern = /^[A-Za-z0-9]{6,10}$/;
+        const passportPattern = /^[A-PR-WY][1-9]\d\s?\d{4}[1-9]$/;
         if (!passportPattern.test(data.answers.passport_id.value)) {
             console.log('Please enter a valid passport number');
             errors.push('Invalid Passport');

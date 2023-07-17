@@ -429,7 +429,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                                 </tr>
                                 <tr style={{ color: 'black', background: `${bgcolor}` }}>
                                     <td style={{ color: 'black', background: `${bgcolor}`, fontWeight: 'bold' }}>
-                                        Arweave AadharLink
+                                        Arweave Aadhar Link
                                     </td>
                                     <td
                                         style={{
@@ -631,7 +631,7 @@ const ViewIdentityModal = ({ handleClose, open, data, pubkey, digitalIdentityPda
                         </tbody>
                     </Table>
                     <Box sx={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
-                        <h6 style={{ color: 'lightskyblue' }}>*File size should be less than 50KB</h6>
+                        <h6 style={{ color: 'lightskyblue' }}>*File size should be less than 90KB</h6>
                     </Box>
 
                     <div className="container" style={{ marginBottom: '4px' }}>
