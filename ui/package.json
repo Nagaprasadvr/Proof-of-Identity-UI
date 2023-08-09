@@ -1,0 +1,98 @@
+{
+    "name": "proof-of-identity",
+    "version": "0.2",
+    "publishConfig": {
+        "access": "public"
+    },
+    "files": [
+        "public",
+        "src",
+        ".gitignore",
+        "config-overrides.js",
+        "LICENSE",
+        "package.json",
+        "README.md",
+        "tsconfig.json"
+    ],
+    "scripts": {
+        "start": "",
+        "clean": "shx mkdir -p build lib && shx rm -rf build lib",
+        "dev": "react-app-rewired start",
+        "build": "react-app-rewired build",
+        "test": "react-app-rewired test --passWithNoTests",
+        "eject": "react-scripts eject"
+    },
+    "dependencies": {
+        "@bundlr-network/client": "^0.11.1",
+        "@emotion/react": "^11.11.0",
+        "@emotion/styled": "^11.11.0",
+        "@material-ui/core": "4.11.4",
+        "@material-ui/icons": "4.11.2",
+        "@metaplex-foundation/beet": "^0.7.1",
+        "@metaplex-foundation/beet-solana": "^0.4.0",
+        "@mui/icons-material": "^5.11.16",
+        "@mui/material": "^5.13.3",
+        "@project-serum/anchor": "^0.26.0",
+        "@quillforms/react-renderer-utils": "5.5.0",
+        "@quillforms/renderer-core": "5.4.0",
+        "@solana/wallet-adapter-base": "0.9.22",
+        "@solana/wallet-adapter-react": "0.15.32",
+        "@solana/wallet-adapter-react-ui": "0.9.20",
+        "@solana/wallet-adapter-wallets": "0.19.16",
+        "@solana/web3.js": "1.75.0",
+        "@typeform/embed-react": "2.20.0",
+        "axios": "^1.4.0",
+        "bootstrap": "^5.3.0-alpha3",
+        "browserify-zlib": "^0.2.0",
+        "buffer": "6.0.3",
+        "constants-browserify": "^1.0.0",
+        "encrypt-rsa": "^2.1.5",
+        "filereader-stream": "^2.0.0",
+        "https-browserify": "^1.0.0",
+        "node-rsa": "^1.1.1",
+        "os-browserify": "^0.3.0",
+        "react": "18.2.0",
+        "react-app-rewired": "2.2.1",
+        "react-bootstrap": "^2.7.4",
+        "react-dom": "18.2.0",
+        "react-hot-toast": "^2.4.1",
+        "react-router-dom": "6.11.1",
+        "react-scripts": "5.0.1",
+        "stream-http": "^3.2.0",
+        "url": "^0.11.0",
+        "web-vitals": "3.3.1"
+    },
+    "devDependencies": {
+        "@testing-library/jest-dom": "5.16.5",
+        "@testing-library/react": "14.0.0",
+        "@testing-library/user-event": "14.4.3",
+        "@types/jest": "^28.1.7",
+        "@types/node-rsa": "^1.1.1",
+        "@types/react": "18.2.5",
+        "@types/react-dom": "18.2.3",
+        "@types/testing-library__jest-dom": "5.14.5",
+        "process": "^0.11.10",
+        "shx": "^0.3.4",
+        "source-map-loader": "^4.0.0",
+        "typescript": "~4.7.4",
+        "webpack": "5.82.0"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
+}

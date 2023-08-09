@@ -1,0 +1,19 @@
+.inputButton {
+  font-size: 20px;
+  background: lightskyblue;
+  color: black;
+  font-family: "Roboto Mono", monospace;
+  font-weight: bolder;
+}
+
+.inputButton:hover {
+  background-color: lightskyblue;
+}
+
+button p {
+  color: white;
+}
+
+.render-core-html-parser{
+  color: red;
+}

@@ -1,0 +1,103 @@
+.App {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: lightskyblue;
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+b,
+a {
+    font-family: 'Roboto Mono', monospace;
+    color: lightskyblue;
+}
+
+.balance-button {
+    color: black;
+    background: lightskyblue;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: bolder;
+    font-size: 20px;
+    height: 45px;
+    width: 350px;
+    border-radius: 8px;
+}
+
+.balance-button:hover {
+    color: white;
+}
+
+
+input {
+    background: lightskyblue;
+    color: black;
+    font-family: "Roboto mono ", monospace;
+    font-weight: bolder;
+
+}
+
+h1:hover,
+h2:hover,
+b:hover {
+    color: white;
+}
+
+/* Customize the scrollbar for the entire page */
+::-webkit-scrollbar {
+    width: 5px;
+    /* Set the width of the scrollbar */
+}
+
+/* Customize the thumb (the part that you drag) */
+::-webkit-scrollbar-thumb {
+    background-color: balck
+        /* Set the color of the thumb */
+
+}
+
+input[type="checked"] {
+    font: inherit;
+        color: currentColor;
+        width: 1.15em;
+        height: 1.15em;
+        border: 0.15em solid currentColor;
+        border-radius: 0.15em;
+        transform: translateY(-0.075em);
+}

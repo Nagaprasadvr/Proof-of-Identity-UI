@@ -1,0 +1,13 @@
+Button {
+    border: 1px solid white;
+    color: white;
+    font-weight: 500;
+}
+
+td,
+tr,
+tbody {
+    border: 1px solid white;
+    font-size: 25px;
+    color: white;
+}

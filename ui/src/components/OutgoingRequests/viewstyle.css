@@ -1,0 +1,31 @@
+Box {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+
+a:hover {
+    color: aqua
+}
+
+td,tr,tbody{
+    border: 1px solid white;
+    font-size: 25px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh; */
+    /* Adjust the height as needed */
+}
+
+.centered-button {
+    text-align: center;
+}
+
+.hover-table-row:hover{
+    color:white;;
+    background-color: black;}

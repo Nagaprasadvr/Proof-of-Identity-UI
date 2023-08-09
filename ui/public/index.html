@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+  <title>POI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+</head>
+<style>
+  .matrix-canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    opacity: 0.8;
+    font-family: "Roboto Mono" monospace;
+    color: lightskyblue;
+  }
+
+  .matrix-canvas:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 64px;
+    background: linear-gradient(to bottom, rgba(254, 254, 254, 0), #000);
+    background-image: linear-gradient(rgba(254, 254, 254, 0), rgb(0, 0, 0));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+   
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;
+  }
+</style>
+
+<body style="background: black">
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <Box class="matrix-canvas">
+    <canvas id="Matrix" style="background-position: hidden"></canvas>
+  </Box>
+
+  <script>
+    const canvas = document.getElementById("Matrix");
+    const context = canvas.getContext("2d");
+
+    const katakana = "!@#$%^&*()_+~><,.?/:;";
+    const latin = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const nums = "0123456789";
+    const small = "abcdefghijklmnopqrstuvwxz";
+
+    const alphabet = katakana + latin + nums + small;
+
+    const fontSize = 20;
+    const columns = canvas.width;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const rainDrops = [];
+
+    for (let x = 0; x < columns; x++) {
+      rainDrops[x] = 1;
+    }
+
+    const draw = () => {
+      context.fillStyle = "rgba(0,0,0,0.05)";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      context.fillStyle = "lightskyblue";
+      context.font = fontSize + "Roboto Mono monospace";
+
+      for (let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet.charAt(
+          Math.floor(Math.random() * alphabet.length)
+        );
+        context.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+        if (
+          rainDrops[i] * fontSize > canvas.height &&
+          Math.random() > 0.975
+        ) {
+          rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
+      }
+    };
+
+    setInterval(draw, 30);
+  </script>
+
+  <Box id="root"></Box>
+
+  <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+</body>
+
+</html>
